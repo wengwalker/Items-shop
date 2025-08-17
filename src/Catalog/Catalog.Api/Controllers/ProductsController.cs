@@ -69,7 +69,10 @@ public class ProductsController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateProductCategory([FromRoute] Guid id, [FromBody] UpdateProductCategoryRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateProductCategory(
+        [FromRoute] Guid id,
+        [FromBody] UpdateProductCategoryRequest request,
+        CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(
             new UpdateProductCategoryCommand(id, request.NewCategoryId),

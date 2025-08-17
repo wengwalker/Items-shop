@@ -12,11 +12,11 @@ namespace Catalog.Api.Controllers;
 
 [Route("api/v1/categories")]
 [ApiController]
-public class CategoryController : ControllerBase
+public class CategoriesController : ControllerBase
 {
     private readonly IMediator _mediator;
 
-    public CategoryController(IMediator mediator)
+    public CategoriesController(IMediator mediator)
     {
         _mediator = mediator;
     }
@@ -51,7 +51,7 @@ public class CategoryController : ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetCategories([FromQuery] string? name = null, [FromQuery] QueryOrderType? order = null, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetCategories([FromQuery] string? name = null, [FromQuery] OrderQueryType? order = null, CancellationToken cancellationToken = default)
     {
         var response = await _mediator.Send(new GetCategoriesQuery(name, order), cancellationToken);
 

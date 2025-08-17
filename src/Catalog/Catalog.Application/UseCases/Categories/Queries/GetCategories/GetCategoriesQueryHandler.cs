@@ -29,7 +29,7 @@ public sealed class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQue
 
         if (request.OrderType is not null)
         {
-            query = request.OrderType == QueryOrderType.Ascending
+            query = request.OrderType == OrderQueryType.Ascending
                 ? query.OrderBy(x => x.Name)
                 : query.OrderByDescending(x => x.Name);
         }

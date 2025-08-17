@@ -5,5 +5,5 @@ namespace Catalog.Application.UseCases.Categories.Queries.GetCategories;
 
 public record GetCategoriesQuery(
     string? Name,
-    QueryOrderType? OrderType)
+    OrderQueryType? OrderType)
     : IRequest<GetCategoriesQueryResponse>;

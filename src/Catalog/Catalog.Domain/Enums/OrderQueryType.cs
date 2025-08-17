@@ -1,6 +1,6 @@
 ﻿namespace Catalog.Domain.Enums;
 
-public enum QueryOrderType
+public enum OrderQueryType
 {
     Ascending = 0,
     Descending = 1
