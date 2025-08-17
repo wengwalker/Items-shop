@@ -1,6 +1,6 @@
 ﻿using Mediator.Lite.Interfaces;
 
-namespace Catalog.Application.Commands.AddProduct;
+namespace Catalog.Application.UseCases.Products.Commands.AddProduct;
 
 public record AddProductCommand(
     string Name,

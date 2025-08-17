@@ -3,7 +3,7 @@ using Catalog.Infrastructure.Context;
 using Mediator.Lite.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Catalog.Application.Queries.GetProducts;
+namespace Catalog.Application.UseCases.Products.Queries.GetProducts;
 
 public sealed class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProductsQueryResponse>
 {

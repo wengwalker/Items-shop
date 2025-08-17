@@ -1,5 +1,5 @@
 ﻿using Mediator.Lite.Interfaces;
 
-namespace Catalog.Application.Commands.DeleteProduct;
+namespace Catalog.Application.UseCases.Products.Commands.DeleteProduct;
 
 public record DeleteProductCommand(Guid ProductId) : IRequest;

@@ -1,6 +1,6 @@
-﻿namespace Catalog.Application.Commands.UpdateProduct;
+﻿namespace Catalog.Application.UseCases.Products.Queries.GetProduct;
 
-public record UpdateProductCommandResponse(
+public record GetProductQueryResponse(
     Guid Id,
     string Name,
     string Description,

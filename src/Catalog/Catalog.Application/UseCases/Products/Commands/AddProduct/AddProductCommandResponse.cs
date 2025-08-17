@@ -1,6 +1,6 @@
-﻿namespace Catalog.Application.Queries.GetProduct;
+﻿namespace Catalog.Application.UseCases.Products.Commands.AddProduct;
 
-public record GetProductQueryResponse(
+public record AddProductCommandResponse(
     Guid Id,
     string Name,
     string Description,

@@ -5,7 +5,7 @@ using FluentValidation;
 using Mediator.Lite.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Catalog.Application.Commands.UpdateProduct;
+namespace Catalog.Application.UseCases.Products.Commands.UpdateProduct;
 
 public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, UpdateProductCommandResponse>
 {

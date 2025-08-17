@@ -5,7 +5,7 @@ using FluentValidation;
 using Mediator.Lite.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Catalog.Application.Queries.GetProduct;
+namespace Catalog.Application.UseCases.Products.Queries.GetProduct;
 
 public sealed class GetProductQueryHandler : IRequestHandler<GetProductQuery, GetProductQueryResponse>
 {

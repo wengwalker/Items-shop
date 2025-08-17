@@ -1,6 +1,6 @@
 ﻿using Mediator.Lite.Interfaces;
 
-namespace Catalog.Application.Commands.UpdateProduct;
+namespace Catalog.Application.UseCases.Products.Commands.UpdateProduct;
 
 public record UpdateProductCommand(
     Guid Id,

@@ -1,9 +1,9 @@
 ﻿using Catalog.Api.DTOs.Products;
-using Catalog.Application.Commands.AddProduct;
-using Catalog.Application.Commands.DeleteProduct;
-using Catalog.Application.Commands.UpdateProduct;
-using Catalog.Application.Queries.GetProduct;
-using Catalog.Application.Queries.GetProducts;
+using Catalog.Application.UseCases.Products.Commands.AddProduct;
+using Catalog.Application.UseCases.Products.Commands.DeleteProduct;
+using Catalog.Application.UseCases.Products.Commands.UpdateProduct;
+using Catalog.Application.UseCases.Products.Queries.GetProduct;
+using Catalog.Application.UseCases.Products.Queries.GetProducts;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -60,6 +60,8 @@ public class ProductsController : ControllerBase
 
         return Ok(response);
     }
+
+    // TODO: PATCH query - update product category
 
     [HttpGet]
     [Produces("application/json")]

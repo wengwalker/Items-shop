@@ -5,7 +5,7 @@ using FluentValidation;
 using Mediator.Lite.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
-namespace Catalog.Application.Commands.DeleteProduct;
+namespace Catalog.Application.UseCases.Products.Commands.DeleteProduct;
 
 public sealed class DeleteProductCommandHandler : IRequestHandler<DeleteProductCommand>
 {

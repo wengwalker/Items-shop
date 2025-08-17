@@ -1,7 +1,7 @@
 using Catalog.Api.Extensions;
 using Catalog.Api.Middlewares;
-using Catalog.Application.Commands.AddProduct;
-using Catalog.Application.Queries.GetProduct;
+using Catalog.Application.UseCases.Products.Commands.AddProduct;
+using Catalog.Application.UseCases.Products.Queries.GetProduct;
 using Catalog.Infrastructure.Context;
 using Catalog.Infrastructure.Extensions;
 using FluentValidation;

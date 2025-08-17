@@ -1,6 +1,6 @@
-﻿namespace Catalog.Application.Commands.AddProduct;
+﻿namespace Catalog.Application.UseCases.Products.Commands.UpdateProduct;
 
-public record AddProductCommandResponse(
+public record UpdateProductCommandResponse(
     Guid Id,
     string Name,
     string Description,
