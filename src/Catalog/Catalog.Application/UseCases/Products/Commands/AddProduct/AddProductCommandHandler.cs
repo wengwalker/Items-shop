@@ -23,10 +23,13 @@ public sealed class AddProductCommandHandler : IRequestHandler<AddProductCommand
     {
         await _validator.ValidateAndThrowAsync(request, cancellationToken);
 
-        var category = await _context.Categories
-            .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == request.CategoryId, cancellationToken)
-            ?? throw new NotFoundException(nameof(CategoryEntity));
+        bool categoryExists = await _context.Categories
+            .AnyAsync(x => x.Id == request.CategoryId, cancellationToken);
+
+        if (!categoryExists)
+        {
+            throw new NotFoundException(nameof(CategoryEntity));
+        }
 
         var product = new ProductEntity
         {
@@ -35,11 +38,10 @@ public sealed class AddProductCommandHandler : IRequestHandler<AddProductCommand
             Description = request.Description,
             Price = request.Price,
             StockQuantity = request.StockQuantity,
-            CategoryId = category.Id,
-            Category = category
+            CategoryId = request.CategoryId
         };
 
-        await _context.Products.AddAsync(product, cancellationToken);
+        _context.Products.Add(product);
 
         await _context.SaveChangesAsync(cancellationToken);
 

@@ -21,6 +21,8 @@ public sealed class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategor
 
     public async Task<UpdateCategoryCommandResponse> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {
+        await _validator.ValidateAndThrowAsync(request, cancellationToken);
+
         var category = await _context.Categories
             .FirstOrDefaultAsync(x => x.Id == request.Id, cancellationToken)
             ?? throw new NotFoundException(nameof(CategoryEntity));

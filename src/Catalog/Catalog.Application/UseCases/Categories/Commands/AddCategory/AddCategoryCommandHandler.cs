@@ -28,7 +28,7 @@ public sealed class AddCategoryCommandHandler : IRequestHandler<AddCategoryComma
             Description = request.Description
         };
 
-        await _context.Categories.AddAsync(category, cancellationToken);
+        _context.Categories.Add(category);
 
         await _context.SaveChangesAsync(cancellationToken);
 

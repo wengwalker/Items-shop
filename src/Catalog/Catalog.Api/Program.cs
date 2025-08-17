@@ -1,7 +1,6 @@
 using Catalog.Api.Extensions;
 using Catalog.Api.Middlewares;
 using Catalog.Application.UseCases.Products.Commands.AddProduct;
-using Catalog.Application.UseCases.Products.Queries.GetProduct;
 using Catalog.Infrastructure.Context;
 using Catalog.Infrastructure.Extensions;
 using FluentValidation;
@@ -37,7 +36,7 @@ builder.Services.AddDbContext<CatalogDbContext>(x => x
     .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
     .EnableDetailedErrors(builder.Environment.IsDevelopment()));
 
-builder.Services.AddValidatorsFromAssemblyContaining<GetProductQueryValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<AddProductCommandValidator>();
 
 builder.Services.AddMediator(typeof(AddProductCommand).Assembly);
 
