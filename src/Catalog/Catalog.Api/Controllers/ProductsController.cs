@@ -2,6 +2,7 @@
 using Catalog.Application.UseCases.Products.Commands.AddProduct;
 using Catalog.Application.UseCases.Products.Commands.DeleteProduct;
 using Catalog.Application.UseCases.Products.Commands.UpdateProduct;
+using Catalog.Application.UseCases.Products.Commands.UpdateProductCategory;
 using Catalog.Application.UseCases.Products.Queries.GetProduct;
 using Catalog.Application.UseCases.Products.Queries.GetProducts;
 using Mediator.Lite.Interfaces;
@@ -61,7 +62,21 @@ public class ProductsController : ControllerBase
         return Ok(response);
     }
 
-    // TODO: PATCH query - update product category
+    [Route("{id}/category")]
+    [HttpPatch]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> UpdateProductCategory([FromRoute] Guid id, [FromBody] UpdateProductCategoryRequest request, CancellationToken cancellationToken)
+    {
+        var response = await _mediator.Send(
+            new UpdateProductCategoryCommand(id, request.NewCategoryId),
+            cancellationToken);
+
+        return Ok(response);
+    }
 
     [HttpGet]
     [Produces("application/json")]
