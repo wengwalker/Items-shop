@@ -22,6 +22,10 @@ public class CategoryController : ControllerBase
     }
 
     [HttpPost]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> AddCategory([FromBody] AddCategoryRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new AddCategoryCommand(request.Name, request.Description), cancellationToken);
@@ -31,6 +35,11 @@ public class CategoryController : ControllerBase
 
     [Route("{id}")]
     [HttpPatch]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> UpdateCategory([FromRoute] Guid id, [FromBody] UpdateCategoryRequest request, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new UpdateCategoryCommand(id, request.Name, request.Description), cancellationToken);
@@ -39,6 +48,9 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCategories([FromQuery] string? name = null, [FromQuery] QueryOrderType? order = null, CancellationToken cancellationToken = default)
     {
         var response = await _mediator.Send(new GetCategoriesQuery(name, order), cancellationToken);
@@ -48,6 +60,11 @@ public class CategoryController : ControllerBase
 
     [Route("{id}")]
     [HttpGet]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetCategory([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(new GetCategoryQuery(id), cancellationToken);
@@ -57,6 +74,11 @@ public class CategoryController : ControllerBase
 
     [Route("{id}")]
     [HttpDelete]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> DeleteCategory([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         await _mediator.Send(new DeleteCategoryCommand(id), cancellationToken);
