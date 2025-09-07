@@ -1,6 +1,6 @@
 ﻿using Catalog.Domain.DTOs;
-using Catalog.Domain.Enums;
 using Catalog.Infrastructure.Context;
+using Domain.Common.Enums;
 using Mediator.Lite.Interfaces;
 using Microsoft.EntityFrameworkCore;
 

@@ -44,7 +44,7 @@ public class CartItemsController : ControllerBase
     }
 
     [Route("{itemId}")]
-    [HttpGet]
+    [HttpDelete]
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

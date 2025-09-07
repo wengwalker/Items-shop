@@ -4,7 +4,7 @@ using Catalog.Application.UseCases.Categories.Commands.DeleteCategory;
 using Catalog.Application.UseCases.Categories.Commands.UpdateCategory;
 using Catalog.Application.UseCases.Categories.Queries.GetCategories;
 using Catalog.Application.UseCases.Categories.Queries.GetCategory;
-using Catalog.Domain.Enums;
+using Domain.Common.Enums;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,5 +1,5 @@
-using Catalog.Api.Extensions;
-using Catalog.Api.Middlewares;
+using Api.Common.Extensions;
+using Api.Common.Middlewares;
 using Catalog.Application.UseCases.Products.Commands.AddProduct;
 using Catalog.Infrastructure.Context;
 using Catalog.Infrastructure.Extensions;

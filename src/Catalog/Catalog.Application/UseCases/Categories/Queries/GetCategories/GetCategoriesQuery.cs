@@ -1,4 +1,4 @@
-﻿using Catalog.Domain.Enums;
+﻿using Domain.Common.Enums;
 using Mediator.Lite.Interfaces;
 
 namespace Catalog.Application.UseCases.Categories.Queries.GetCategories;

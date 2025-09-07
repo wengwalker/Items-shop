@@ -1,7 +1,7 @@
 ﻿using Catalog.Domain.DTOs;
 using Catalog.Domain.Entities;
-using Catalog.Domain.Exceptions;
 using Catalog.Infrastructure.Context;
+using Domain.Common.Exceptions;
 using FluentValidation;
 using Mediator.Lite.Interfaces;
 using Microsoft.EntityFrameworkCore;
