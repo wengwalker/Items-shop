@@ -5,6 +5,7 @@ using Catalog.Application.UseCases.Products.Commands.UpdateProduct;
 using Catalog.Application.UseCases.Products.Commands.UpdateProductCategory;
 using Catalog.Application.UseCases.Products.Queries.GetProduct;
 using Catalog.Application.UseCases.Products.Queries.GetProducts;
+using Domain.Common.Enums;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -85,9 +86,12 @@ public class ProductsController : ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetProducts(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetProducts(
+        [FromQuery] string? name = null,
+        [FromQuery] OrderQueryType? order = null,
+        CancellationToken cancellationToken = default)
     {
-        var response = await _mediator.Send(new GetProductsQuery(), cancellationToken);
+        var response = await _mediator.Send(new GetProductsQuery(name, order), cancellationToken);
 
         return Ok(response);
     }

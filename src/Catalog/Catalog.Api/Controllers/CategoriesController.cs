@@ -40,9 +40,14 @@ public class CategoriesController : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> UpdateCategory([FromRoute] Guid id, [FromBody] UpdateCategoryRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> UpdateCategory(
+        [FromRoute] Guid id,
+        [FromBody] UpdateCategoryRequest request,
+        CancellationToken cancellationToken)
     {
-        var response = await _mediator.Send(new UpdateCategoryCommand(id, request.Name, request.Description), cancellationToken);
+        var response = await _mediator.Send(
+            new UpdateCategoryCommand(id, request.Name, request.Description),
+            cancellationToken);
 
         return Ok(response);
     }
@@ -51,7 +56,10 @@ public class CategoriesController : ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<IActionResult> GetCategories([FromQuery] string? name = null, [FromQuery] OrderQueryType? order = null, CancellationToken cancellationToken = default)
+    public async Task<IActionResult> GetCategories(
+        [FromQuery] string? name = null,
+        [FromQuery] OrderQueryType? order = null,
+        CancellationToken cancellationToken = default)
     {
         var response = await _mediator.Send(new GetCategoriesQuery(name, order), cancellationToken);
 
