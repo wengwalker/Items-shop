@@ -1,0 +1,11 @@
+.git
+**/[Bb]in
+**/[Oo]bj
+**/out
+**/.vs
+**/.idea
+**/.vscode/
+**/.dockerignore/
+**/docker-compose*.yml/
+*.user
+*.csproj.user
