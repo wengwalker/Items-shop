@@ -24,7 +24,7 @@ public sealed class GetCategoriesQueryHandler : IRequestHandler<GetCategoriesQue
         if (request.Name is not null)
         {
             query = query
-                .Where(x => x.Name.Contains(request.Name, StringComparison.OrdinalIgnoreCase));
+                .Where(x => EF.Functions.ILike(x.Name, $"%{request.Name}%"));
         }
 
         if (request.OrderType is not null)
