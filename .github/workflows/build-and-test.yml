@@ -1,0 +1,38 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches: [master, develop]
+    types: [opened, reopened, synchronize]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SOLUTION_FILE: ./src/items-shop.sln
+      PROJECT_PATH: ./src/Catalog/Catalog.Api/Catalog.Api.csproj
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.*
+
+      - name: Install dependencies
+        run: dotnet restore ${{ env.SOLUTION_FILE }}
+
+      - name: Build
+        run: |
+          dotnet build ${{ env.SOLUTION_FILE }} \
+            --configuration Release \
+            --no-restore
+
+      - name: Test
+        run: |
+          dotnet test ${{ env.SOLUTION_FILE }} \
+            --configuration Release \
+            --no-build \
+            --no-restore \
+            --verbosity normal
