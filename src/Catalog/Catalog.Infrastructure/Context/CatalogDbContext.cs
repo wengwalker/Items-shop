@@ -1,17 +1,17 @@
-﻿using Catalog.Domain.Entities;
+using Catalog.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Infrastructure.Context;
 
 public class CatalogDbContext : DbContext
 {
-    public virtual DbSet<ProductEntity> Products { get; set; }
+    public virtual DbSet<ProductEntity> Products { get; set; } = null!;
 
-    public virtual DbSet<CategoryEntity> Categories { get; set; }
+    public virtual DbSet<CategoryEntity> Categories { get; set; } = null!;
 
-    public virtual DbSet<CartEntity> Carts { get; set; }
+    public virtual DbSet<CartEntity> Carts { get; set; } = null!;
 
-    public virtual DbSet<CartItemEntity> CartItems { get; set; }
+    public virtual DbSet<CartItemEntity> CartItems { get; set; } = null!;
 
     protected CatalogDbContext() { }
 

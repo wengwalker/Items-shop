@@ -1,4 +1,4 @@
-﻿using Catalog.Api.DTOs.Categories;
+using Catalog.Api.DTOs.Categories;
 using Catalog.Application.UseCases.Categories.Commands.AddCategory;
 using Catalog.Application.UseCases.Categories.Commands.DeleteCategory;
 using Catalog.Application.UseCases.Categories.Commands.UpdateCategory;
@@ -12,14 +12,9 @@ namespace Catalog.Api.Controllers;
 
 [Route("api/v1/categories")]
 [ApiController]
-public class CategoriesController : ControllerBase
+public class CategoriesController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public CategoriesController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
+    private readonly IMediator _mediator = mediator;
 
     [HttpPost]
     [Produces("application/json")]

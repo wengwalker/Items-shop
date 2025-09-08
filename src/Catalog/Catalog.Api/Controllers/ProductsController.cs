@@ -1,4 +1,4 @@
-﻿using Catalog.Api.DTOs.Products;
+using Catalog.Api.DTOs.Products;
 using Catalog.Application.UseCases.Products.Commands.AddProduct;
 using Catalog.Application.UseCases.Products.Commands.DeleteProduct;
 using Catalog.Application.UseCases.Products.Commands.UpdateProduct;
@@ -13,14 +13,9 @@ namespace Catalog.Api.Controllers;
 
 [Route("api/v1/products")]
 [ApiController]
-public class ProductsController : ControllerBase
+public class ProductsController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public ProductsController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
+    private readonly IMediator _mediator = mediator;
 
     [HttpPost]
     [Produces("application/json")]

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
@@ -88,7 +88,7 @@ namespace Catalog.Infrastructure.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_CartItems_CartId_ProductId",
                 table: "CartItems",
-                columns: new[] { "CartId", "ProductId" },
+                columns: ["CartId", "ProductId"],
                 unique: true);
 
             migrationBuilder.CreateIndex(

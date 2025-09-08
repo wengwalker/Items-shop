@@ -1,4 +1,4 @@
-﻿using Catalog.Domain.Entities;
+using Catalog.Domain.Entities;
 using Catalog.Infrastructure.Context;
 using Domain.Common.Exceptions;
 using FluentValidation;
@@ -7,17 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.UseCases.Products.Queries.GetProduct;
 
-public sealed class GetProductQueryHandler : IRequestHandler<GetProductQuery, GetProductQueryResponse>
+public sealed class GetProductQueryHandler(CatalogDbContext context, IValidator<GetProductQuery> validator) : IRequestHandler<GetProductQuery, GetProductQueryResponse>
 {
-    private readonly CatalogDbContext _context;
+    private readonly CatalogDbContext _context = context;
 
-    private readonly IValidator<GetProductQuery> _validator;
-
-    public GetProductQueryHandler(CatalogDbContext context, IValidator<GetProductQuery> validator)
-    {
-        _context = context;
-        _validator = validator;
-    }
+    private readonly IValidator<GetProductQuery> _validator = validator;
 
     public async Task<GetProductQueryResponse> Handle(GetProductQuery request, CancellationToken cancellationToken)
     {

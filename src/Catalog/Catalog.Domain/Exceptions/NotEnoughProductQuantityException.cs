@@ -1,4 +1,4 @@
-﻿namespace Catalog.Domain.Exceptions;
+namespace Catalog.Domain.Exceptions;
 
 public class NotEnoughProductQuantityException : Exception
 {

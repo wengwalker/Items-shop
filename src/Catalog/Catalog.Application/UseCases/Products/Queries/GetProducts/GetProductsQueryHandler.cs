@@ -1,4 +1,4 @@
-﻿using Catalog.Domain.DTOs;
+using Catalog.Domain.DTOs;
 using Catalog.Infrastructure.Context;
 using Domain.Common.Enums;
 using Mediator.Lite.Interfaces;
@@ -6,14 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.UseCases.Products.Queries.GetProducts;
 
-public sealed class GetProductsQueryHandler : IRequestHandler<GetProductsQuery, GetProductsQueryResponse>
+public sealed class GetProductsQueryHandler(CatalogDbContext context) : IRequestHandler<GetProductsQuery, GetProductsQueryResponse>
 {
-    private readonly CatalogDbContext _context;
-
-    public GetProductsQueryHandler(CatalogDbContext context)
-    {
-        _context = context;
-    }
+    private readonly CatalogDbContext _context = context;
 
     public async Task<GetProductsQueryResponse> Handle(GetProductsQuery request, CancellationToken cancellationToken)
     {

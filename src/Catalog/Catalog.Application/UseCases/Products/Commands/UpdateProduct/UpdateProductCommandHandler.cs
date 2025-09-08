@@ -1,4 +1,4 @@
-﻿using Catalog.Domain.Entities;
+using Catalog.Domain.Entities;
 using Catalog.Infrastructure.Context;
 using Domain.Common.Exceptions;
 using FluentValidation;
@@ -7,17 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.UseCases.Products.Commands.UpdateProduct;
 
-public sealed class UpdateProductCommandHandler : IRequestHandler<UpdateProductCommand, UpdateProductCommandResponse>
+public sealed class UpdateProductCommandHandler(CatalogDbContext context, IValidator<UpdateProductCommand> validator) : IRequestHandler<UpdateProductCommand, UpdateProductCommandResponse>
 {
-    private readonly CatalogDbContext _context;
+    private readonly CatalogDbContext _context = context;
 
-    private readonly IValidator<UpdateProductCommand> _validator;
-
-    public UpdateProductCommandHandler(CatalogDbContext context, IValidator<UpdateProductCommand> validator)
-    {
-        _context = context;
-        _validator = validator;
-    }
+    private readonly IValidator<UpdateProductCommand> _validator = validator;
 
     public async Task<UpdateProductCommandResponse> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {

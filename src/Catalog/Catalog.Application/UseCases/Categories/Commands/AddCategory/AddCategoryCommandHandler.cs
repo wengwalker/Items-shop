@@ -1,21 +1,15 @@
-﻿using Catalog.Domain.Entities;
+using Catalog.Domain.Entities;
 using Catalog.Infrastructure.Context;
 using FluentValidation;
 using Mediator.Lite.Interfaces;
 
 namespace Catalog.Application.UseCases.Categories.Commands.AddCategory;
 
-public sealed class AddCategoryCommandHandler : IRequestHandler<AddCategoryCommand, AddCategoryCommandResponse>
+public sealed class AddCategoryCommandHandler(CatalogDbContext context, IValidator<AddCategoryCommand> validator) : IRequestHandler<AddCategoryCommand, AddCategoryCommandResponse>
 {
-    private readonly CatalogDbContext _context;
+    private readonly CatalogDbContext _context = context;
 
-    private readonly IValidator<AddCategoryCommand> _validator;
-
-    public AddCategoryCommandHandler(CatalogDbContext context, IValidator<AddCategoryCommand> validator)
-    {
-        _context = context;
-        _validator = validator;
-    }
+    private readonly IValidator<AddCategoryCommand> _validator = validator;
 
     public async Task<AddCategoryCommandResponse> Handle(AddCategoryCommand request, CancellationToken cancellationToken)
     {

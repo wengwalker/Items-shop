@@ -1,4 +1,4 @@
-﻿namespace Catalog.Application.UseCases.Products.Commands.UpdateProduct;
+namespace Catalog.Application.UseCases.Products.Commands.UpdateProduct;
 
 public record UpdateProductCommandResponse(
     Guid Id,

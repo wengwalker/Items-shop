@@ -1,4 +1,4 @@
-﻿using Catalog.Domain.Entities;
+using Catalog.Domain.Entities;
 using Catalog.Infrastructure.Context;
 using Domain.Common.Exceptions;
 using FluentValidation;
@@ -7,17 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.UseCases.Categories.Commands.DeleteCategory;
 
-public sealed class DeleteCategoryCommandHandler : IRequestHandler<DeleteCategoryCommand>
+public sealed class DeleteCategoryCommandHandler(CatalogDbContext context, IValidator<DeleteCategoryCommand> validator) : IRequestHandler<DeleteCategoryCommand>
 {
-    private readonly CatalogDbContext _context;
+    private readonly CatalogDbContext _context = context;
 
-    private readonly IValidator<DeleteCategoryCommand> _validator;
-
-    public DeleteCategoryCommandHandler(CatalogDbContext context, IValidator<DeleteCategoryCommand> validator)
-    {
-        _context = context;
-        _validator = validator;
-    }
+    private readonly IValidator<DeleteCategoryCommand> _validator = validator;
 
     public async Task Handle(DeleteCategoryCommand request, CancellationToken cancellationToken)
     {

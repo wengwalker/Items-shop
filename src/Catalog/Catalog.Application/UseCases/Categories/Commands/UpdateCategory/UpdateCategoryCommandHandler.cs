@@ -1,4 +1,4 @@
-﻿using Catalog.Domain.Entities;
+using Catalog.Domain.Entities;
 using Catalog.Infrastructure.Context;
 using Domain.Common.Exceptions;
 using FluentValidation;
@@ -7,17 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.UseCases.Categories.Commands.UpdateCategory;
 
-public sealed class UpdateCategoryCommandHandler : IRequestHandler<UpdateCategoryCommand, UpdateCategoryCommandResponse>
+public sealed class UpdateCategoryCommandHandler(CatalogDbContext context, IValidator<UpdateCategoryCommand> validator) : IRequestHandler<UpdateCategoryCommand, UpdateCategoryCommandResponse>
 {
-    private readonly CatalogDbContext _context;
+    private readonly CatalogDbContext _context = context;
 
-    private readonly IValidator<UpdateCategoryCommand> _validator;
-
-    public UpdateCategoryCommandHandler(CatalogDbContext context, IValidator<UpdateCategoryCommand> validator)
-    {
-        _context = context;
-        _validator = validator;
-    }
+    private readonly IValidator<UpdateCategoryCommand> _validator = validator;
 
     public async Task<UpdateCategoryCommandResponse> Handle(UpdateCategoryCommand request, CancellationToken cancellationToken)
     {

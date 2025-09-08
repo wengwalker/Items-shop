@@ -1,4 +1,4 @@
-﻿namespace Catalog.Api.DTOs.Products;
+namespace Catalog.Api.DTOs.Products;
 
 public record UpdateProductRequest(
     string Name,

@@ -1,4 +1,4 @@
-﻿using Domain.Common.Exceptions;
+using Domain.Common.Exceptions;
 using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
@@ -7,17 +7,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Api.Common.Middlewares;
 
-public class CustomExceptionHandler : IExceptionHandler
+public class CustomExceptionHandler(IProblemDetailsService problemDetailsService, ILogger<CustomExceptionHandler> logger) : IExceptionHandler
 {
-    private readonly IProblemDetailsService _problemDetailsService;
+    private readonly IProblemDetailsService _problemDetailsService = problemDetailsService;
 
-    private readonly ILogger<CustomExceptionHandler> _logger;
-
-    public CustomExceptionHandler(IProblemDetailsService problemDetailsService, ILogger<CustomExceptionHandler> logger)
-    {
-        _problemDetailsService = problemDetailsService;
-        _logger = logger;
-    }
+    private readonly ILogger<CustomExceptionHandler> _logger = logger;
 
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
@@ -35,12 +29,12 @@ public class CustomExceptionHandler : IExceptionHandler
             Exception = exception,
             HttpContext = httpContext,
             ProblemDetails = exception is ValidationException validationException
-                ? GetValidationProblemDetails(httpContext, validationException)
-                : GetProblemDetails(httpContext, exception)
+                ? global::Api.Common.Middlewares.CustomExceptionHandler.GetValidationProblemDetails(httpContext, validationException)
+                : global::Api.Common.Middlewares.CustomExceptionHandler.GetProblemDetails(httpContext, exception)
         });
     }
 
-    private ProblemDetails GetProblemDetails(HttpContext httpContext, Exception exception)
+    private static ProblemDetails GetProblemDetails(HttpContext httpContext, Exception exception)
     {
         return new ProblemDetails
         {
@@ -51,7 +45,7 @@ public class CustomExceptionHandler : IExceptionHandler
         };
     }
 
-    private ValidationProblemDetails GetValidationProblemDetails(HttpContext httpContext, ValidationException exception)
+    private static ValidationProblemDetails GetValidationProblemDetails(HttpContext httpContext, ValidationException exception)
     {
         return new ValidationProblemDetails
         {

@@ -1,4 +1,4 @@
-﻿using FluentValidation;
+using FluentValidation;
 
 namespace Catalog.Application.UseCases.Products.Commands.UpdateProduct;
 

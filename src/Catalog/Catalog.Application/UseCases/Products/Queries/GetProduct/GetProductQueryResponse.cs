@@ -1,4 +1,4 @@
-﻿namespace Catalog.Application.UseCases.Products.Queries.GetProduct;
+namespace Catalog.Application.UseCases.Products.Queries.GetProduct;
 
 public record GetProductQueryResponse(
     Guid Id,

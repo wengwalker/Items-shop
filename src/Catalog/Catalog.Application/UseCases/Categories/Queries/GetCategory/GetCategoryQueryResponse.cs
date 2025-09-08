@@ -1,4 +1,4 @@
-﻿namespace Catalog.Application.UseCases.Categories.Queries.GetCategory;
+namespace Catalog.Application.UseCases.Categories.Queries.GetCategory;
 
 public record GetCategoryQueryResponse(
     Guid Id,

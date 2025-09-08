@@ -10,5 +10,7 @@
 *.yml text eol=lf
 
 Dockerfile text eol=lf
-.dockerignore text eof=lf
-.editorconfig text eof=lf
+.gitignore text eol=lf
+.gitattributes text eof=lf
+./src/.dockerignore text eof=lf
+./src/.editorconfig text eof=lf

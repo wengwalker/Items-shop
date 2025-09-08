@@ -1,4 +1,4 @@
-﻿using Catalog.Api.DTOs.CartItems;
+using Catalog.Api.DTOs.CartItems;
 using Catalog.Application.UseCases.CartItems.Commands.AddCartItem;
 using Catalog.Application.UseCases.CartItems.Commands.DeleteCartItem;
 using Catalog.Application.UseCases.CartItems.Queries.GetCartItems;
@@ -9,14 +9,9 @@ namespace Catalog.Api.Controllers;
 
 [Route("api/v1/carts/{cartId}/items")]
 [ApiController]
-public class CartItemsController : ControllerBase
+public class CartItemsController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public CartItemsController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
+    private readonly IMediator _mediator = mediator;
 
     [HttpPost]
     [Produces("application/json")]

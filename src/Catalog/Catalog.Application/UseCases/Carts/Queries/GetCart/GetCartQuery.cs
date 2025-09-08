@@ -1,4 +1,4 @@
-﻿using Mediator.Lite.Interfaces;
+using Mediator.Lite.Interfaces;
 
 namespace Catalog.Application.UseCases.Carts.Queries.GetCart;
 

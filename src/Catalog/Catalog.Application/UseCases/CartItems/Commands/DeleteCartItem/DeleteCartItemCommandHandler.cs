@@ -1,4 +1,4 @@
-﻿using Catalog.Domain.Entities;
+using Catalog.Domain.Entities;
 using Catalog.Infrastructure.Context;
 using Domain.Common.Exceptions;
 using FluentValidation;
@@ -7,17 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.UseCases.CartItems.Commands.DeleteCartItem;
 
-public sealed class DeleteCartItemCommandHandler : IRequestHandler<DeleteCartItemCommand>
+public sealed class DeleteCartItemCommandHandler(CatalogDbContext context, IValidator<DeleteCartItemCommand> validator) : IRequestHandler<DeleteCartItemCommand>
 {
-    private readonly CatalogDbContext _context;
+    private readonly CatalogDbContext _context = context;
 
-    private readonly IValidator<DeleteCartItemCommand> _validator;
-
-    public DeleteCartItemCommandHandler(CatalogDbContext context, IValidator<DeleteCartItemCommand> validator)
-    {
-        _context = context;
-        _validator = validator;
-    }
+    private readonly IValidator<DeleteCartItemCommand> _validator = validator;
 
     public async Task Handle(DeleteCartItemCommand request, CancellationToken cancellationToken)
     {

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 

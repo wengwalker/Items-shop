@@ -1,4 +1,4 @@
-﻿namespace Catalog.Domain.Entities;
+namespace Catalog.Domain.Entities;
 
 public class CartItemEntity
 {

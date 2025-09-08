@@ -1,4 +1,4 @@
-﻿using Catalog.Application.UseCases.Carts.Commands.AddCart;
+using Catalog.Application.UseCases.Carts.Commands.AddCart;
 using Catalog.Application.UseCases.Carts.Commands.DeleteCart;
 using Catalog.Application.UseCases.Carts.Queries.GetCart;
 using Mediator.Lite.Interfaces;
@@ -8,14 +8,9 @@ namespace Catalog.Api.Controllers;
 
 [Route("api/v1/carts")]
 [ApiController]
-public class CartsController : ControllerBase
+public class CartsController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator _mediator;
-
-    public CartsController(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
+    private readonly IMediator _mediator = mediator;
 
     [HttpPost]
     [Produces("application/json")]

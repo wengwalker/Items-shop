@@ -1,4 +1,4 @@
-﻿using Catalog.Domain.Entities;
+using Catalog.Domain.Entities;
 using Catalog.Infrastructure.Context;
 using Domain.Common.Exceptions;
 using FluentValidation;
@@ -7,17 +7,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.UseCases.Categories.Queries.GetCategory;
 
-public sealed class GetCategoryQueryHandler : IRequestHandler<GetCategoryQuery, GetCategoryQueryResponse>
+public sealed class GetCategoryQueryHandler(CatalogDbContext context, IValidator<GetCategoryQuery> validator) : IRequestHandler<GetCategoryQuery, GetCategoryQueryResponse>
 {
-    private readonly CatalogDbContext _context;
+    private readonly CatalogDbContext _context = context;
 
-    private readonly IValidator<GetCategoryQuery> _validator;
-
-    public GetCategoryQueryHandler(CatalogDbContext context, IValidator<GetCategoryQuery> validator)
-    {
-        _context = context;
-        _validator = validator;
-    }
+    private readonly IValidator<GetCategoryQuery> _validator = validator;
 
     public async Task<GetCategoryQueryResponse> Handle(GetCategoryQuery request, CancellationToken cancellationToken)
     {

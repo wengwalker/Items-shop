@@ -1,4 +1,4 @@
-﻿using Catalog.Domain.Entities;
+using Catalog.Domain.Entities;
 using Catalog.Domain.Exceptions;
 using Catalog.Infrastructure.Context;
 using Domain.Common.Exceptions;
@@ -8,17 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.UseCases.CartItems.Commands.AddCartItem;
 
-public sealed class AddCartItemCommandHandler : IRequestHandler<AddCartItemCommand, AddCartItemCommandResponse>
+public sealed class AddCartItemCommandHandler(CatalogDbContext context, IValidator<AddCartItemCommand> validator) : IRequestHandler<AddCartItemCommand, AddCartItemCommandResponse>
 {
-    private readonly CatalogDbContext _context;
+    private readonly CatalogDbContext _context = context;
 
-    private readonly IValidator<AddCartItemCommand> _validator;
-
-    public AddCartItemCommandHandler(CatalogDbContext context, IValidator<AddCartItemCommand> validator)
-    {
-        _context = context;
-        _validator = validator;
-    }
+    private readonly IValidator<AddCartItemCommand> _validator = validator;
 
     public async Task<AddCartItemCommandResponse> Handle(AddCartItemCommand request, CancellationToken cancellationToken)
     {

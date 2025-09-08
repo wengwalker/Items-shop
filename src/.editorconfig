@@ -1,13 +1,14 @@
 root = true
 
 [*]
+charset = utf-8
 indent_style = space
 end_of_line = lf
 insert_final_newline = true
 
-[*.xml]
+[**/*.xml]
 indent_size = 2
 
-[*.cs]
+[**/*.cs]
 indent_size = 4
 tab_width = 4

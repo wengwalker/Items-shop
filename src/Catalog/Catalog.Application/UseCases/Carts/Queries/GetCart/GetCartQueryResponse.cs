@@ -1,4 +1,4 @@
-﻿namespace Catalog.Application.UseCases.Carts.Queries.GetCart;
+namespace Catalog.Application.UseCases.Carts.Queries.GetCart;
 
 public record GetCartQueryResponse(
     Guid Id,

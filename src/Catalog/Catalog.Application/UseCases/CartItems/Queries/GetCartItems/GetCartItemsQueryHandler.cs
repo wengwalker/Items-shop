@@ -1,4 +1,4 @@
-﻿using Catalog.Domain.DTOs;
+using Catalog.Domain.DTOs;
 using Catalog.Domain.Entities;
 using Catalog.Infrastructure.Context;
 using Domain.Common.Exceptions;
@@ -8,17 +8,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Catalog.Application.UseCases.CartItems.Queries.GetCartItems;
 
-public sealed class GetCartItemsQueryHandler : IRequestHandler<GetCartItemsQuery, GetCartItemsQueryResponse>
+public sealed class GetCartItemsQueryHandler(CatalogDbContext context, IValidator<GetCartItemsQuery> validator) : IRequestHandler<GetCartItemsQuery, GetCartItemsQueryResponse>
 {
-    private readonly CatalogDbContext _context;
+    private readonly CatalogDbContext _context = context;
 
-    private readonly IValidator<GetCartItemsQuery> _validator;
-
-    public GetCartItemsQueryHandler(CatalogDbContext context, IValidator<GetCartItemsQuery> validator)
-    {
-        _context = context;
-        _validator = validator;
-    }
+    private readonly IValidator<GetCartItemsQuery> _validator = validator;
 
     public async Task<GetCartItemsQueryResponse> Handle(GetCartItemsQuery request, CancellationToken cancellationToken)
     {

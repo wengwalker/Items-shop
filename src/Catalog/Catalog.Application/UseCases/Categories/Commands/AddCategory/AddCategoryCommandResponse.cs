@@ -1,4 +1,4 @@
-﻿namespace Catalog.Application.UseCases.Categories.Commands.AddCategory;
+namespace Catalog.Application.UseCases.Categories.Commands.AddCategory;
 
 public record AddCategoryCommandResponse(
     Guid Id,

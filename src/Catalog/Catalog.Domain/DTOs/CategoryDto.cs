@@ -1,4 +1,4 @@
-﻿namespace Catalog.Domain.DTOs;
+namespace Catalog.Domain.DTOs;
 
 public record CategoryDto(
     Guid Id,

@@ -1,4 +1,4 @@
-﻿namespace Catalog.Application.UseCases.Products.Commands.AddProduct;
+namespace Catalog.Application.UseCases.Products.Commands.AddProduct;
 
 public record AddProductCommandResponse(
     Guid Id,

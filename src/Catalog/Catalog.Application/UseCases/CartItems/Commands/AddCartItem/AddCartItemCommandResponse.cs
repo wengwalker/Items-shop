@@ -1,4 +1,4 @@
-﻿namespace Catalog.Application.UseCases.CartItems.Commands.AddCartItem;
+namespace Catalog.Application.UseCases.CartItems.Commands.AddCartItem;
 
 public record AddCartItemCommandResponse(
     Guid Id,
