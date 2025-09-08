@@ -1,0 +1,14 @@
+* text=auto
+
+*.cs text eol=lf
+*.csproj text eol=lf
+*.sln text eol=lf
+*.json text eol=lf
+*.xml text eol=lf
+*.md text eol=lf
+*.props text eol=lf
+*.yml text eol=lf
+
+Dockerfile text eol=lf
+.dockerignore text eof=lf
+.editorconfig text eof=lf
