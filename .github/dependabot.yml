@@ -1,0 +1,37 @@
+version: 2
+updates:
+  - package-ecosystem: "nuget"
+    directories: ["/src/**/*"]
+    schedule:
+      interval: monthly
+      day: "friday"
+      time: "19:00"
+      timezone: "Europe/Moscow"
+    open-pull-requests-limit: 10
+    labels:
+      - "dependencies"
+      - "dependabot"
+    ignore:
+      - dependency-name: "Microsoft.AspNetCore.*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "Microsoft.EntityFrameworkCore.*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "Npgsql.EntityFrameworkCore.*"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "FluentValidation"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "Swashbuckle.AspNetCore"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "Serilog.AspNetCore"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "FluentValidation.*"
+    assignees:
+      - "wengwalker"
+
+  - package-ecosystem: "github-actions"
+    directories: [".github/workflows"]
+    schedule:
+      interval: "monthly"
+    labels:
+      - "dependencies"
+      - "dependabot"
