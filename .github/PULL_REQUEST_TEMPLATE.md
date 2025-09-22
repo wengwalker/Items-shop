@@ -4,16 +4,12 @@
 
 <!-- Clearly describe what this pull request accomplishes and why it's needed -->
 
-## Type of change
-
-- [ ] Bug Fix
-- [ ] New feature
-
 ## Related Issues
 
 <!-- link to any related issues using #issue-number -->
 
 Fixes # <!-- issue number -->
+
 Related to # <!-- issue number -->
 
 ## Screenshots (if applicable)
