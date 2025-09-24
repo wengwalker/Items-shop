@@ -26,7 +26,7 @@ Thank you for your interest in contributing to Items Shop! We welcome contributi
 
 **Important:** The names of the Pull Requests must match this format: `<Type>(<Scope>): #<Issue> <Description>`, where `type` means the type of changes, `scope` means the subproject/subsystem where the changes are being made (optional), for example: `feat(Auth): #123 Add OAuth2 support` or `fix: #456 Resolve null reference in login`
 
-**Important:** This project follows a merge strategy. The title of your Pull Request (PR) will become the final commit message in the main branch. Therefore, following a consistent naming convention is crucial for clarity and generating change logs
+**Important:** This project follows a merge strategy. The title of your Pull Request will become the final commit message in the main branch. Therefore, following a consistent naming convention is crucial for clarity and generating change logs
 
 ### Branching Strategy
 

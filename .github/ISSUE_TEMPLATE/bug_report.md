@@ -1,3 +1,11 @@
+---
+name: "Bug Report"
+description: "Report a bug"
+title: "Bug: "
+labels: ["bug"]
+assignees: []
+---
+
 <!--- Provide a general summary of your changes in the Title above -->
 
 ## Description

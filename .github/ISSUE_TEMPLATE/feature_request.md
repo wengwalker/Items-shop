@@ -1,3 +1,11 @@
+---
+name: "Feature Request"
+description: "Suggest a new feature"
+title: "Feature: "
+labels: ["enhancement"]
+assignees: []
+---
+
 <!--- Provide a general summary of your changes in the Title above -->
 
 ## Description
