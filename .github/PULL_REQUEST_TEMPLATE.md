@@ -1,4 +1,5 @@
-<!--- Provide a general summary of your changes in the Title above -->
+<!-- Provide a general summary of your changes in the Title above -->
+<!-- Important: PR name must match this format: <Type>(<Scope>): #<Issue> <Description> -->
 
 ## Description
 
