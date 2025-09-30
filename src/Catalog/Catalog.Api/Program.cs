@@ -2,8 +2,8 @@ using Api.Common.Extensions;
 using Api.Common.Middlewares;
 using Catalog.Application.UseCases.Products.Commands.AddProduct;
 using Catalog.Infrastructure.Context;
-using Catalog.Infrastructure.Extensions;
 using FluentValidation;
+using Infrastructure.Common.Extensions;
 using Mediator.Lite.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -26,7 +26,7 @@ builder.Services.AddSwaggerGen(options =>
     options.SwaggerDoc("v1", new OpenApiInfo
     {
         Version = "v1",
-        Title = "Items shop API",
+        Title = "Items shop - Catalog API",
         Description = "Simple web marketplace, implemented in ASP .NET Core Web API"
     });
 });
@@ -46,20 +46,18 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 var app = builder.Build();
 
-app.MigrateDatabase<CatalogDbContext>();
+if (app.Environment.IsDevelopment())
+{
+    await app.MigrateDatabaseAsync<CatalogDbContext>();
+
+    app.UseSwagger();
+
+    app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "v1"));
+}
 
 app.UseExceptionHandler();
 
 app.UseSerilogRequestLogging();
-
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(x =>
-    {
-        x.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-    });
-}
 
 app.UseRouting();
 
@@ -67,4 +65,4 @@ app.MapControllers();
 
 await app.RunAsync();
 
-Log.CloseAndFlush();
+await Log.CloseAndFlushAsync();
