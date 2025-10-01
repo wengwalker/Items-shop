@@ -6,6 +6,7 @@ using Mediator.Lite.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Order.Application.UseCases.Orders.AddOrder;
+using Order.Application.UseCases.Orders.DeleteOrder;
 using Order.Infrastructure.Context;
 using Serilog;
 
@@ -36,7 +37,7 @@ builder.Services.AddDbContext<OrderDbContext>(x => x
     .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
     .EnableDetailedErrors(builder.Environment.IsDevelopment()));
 
-//builder.Services.AddValidatorsFromAssemblyContaining<>();
+builder.Services.AddValidatorsFromAssemblyContaining<DeleteOrderCommandValidator>();
 
 builder.Services.AddMediator(typeof(AddOrderCommand).Assembly);
 

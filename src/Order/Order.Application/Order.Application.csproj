@@ -11,13 +11,11 @@
     <Folder Include="UseCases\OrderItems\ListOrderItems\" />
     <Folder Include="UseCases\OrderItems\IncreaseQuantityOrderItem\" />
     <Folder Include="UseCases\OrderItems\DecreaseQuantityOrderItem\" />
-    <Folder Include="UseCases\Orders\DeleteOrder\" />
-    <Folder Include="UseCases\Orders\ListOrders\" />
-    <Folder Include="UseCases\Orders\UpdateOrderPrice\" />
     <Folder Include="UseCases\Orders\UpdateOrderStatus\" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Shared\Domain.Common\Domain.Common.csproj" />
     <ProjectReference Include="..\Order.Infrastructure\Order.Infrastructure.csproj" />
   </ItemGroup>
 
