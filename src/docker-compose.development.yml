@@ -81,6 +81,10 @@ services:
       dockerfile: Order/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ExternalApiOptions__RetryAttempts=${ORDER_POLLY_RETRY_ATTEMPTS}
+      - ExternalApiOptions__EventsCountToBreak=${ORDER_POLLY_EVENTS_COUNT_TO_BREAK}
+      - ExternalApiOptions__DurationOfBreak=${ORDER_DURATION_OF_BREAK}
+      - ExternalApiOptions__CatalogBaseUrl=${ORDER_CATALOG_BASE_URL}
     ports:
       - ${ORDER_PORTS:-8081:8080}
     networks:
