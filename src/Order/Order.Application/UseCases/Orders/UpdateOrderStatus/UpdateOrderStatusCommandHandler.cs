@@ -5,21 +5,21 @@ using Microsoft.EntityFrameworkCore;
 using Order.Domain.Entities;
 using Order.Infrastructure.Context;
 
-namespace Order.Application.UseCases.Orders.UpdateOrderPrice;
+namespace Order.Application.UseCases.Orders.UpdateOrderStatus;
 
-public sealed class UpdateOrderPriceCommandHandler : IRequestHandler<UpdateOrderPriceCommand, UpdateOrderPriceCommandResponse>
+public sealed class UpdateOrderStatusCommandHandler : IRequestHandler<UpdateOrderStatusCommand, UpdateOrderStatusCommandResponse>
 {
     private readonly OrderDbContext _context;
 
-    private readonly IValidator<UpdateOrderPriceCommand> _validator;
+    private readonly IValidator<UpdateOrderStatusCommand> _validator;
 
-    public UpdateOrderPriceCommandHandler(OrderDbContext context, IValidator<UpdateOrderPriceCommand> validator)
+    public UpdateOrderStatusCommandHandler(OrderDbContext context, IValidator<UpdateOrderStatusCommand> validator)
     {
         _context = context;
         _validator = validator;
     }
 
-    public async Task<UpdateOrderPriceCommandResponse> Handle(UpdateOrderPriceCommand request, CancellationToken cancellationToken)
+    public async Task<UpdateOrderStatusCommandResponse> Handle(UpdateOrderStatusCommand request, CancellationToken cancellationToken)
     {
         await _validator.ValidateAndThrowAsync(request, cancellationToken);
 
@@ -27,11 +27,11 @@ public sealed class UpdateOrderPriceCommandHandler : IRequestHandler<UpdateOrder
             .FirstOrDefaultAsync(x => x.Id == request.OrderId, cancellationToken)
             ?? throw new NotFoundException(nameof(OrderEntity));
 
-        order.Price = request.NewPrice;
+        order.Status = request.NewStatus;
         order.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return new UpdateOrderPriceCommandResponse(order.Id, order.Price, order.UpdatedAt);
+        return new UpdateOrderStatusCommandResponse(order.Id, order.Status, order.UpdatedAt);
     }
 }

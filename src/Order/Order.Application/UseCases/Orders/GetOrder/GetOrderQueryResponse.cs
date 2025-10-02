@@ -1,6 +1,6 @@
 using Order.Domain.Enums;
 
-namespace Order.Application.UseCases.Orders.ListOrders;
+namespace Order.Application.UseCases.Orders.GetOrder;
 
 public record GetOrderQueryResponse(
     Guid OrderId,

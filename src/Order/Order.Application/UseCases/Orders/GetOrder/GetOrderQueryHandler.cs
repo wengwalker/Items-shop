@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Order.Domain.Entities;
 using Order.Infrastructure.Context;
 
-namespace Order.Application.UseCases.Orders.ListOrders;
+namespace Order.Application.UseCases.Orders.GetOrder;
 
-public class GetOrderQueryHandler : IRequestHandler<GetOrderQuery, GetOrderQueryResponse>
+public sealed class GetOrderQueryHandler : IRequestHandler<GetOrderQuery, GetOrderQueryResponse>
 {
     private readonly OrderDbContext _context;
 

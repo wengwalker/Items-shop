@@ -7,7 +7,7 @@ using Order.Infrastructure.Context;
 
 namespace Order.Application.UseCases.Orders.DeleteOrder;
 
-public class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
+public sealed class DeleteOrderCommandHandler : IRequestHandler<DeleteOrderCommand>
 {
     private readonly OrderDbContext _context;
 

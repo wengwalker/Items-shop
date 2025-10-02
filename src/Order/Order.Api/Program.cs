@@ -1,5 +1,6 @@
 using Api.Common.Extensions;
 using Api.Common.Middlewares;
+using Api.Common.Options;
 using FluentValidation;
 using Infrastructure.Common.Extensions;
 using Mediator.Lite.Extensions;
@@ -15,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .CreateLogger();
+
+builder.Services.AddExternalApiOptions();
 
 builder.Services.AddSerilog();
 
@@ -36,6 +39,8 @@ builder.Services.AddDbContext<OrderDbContext>(x => x
     .UseNpgsql(builder.Configuration.GetConnectionString(nameof(OrderDbContext)))
     .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
     .EnableDetailedErrors(builder.Environment.IsDevelopment()));
+
+builder.Services.AddCatalogRefitExtensions(builder.Services.GetOptions<ExternalApiOptions>());
 
 builder.Services.AddValidatorsFromAssemblyContaining<DeleteOrderCommandValidator>();
 

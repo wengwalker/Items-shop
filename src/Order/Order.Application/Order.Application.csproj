@@ -6,16 +6,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="UseCases\OrderItems\AddOrderItem\" />
-    <Folder Include="UseCases\OrderItems\DeleteOrderItem\" />
     <Folder Include="UseCases\OrderItems\ListOrderItems\" />
     <Folder Include="UseCases\OrderItems\IncreaseQuantityOrderItem\" />
     <Folder Include="UseCases\OrderItems\DecreaseQuantityOrderItem\" />
-    <Folder Include="UseCases\Orders\UpdateOrderStatus\" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Shared\Domain.Common\Domain.Common.csproj" />
+    <ProjectReference Include="..\..\Shared\Infrastructure.Common\Infrastructure.Common.csproj" />
     <ProjectReference Include="..\Order.Infrastructure\Order.Infrastructure.csproj" />
   </ItemGroup>
 

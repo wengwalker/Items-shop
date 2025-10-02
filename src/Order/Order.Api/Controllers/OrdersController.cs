@@ -2,7 +2,7 @@ using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Order.Application.UseCases.Orders.AddOrder;
 using Order.Application.UseCases.Orders.DeleteOrder;
-using Order.Application.UseCases.Orders.ListOrders;
+using Order.Application.UseCases.Orders.GetOrder;
 
 namespace Order.Api.Controllers;
 
