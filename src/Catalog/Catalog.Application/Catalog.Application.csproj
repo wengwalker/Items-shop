@@ -5,9 +5,4 @@
     <PackageReference Include="Mediator.Lite" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Shared\Domain.Common\Domain.Common.csproj" />
-    <ProjectReference Include="..\Catalog.Infrastructure\Catalog.Infrastructure.csproj" />
-  </ItemGroup>
-
 </Project>

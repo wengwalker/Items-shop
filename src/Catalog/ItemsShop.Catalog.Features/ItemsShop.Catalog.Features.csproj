@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Mediator.Lite" />
+  </ItemGroup>
+
+    <ItemGroup>
+    <Folder Include="Features\CartItems\CreateCartItem\" />
+    <Folder Include="Features\CartItems\DeleteCartItem\" />
+    <Folder Include="Features\CartItems\GetCartItem\" />
+    <Folder Include="Features\Carts\CreateCart\" />
+    <Folder Include="Features\Carts\DeleteCart\" />
+    <Folder Include="Features\Carts\GetCart\" />
+    <Folder Include="Features\Categories\CreateCategory\" />
+    <Folder Include="Features\Categories\DeleteCategory\" />
+    <Folder Include="Features\Categories\GetCategories\" />
+    <Folder Include="Features\Categories\UpdateCategoryDescription\" />
+    <Folder Include="Features\Products\UpdateProductDescription\" />
+    <Folder Include="Features\Products\UpdateProductQuantity\" />
+    <Folder Include="Features\Products\UpdateProductPrice\" />
+    <Folder Include="Features\Products\UpdateProductCategory\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ItemsShop.Common.Api\ItemsShop.Common.Api.csproj" />
+    <ProjectReference Include="..\..\Common\ItemsShop.Common.Domain\ItemsShop.Common.Domain.csproj" />
+    <ProjectReference Include="..\ItemsShop.Catalog.Domain\ItemsShop.Catalog.Domain.csproj" />
+    <ProjectReference Include="..\ItemsShop.Catalog.Infrastructure\ItemsShop.Catalog.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

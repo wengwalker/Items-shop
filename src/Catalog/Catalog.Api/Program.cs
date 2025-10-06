@@ -1,12 +1,5 @@
-using Api.Common.Extensions;
-using Api.Common.Middlewares;
-using Catalog.Application.UseCases.Products.Commands.AddProduct;
 using Catalog.Infrastructure.Context;
 using Catalog.Infrastructure.Extensions;
-using FluentValidation;
-using Mediator.Lite.Extensions;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,7 +10,7 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services.AddSerilog();
 
-builder.Services.AddEndpointsApiExplorer();
+/*builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddControllers();
 
@@ -34,21 +27,21 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<CatalogDbContext>(x => x
     .UseNpgsql(builder.Configuration.GetConnectionString(nameof(CatalogDbContext)))
     .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
-    .EnableDetailedErrors(builder.Environment.IsDevelopment()));
+    .EnableDetailedErrors(builder.Environment.IsDevelopment()));*/
 
-builder.Services.AddValidatorsFromAssemblyContaining<AddProductCommandValidator>();
+//builder.Services.AddValidatorsFromAssemblyContaining<AddProductCommandValidator>();
 
-builder.Services.AddMediator(typeof(AddProductCommand).Assembly);
+//builder.Services.AddMediator(typeof(AddProductCommand).Assembly);
 
-builder.Services.AddProblemDetailsExtended();
+//builder.Services.AddProblemDetailsExtended();
 
-builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+//builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
 var app = builder.Build();
 
 app.MigrateDatabase<CatalogDbContext>();
 
-app.UseExceptionHandler();
+//app.UseExceptionHandler();
 
 app.UseSerilogRequestLogging();
 
@@ -63,7 +56,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseRouting();
 
-app.MapControllers();
+//app.MapControllers();
 
 await app.RunAsync();
 
