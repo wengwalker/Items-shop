@@ -17,10 +17,8 @@
     <Folder Include="Features\Categories\DeleteCategory\" />
     <Folder Include="Features\Categories\GetCategories\" />
     <Folder Include="Features\Categories\UpdateCategoryDescription\" />
-    <Folder Include="Features\Products\UpdateProductDescription\" />
     <Folder Include="Features\Products\UpdateProductQuantity\" />
     <Folder Include="Features\Products\UpdateProductPrice\" />
-    <Folder Include="Features\Products\UpdateProductCategory\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -37,7 +37,7 @@ public sealed class CreateProductHandler(
 
         if (!categoryExists)
         {
-            logger.LogInformation("Category with ID {CategoryId} does not exists", request.CategoryId);
+            logger.LogInformation("Category with Id {CategoryId} does not exists", request.CategoryId);
 
             return Result<CreateProductResponse>.Failure($"Category with ID {request.CategoryId} does not exists");
         }
@@ -47,7 +47,7 @@ public sealed class CreateProductHandler(
         context.Products.Add(product);
         await context.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Created product with ID {ProductId}", product.Id);
+        logger.LogInformation("Created product with Id {ProductId}", product.Id);
 
         var response = product.MapToResponse();
 

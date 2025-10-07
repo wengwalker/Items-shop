@@ -1,5 +1,4 @@
-//using FluentValidation;
-using ItemsShop.Catalog.Domain.Enums;
+using FluentValidation;
 using ItemsShop.Catalog.Features.Shared.Routes;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
@@ -8,38 +7,38 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.Products.GetProducts;
+namespace ItemsShop.Catalog.Features.Features.Products.UpdateProductDescription;
 
-public sealed record GetProductsRequest(
-    string? Name,
-    OrderQueryType? OrderType);
+public sealed record UpdateProductDescriptionRequest(
+    string Description);
 
-public class GetProductsEndpoint : IEndpoint
+public class UpdateProductDescriptionEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapGet(ProductRotueConsts.BaseRoute, Handle);
+        builder.MapPost(ProductRotueConsts.UpdateProductDescription, Handle);
     }
 
     private static async Task<IResult> Handle(
-        [FromBody] GetProductsRequest request,
-        //IValidator<GetProductsRequest> validator,
+        [FromRoute] Guid id,
+        [FromBody] UpdateProductDescriptionRequest request,
+        IValidator<UpdateProductDescriptionRequest> validator,
         IMediator mediator,
         CancellationToken cancellationToken)
     {
-        /*var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
         {
             return Results.ValidationProblem(validationResult.ToDictionary());
-        }*/
+        }
 
-        var command = request.MapToCommand();
+        var command = request.MapToCommand(id);
 
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
-            ? Results.Ok(response.Value)
+            ? Results.NoContent()
             : Results.Conflict(response.Error);
     }
 }
