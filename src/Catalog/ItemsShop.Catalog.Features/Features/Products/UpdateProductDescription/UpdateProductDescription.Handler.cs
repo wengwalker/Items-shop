@@ -1,7 +1,7 @@
-using ItemsShop.Catalog.Features.Features.Products.UpdateProductCategory;
 using ItemsShop.Catalog.Infrastructure.Database;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -30,7 +30,8 @@ public sealed class UpdateProductDescriptionHandler(
         {
             logger.LogInformation("Product with Id {ProductId} does not exists", request.ProductId);
 
-            return Result<UpdateProductDescriptionResponse>.Failure($"Product with ID {request.ProductId} does not exists");
+            return Result<UpdateProductDescriptionResponse>
+                .Failure($"Product with ID {request.ProductId} does not exists", StatusCodes.Status404NotFound);
         }
 
         product.Description = request.Description;

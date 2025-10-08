@@ -20,7 +20,11 @@ public class CreateProductEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost(ProductRotueConsts.BaseRoute, Handle);
+        builder.MapPost(ProductRouteConsts.BaseRoute, Handle)
+            .WithName("CreateProduct")
+            .Produces<CreateProductResponse>()
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
@@ -41,7 +45,9 @@ public class CreateProductEndpoint : IEndpoint
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
-            ? Results.Created(ProductRotueConsts.BaseRoute, response.Value)
-            : Results.Conflict(response.Error);
+            ? Results.Created(ProductRouteConsts.BaseRoute, response.Value)
+            : Results.Problem(
+                detail: response.Error,
+                statusCode: response.StatusCode);
     }
 }

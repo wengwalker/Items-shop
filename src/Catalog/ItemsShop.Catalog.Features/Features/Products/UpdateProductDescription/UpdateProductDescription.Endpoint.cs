@@ -16,7 +16,11 @@ public class UpdateProductDescriptionEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost(ProductRotueConsts.UpdateProductDescription, Handle);
+        builder.MapPatch(ProductRouteConsts.UpdateProductDescription, Handle)
+            .WithName("UpdateProductDescriptionById")
+            .Produces<UpdateProductDescriptionResponse>()
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
@@ -38,7 +42,9 @@ public class UpdateProductDescriptionEndpoint : IEndpoint
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
-            ? Results.NoContent()
-            : Results.Conflict(response.Error);
+            ? Results.Ok(response.Value)
+            : Results.Problem(
+                detail: response.Error,
+                statusCode: response.StatusCode);
     }
 }

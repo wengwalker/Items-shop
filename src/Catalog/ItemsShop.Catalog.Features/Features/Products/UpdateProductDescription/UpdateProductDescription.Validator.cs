@@ -8,6 +8,8 @@ public class UpdateProductDescriptionRequestValidator : AbstractValidator<Update
     {
         RuleFor(x => x.Description)
             .NotEmpty()
-            .WithMessage("Description must be set");
+                .WithMessage("Description must be set")
+            .MaximumLength(300)
+                .WithMessage("Description length exceeds 300 characters limit");
     }
 }

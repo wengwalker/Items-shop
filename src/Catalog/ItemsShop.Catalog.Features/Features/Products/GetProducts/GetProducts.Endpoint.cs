@@ -1,4 +1,4 @@
-//using FluentValidation;
+using FluentValidation;
 using ItemsShop.Catalog.Domain.Enums;
 using ItemsShop.Catalog.Features.Shared.Routes;
 using ItemsShop.Common.Api.Abstractions;
@@ -18,21 +18,24 @@ public class GetProductsEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapGet(ProductRotueConsts.BaseRoute, Handle);
+        builder.MapGet(ProductRouteConsts.BaseRoute, Handle)
+            .WithName("GetProducts")
+            .Produces<GetProductsResponse>()
+            .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
         [FromBody] GetProductsRequest request,
-        //IValidator<GetProductsRequest> validator,
+        IValidator<GetProductsRequest> validator,
         IMediator mediator,
         CancellationToken cancellationToken)
     {
-        /*var validationResult = await validator.ValidateAsync(request, cancellationToken);
+        var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
         {
             return Results.ValidationProblem(validationResult.ToDictionary());
-        }*/
+        }
 
         var command = request.MapToCommand();
 
@@ -40,6 +43,8 @@ public class GetProductsEndpoint : IEndpoint
 
         return response.IsSuccess
             ? Results.Ok(response.Value)
-            : Results.Conflict(response.Error);
+            : Results.Problem(
+                detail: response.Error,
+                statusCode: response.StatusCode);
     }
 }

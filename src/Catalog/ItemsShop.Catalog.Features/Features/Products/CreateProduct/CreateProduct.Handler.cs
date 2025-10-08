@@ -1,6 +1,7 @@
 using ItemsShop.Catalog.Infrastructure.Database;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -39,7 +40,8 @@ public sealed class CreateProductHandler(
         {
             logger.LogInformation("Category with Id {CategoryId} does not exists", request.CategoryId);
 
-            return Result<CreateProductResponse>.Failure($"Category with ID {request.CategoryId} does not exists");
+            return Result<CreateProductResponse>
+                .Failure($"Category with ID {request.CategoryId} does not exists", StatusCodes.Status404NotFound);
         }
 
         var product = request.MapToProduct();

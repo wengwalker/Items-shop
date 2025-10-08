@@ -18,7 +18,7 @@ internal static class CreateProductMappingExtensions
             Name = command.Name,
             Description = command.Description,
             Price = command.Price,
-            StockQuantity = command.StockQuantity,
+            Quantity = command.StockQuantity,
             CategoryId = command.CategoryId
         };
 
@@ -27,7 +27,7 @@ internal static class CreateProductMappingExtensions
                 product.Name,
                 product.Description,
                 product.Price,
-                product.StockQuantity,
+                product.Quantity,
                 product.CreatedAt,
                 product.UpdatedAt,
                 product.CategoryId);

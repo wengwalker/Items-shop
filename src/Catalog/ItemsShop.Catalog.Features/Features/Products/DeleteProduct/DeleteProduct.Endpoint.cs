@@ -15,7 +15,11 @@ public class DeleteProductEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapDelete(ProductRotueConsts.DeleteProduct, Handle);
+        builder.MapDelete(ProductRouteConsts.DeleteProduct, Handle)
+            .WithName("DeleteProductById")
+            .Produces(StatusCodes.Status204NoContent)
+            .ProducesProblem(StatusCodes.Status404NotFound)
+            .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
@@ -37,6 +41,8 @@ public class DeleteProductEndpoint : IEndpoint
 
         return response.IsSuccess
             ? Results.NoContent()
-            : Results.Conflict(response.Error);
+            : Results.Problem(
+                detail: response.Error,
+                statusCode: response.StatusCode);
     }
 }

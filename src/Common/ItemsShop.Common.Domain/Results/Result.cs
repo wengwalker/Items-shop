@@ -10,20 +10,28 @@ public class Result<T>
 
     public string? Error { get; }
 
-    private Result(bool isSuccess, T? value, string? error)
+    public int? StatusCode { get; }
+
+    private Result(bool isSuccess, T? value, string? error, int? statusCode)
     {
         IsSuccess = isSuccess;
         Value = value;
         Error = error;
+        StatusCode = statusCode;
     }
 
     public static Result<T> Success(T value)
     {
-        return new Result<T>(true, value, null);
+        return new Result<T>(true, value, null, null);
     }
 
     public static Result<T> Failure(string error)
     {
-        return new Result<T>(false, default(T), error);
+        return new Result<T>(false, default(T), error, null);
+    }
+
+    public static Result<T> Failure(string error, int statusCode)
+    {
+        return new Result<T>(false, default(T), error, statusCode);
     }
 }

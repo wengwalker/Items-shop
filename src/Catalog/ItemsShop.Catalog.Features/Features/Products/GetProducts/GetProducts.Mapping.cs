@@ -13,7 +13,7 @@ internal static class GetProductsMappingExtensions
             product.Name,
             product.Description,
             product.Price,
-            product.StockQuantity,
+            product.Quantity,
             product.CreatedAt,
             product.UpdatedAt,
             product.CategoryId);

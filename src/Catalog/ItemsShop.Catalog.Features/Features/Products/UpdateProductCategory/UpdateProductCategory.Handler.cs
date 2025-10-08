@@ -1,6 +1,7 @@
 using ItemsShop.Catalog.Infrastructure.Database;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -29,7 +30,8 @@ public sealed class UpdateProductCategoryHandler(
         {
             logger.LogInformation("Category with Id {CategoryId} does not exists", request.CategoryId);
 
-            return Result<UpdateProductCategoryResponse>.Failure($"Category with ID {request.CategoryId} does not exists");
+            return Result<UpdateProductCategoryResponse>
+                .Failure($"Category with ID {request.CategoryId} does not exists", StatusCodes.Status404NotFound);
         }
 
         var product = await context.Products
@@ -39,7 +41,8 @@ public sealed class UpdateProductCategoryHandler(
         {
             logger.LogInformation("Product with Id {ProductId} does not exists", request.ProductId);
 
-            return Result<UpdateProductCategoryResponse>.Failure($"Product with ID {request.ProductId} does not exists");
+            return Result<UpdateProductCategoryResponse>
+                .Failure($"Product with ID {request.ProductId} does not exists", StatusCodes.Status404NotFound);
         }
 
         product.CategoryId = request.CategoryId;

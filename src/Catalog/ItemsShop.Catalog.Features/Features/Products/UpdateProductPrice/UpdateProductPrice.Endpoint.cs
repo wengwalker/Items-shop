@@ -7,26 +7,26 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.Products.UpdateProductCategory;
+namespace ItemsShop.Catalog.Features.Features.Products.UpdateProductPrice;
 
-public sealed record UpdateProductCategoryRequest(
-    Guid CategoryId);
+public sealed record UpdateProductPriceRequest(
+    decimal Price);
 
-public class UpdateProductCategoryEndpoint : IEndpoint
+public class UpdateProductPriceEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPatch(ProductRouteConsts.UpdateProductCategory, Handle)
-            .WithName("UpdateProductCategoryById")
-            .Produces<UpdateProductCategoryResponse>()
+        builder.MapPatch(ProductRouteConsts.UpdateProductPrice, Handle)
+            .WithName("UpdateProductPriceById")
+            .Produces<UpdateProductPriceResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
         [FromRoute] Guid id,
-        [FromBody] UpdateProductCategoryRequest request,
-        IValidator<UpdateProductCategoryRequest> validator,
+        [FromBody] UpdateProductPriceRequest request,
+        IValidator<UpdateProductPriceRequest> validator,
         IMediator mediator,
         CancellationToken cancellationToken)
     {

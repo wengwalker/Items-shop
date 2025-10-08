@@ -16,7 +16,7 @@ public static class DependencyInjection
 
         services.AddMediator(typeof(CreateProductHandler).Assembly);
 
-        services.AddValidatorsFromAssembly(typeof(CreateProductCommandValidator).Assembly);
+        services.AddValidatorsFromAssembly(typeof(CreateProductRequestValidator).Assembly);
 
         services.AddCatalogInfrastructure(configuration);
 

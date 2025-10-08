@@ -1,4 +1,4 @@
-using FluentValidation;
+﻿using FluentValidation;
 using ItemsShop.Catalog.Features.Shared.Routes;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
@@ -7,26 +7,26 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.Products.UpdateProductCategory;
+namespace ItemsShop.Catalog.Features.Features.Products.UpdateProductQuantity;
 
-public sealed record UpdateProductCategoryRequest(
-    Guid CategoryId);
+public sealed record UpdateProductQuantityRequest(
+    long Quantity);
 
-public class UpdateProductCategoryEndpoint : IEndpoint
+public class UpdateProductQuantityEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPatch(ProductRouteConsts.UpdateProductCategory, Handle)
-            .WithName("UpdateProductCategoryById")
-            .Produces<UpdateProductCategoryResponse>()
+        builder.MapPatch(ProductRouteConsts.UpdateProductQuantity, Handle)
+            .WithName("UpdateProductQuantityById")
+            .Produces<UpdateProductQuantityResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
         [FromRoute] Guid id,
-        [FromBody] UpdateProductCategoryRequest request,
-        IValidator<UpdateProductCategoryRequest> validator,
+        [FromBody] UpdateProductQuantityRequest request,
+        IValidator<UpdateProductQuantityRequest> validator,
         IMediator mediator,
         CancellationToken cancellationToken)
     {

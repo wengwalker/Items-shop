@@ -1,6 +1,7 @@
 using ItemsShop.Catalog.Infrastructure.Database;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -26,7 +27,8 @@ public sealed class DeleteProductHandler(
         {
             logger.LogInformation("Product with ID {ProductId} does not exists", request.ProductId);
 
-            return Result<DeleteProductResponse>.Failure($"Product with ID {request.ProductId} does not exists");
+            return Result<DeleteProductResponse>
+                .Failure($"Product with ID {request.ProductId} does not exists", StatusCodes.Status404NotFound);
         }
 
         context.Products.Remove(product);
