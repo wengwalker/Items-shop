@@ -10,7 +10,7 @@ public class ProductEntity
 
     public decimal Price { get; set; }
 
-    public long StockQuantity { get; set; }
+    public long Quantity { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

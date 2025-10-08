@@ -28,7 +28,7 @@ public class ProductEntityConfiguration : IEntityTypeConfiguration<ProductEntity
             .IsRequired();
 
         builder
-            .Property(x => x.StockQuantity)
+            .Property(x => x.Quantity)
             .HasDefaultValue(0);
 
         builder
