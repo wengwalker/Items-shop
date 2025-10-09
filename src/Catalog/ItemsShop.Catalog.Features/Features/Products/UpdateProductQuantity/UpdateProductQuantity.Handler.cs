@@ -1,4 +1,4 @@
-﻿using ItemsShop.Catalog.Infrastructure.Database;
+using ItemsShop.Catalog.Infrastructure.Database;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -15,7 +15,7 @@ public sealed record UpdateProductQuantityResponse(
     Guid ProductId,
     long Quantity);
 
-public class UpdateProductQuantityHandler(
+public sealed class UpdateProductQuantityHandler(
     CatalogDbContext context,
     ILogger<UpdateProductQuantityHandler> logger) : IRequestHandler<UpdateProductQuantityCommand, Result<UpdateProductQuantityResponse>>
 {

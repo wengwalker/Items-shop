@@ -7,29 +7,24 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.Products.CreateProduct;
+namespace ItemsShop.Catalog.Features.Features.Carts.DeleteCart;
 
-public sealed record CreateProductRequest(
-    string Name,
-    string Description,
-    decimal Price,
-    long StockQuantity,
-    Guid CategoryId);
+public sealed record DeleteCartRequest([FromRoute] Guid id);
 
-public class CreateProductEndpoint : IEndpoint
+public class DeleteCartEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost(ProductRouteConsts.BaseRoute, Handle)
-            .WithName("CreateProduct")
-            .Produces<CreateProductResponse>(StatusCodes.Status201Created)
+        builder.MapDelete(CartsRouteConsts.DeleteCart, Handle)
+            .WithName("DeleteCartById")
+            .Produces<DeleteCartResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
-        [FromBody] CreateProductRequest request,
-        IValidator<CreateProductRequest> validator,
+        DeleteCartRequest request,
+        IValidator<DeleteCartRequest> validator,
         IMediator mediator,
         CancellationToken cancellationToken)
     {
@@ -45,7 +40,7 @@ public class CreateProductEndpoint : IEndpoint
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
-            ? Results.Created(ProductRouteConsts.BaseRoute, response.Value)
+            ? Results.NoContent()
             : Results.Problem(
                 detail: response.Error,
                 statusCode: response.StatusCode);

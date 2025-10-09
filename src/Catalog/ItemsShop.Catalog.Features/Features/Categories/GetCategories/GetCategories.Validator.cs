@@ -1,10 +1,10 @@
 using FluentValidation;
 
-namespace ItemsShop.Catalog.Features.Features.Products.GetProducts;
+namespace ItemsShop.Catalog.Features.Features.Categories.GetCategories;
 
-public class GetProductsRequestValidator : AbstractValidator<GetProductsRequest>
+public class GetCategoriesRequestValidator : AbstractValidator<GetCategoriesRequest>
 {
-    public GetProductsRequestValidator()
+    public GetCategoriesRequestValidator()
     {
         RuleFor(x => x.Name)
             .NotEmpty()

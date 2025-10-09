@@ -20,6 +20,11 @@ public class Result<T>
         StatusCode = statusCode;
     }
 
+    public static Result<T> Success()
+    {
+        return new Result<T>(true, default(T), null, null);
+    }
+
     public static Result<T> Success(T value)
     {
         return new Result<T>(true, value, null, null);

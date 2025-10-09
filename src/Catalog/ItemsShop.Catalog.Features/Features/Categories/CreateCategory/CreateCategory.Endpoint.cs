@@ -7,29 +7,26 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.Products.CreateProduct;
+namespace ItemsShop.Catalog.Features.Features.Categories.CreateCategory;
 
-public sealed record CreateProductRequest(
+public sealed record CreateCategoryRequest(
     string Name,
-    string Description,
-    decimal Price,
-    long StockQuantity,
-    Guid CategoryId);
+    string? Description);
 
-public class CreateProductEndpoint : IEndpoint
+public class CreateCategoryEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost(ProductRouteConsts.BaseRoute, Handle)
-            .WithName("CreateProduct")
-            .Produces<CreateProductResponse>(StatusCodes.Status201Created)
-            .ProducesProblem(StatusCodes.Status404NotFound)
+        builder.MapPost(CategoriesRouteConsts.BaseRoute, Handle)
+            .WithName("CreateCategory")
+            .Produces<CreateCategoryResponse>(StatusCodes.Status201Created)
+            .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
-        [FromBody] CreateProductRequest request,
-        IValidator<CreateProductRequest> validator,
+        [FromBody] CreateCategoryRequest request,
+        IValidator<CreateCategoryRequest> validator,
         IMediator mediator,
         CancellationToken cancellationToken)
     {
@@ -45,7 +42,7 @@ public class CreateProductEndpoint : IEndpoint
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
-            ? Results.Created(ProductRouteConsts.BaseRoute, response.Value)
+            ? Results.Created(CategoriesRouteConsts.BaseRoute, response.Value)
             : Results.Problem(
                 detail: response.Error,
                 statusCode: response.StatusCode);

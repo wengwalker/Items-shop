@@ -4,6 +4,8 @@ internal static class ProductRouteConsts
 {
     internal const string BaseRoute = "/api/v1/products";
 
+    internal const string GetProduct = BaseRoute + "/{id:guid}";
+
     internal const string DeleteProduct = BaseRoute + "/{id:guid}";
 
     internal const string UpdateProductCategory = BaseRoute + "/{id:guid}/category";

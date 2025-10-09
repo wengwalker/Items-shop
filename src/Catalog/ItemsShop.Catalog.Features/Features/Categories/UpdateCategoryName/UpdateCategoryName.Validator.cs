@@ -1,0 +1,15 @@
+using FluentValidation;
+
+namespace ItemsShop.Catalog.Features.Features.Categories.UpdateCategoryName;
+
+public class UpdateCategoryNameRequestValidator : AbstractValidator<UpdateCategoryNameRequest>
+{
+    public UpdateCategoryNameRequestValidator()
+    {
+        RuleFor(x => x.Name)
+            .NotEmpty()
+            .WithMessage("Name must be set")
+            .MaximumLength(70)
+            .WithMessage("Name length exceeds 70 characters limit");
+    }
+}

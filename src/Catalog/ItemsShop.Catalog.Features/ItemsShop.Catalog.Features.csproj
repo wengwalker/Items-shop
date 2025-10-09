@@ -6,24 +6,16 @@
     <PackageReference Include="Mediator.Lite" />
   </ItemGroup>
 
-    <ItemGroup>
-    <Folder Include="Features\CartItems\CreateCartItem\" />
-    <Folder Include="Features\CartItems\DeleteCartItem\" />
-    <Folder Include="Features\CartItems\GetCartItem\" />
-    <Folder Include="Features\Carts\CreateCart\" />
-    <Folder Include="Features\Carts\DeleteCart\" />
-    <Folder Include="Features\Carts\GetCart\" />
-    <Folder Include="Features\Categories\CreateCategory\" />
-    <Folder Include="Features\Categories\DeleteCategory\" />
-    <Folder Include="Features\Categories\GetCategories\" />
-    <Folder Include="Features\Categories\UpdateCategoryDescription\" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\Common\ItemsShop.Common.Api\ItemsShop.Common.Api.csproj" />
     <ProjectReference Include="..\..\Common\ItemsShop.Common.Domain\ItemsShop.Common.Domain.csproj" />
     <ProjectReference Include="..\ItemsShop.Catalog.Domain\ItemsShop.Catalog.Domain.csproj" />
     <ProjectReference Include="..\ItemsShop.Catalog.Infrastructure\ItemsShop.Catalog.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Categories\GetCategory\" />
+    <Folder Include="Features\Products\GetProduct\" />
   </ItemGroup>
 
 </Project>

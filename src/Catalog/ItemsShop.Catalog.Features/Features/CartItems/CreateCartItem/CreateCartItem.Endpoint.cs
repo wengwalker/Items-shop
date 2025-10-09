@@ -7,29 +7,27 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.Products.CreateProduct;
+namespace ItemsShop.Catalog.Features.Features.CartItems.CreateCartItem;
 
-public sealed record CreateProductRequest(
-    string Name,
-    string Description,
-    decimal Price,
-    long StockQuantity,
-    Guid CategoryId);
+public sealed record CreateCartItemRequest(
+    int Quantity,
+    Guid ProductId);
 
-public class CreateProductEndpoint : IEndpoint
+public class CreateCartItemEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost(ProductRouteConsts.BaseRoute, Handle)
-            .WithName("CreateProduct")
-            .Produces<CreateProductResponse>(StatusCodes.Status201Created)
+        builder.MapPost(CartItemsRouteConsts.BaseRoute, Handle)
+            .WithName("CreateCart")
+            .Produces<CreateCartItemResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
-        [FromBody] CreateProductRequest request,
-        IValidator<CreateProductRequest> validator,
+        [FromRoute] Guid cartId,
+        [FromBody] CreateCartItemRequest request,
+        IValidator<CreateCartItemRequest> validator,
         IMediator mediator,
         CancellationToken cancellationToken)
     {
@@ -40,12 +38,12 @@ public class CreateProductEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand();
+        var command = request.MapToCommand(cartId);
 
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
-            ? Results.Created(ProductRouteConsts.BaseRoute, response.Value)
+            ? Results.Created(CartItemsRouteConsts.BaseRoute, response.Value)
             : Results.Problem(
                 detail: response.Error,
                 statusCode: response.StatusCode);

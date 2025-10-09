@@ -10,13 +10,13 @@ internal static class GetProductsMappingExtensions
 
     public static ProductResponse MapToResponse(this ProductEntity product)
         => new(product.Id,
-            product.Name,
-            product.Description,
-            product.Price,
-            product.Quantity,
-            product.CreatedAt,
-            product.UpdatedAt,
-            product.CategoryId);
+                product.Name,
+                product.Description,
+                product.Price,
+                product.Quantity,
+                product.CreatedAt,
+                product.UpdatedAt,
+                product.CategoryId);
 
     public static GetProductsResponse MapToResponse(this List<ProductResponse> responses)
         => new(responses);

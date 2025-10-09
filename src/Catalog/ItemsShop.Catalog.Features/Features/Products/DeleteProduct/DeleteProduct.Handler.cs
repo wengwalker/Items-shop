@@ -36,8 +36,6 @@ public sealed class DeleteProductHandler(
 
         logger.LogInformation("Deleted product with ID {ProductId}", product.Id);
 
-        var response = request.MapToResponse();
-
-        return Result<DeleteProductResponse>.Success(response);
+        return Result<DeleteProductResponse>.Success();
     }
 }

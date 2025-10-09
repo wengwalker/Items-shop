@@ -1,0 +1,56 @@
+using ItemsShop.Catalog.Domain.Enums;
+using ItemsShop.Catalog.Features.Shared.Responses;
+using ItemsShop.Catalog.Infrastructure.Database;
+using ItemsShop.Common.Domain.Results;
+using Mediator.Lite.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+namespace ItemsShop.Catalog.Features.Features.Categories.GetCategories;
+
+public sealed record GetCategoriesCommand(
+    string? Name,
+    OrderQueryType? OrderType) : IRequest<Result<GetCategoriesResponse>>;
+
+public sealed record GetCategoriesResponse(
+    List<CategoryResponse> Categories);
+
+public sealed class GetCategoriesHandler(
+    CatalogDbContext context,
+    ILogger<GetCategoriesHandler> logger) : IRequestHandler<GetCategoriesCommand, Result<GetCategoriesResponse>>
+{
+    public async Task<Result<GetCategoriesResponse>> Handle(GetCategoriesCommand request, CancellationToken cancellationToken)
+    {
+        logger.LogInformation("Fetching categories");
+
+        var query = context.Categories
+            .AsQueryable()
+            .AsNoTracking();
+
+        if (request.Name is not null)
+        {
+            logger.LogInformation("Fetching categories with specified name like {Name}", request.Name);
+
+            query = query.Where(x => EF.Functions.ILike(x.Name, $"%{request.Name}%"));
+        }
+
+        if (request.OrderType is not null)
+        {
+            logger.LogInformation("Fetching categories in specified order: {OrderType}", request.OrderType);
+
+            query = request.OrderType == OrderQueryType.Ascending
+                ? query.OrderBy(x => x.Name)
+                : query.OrderByDescending(x => x.Name);
+        }
+
+        List<CategoryResponse> categories = await query
+            .Select(x => x.MapToResponse())
+            .ToListAsync(cancellationToken);
+
+        var response = categories.MapToResponse();
+
+        logger.LogInformation("Fetched {Count} categories", response.Categories.Count);
+
+        return Result<GetCategoriesResponse>.Success(response);
+    }
+}
