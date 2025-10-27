@@ -13,9 +13,4 @@
     <ProjectReference Include="..\ItemsShop.Catalog.Infrastructure\ItemsShop.Catalog.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Categories\GetCategory\" />
-    <Folder Include="Features\Products\GetProduct\" />
-  </ItemGroup>
-
 </Project>

@@ -25,7 +25,7 @@ public sealed class DeleteCartHandler(
 
         if (cart == null)
         {
-            logger.LogInformation("Cart with ID {ProductId} does not exists", request.CartId);
+            logger.LogInformation("Cart with ID {CartId} does not exists", request.CartId);
 
             return Result<DeleteCartResponse>
                 .Failure($"Cart with ID {request.CartId} does not exists", StatusCodes.Status404NotFound);

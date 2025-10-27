@@ -5,7 +5,7 @@ public sealed record ProductResponse(
     string Name,
     string Description,
     decimal Price,
-    long StockQuantity,
+    long Quantity,
     DateTime CreatedAt,
     DateTime UpdatedAt,
     Guid CategoryId);
