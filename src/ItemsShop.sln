@@ -5,9 +5,21 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalog", "Catalog", "{50761A8C-3A0B-6B1B-86AD-17AC9E1B806D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Api", "Catalog\Catalog.Api\Catalog.Api.csproj", "{49B9A888-9BD6-48B4-9458-B41D0C175734}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Catalog.Features", "Catalog\ItemsShop.Catalog.Features\ItemsShop.Catalog.Features.csproj", "{41908745-6386-4DD9-A628-A59B88C0CEFB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalog.Application", "Catalog\Catalog.Application\Catalog.Application.csproj", "{E8DBBFFF-E573-45F7-88C2-59ADB537931A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Catalog.Domain", "Catalog\ItemsShop.Catalog.Domain\ItemsShop.Catalog.Domain.csproj", "{F3CA5CA7-6B75-44E6-AF31-99AF313F23B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Catalog.Infrastructure", "Catalog\ItemsShop.Catalog.Infrastructure\ItemsShop.Catalog.Infrastructure.csproj", "{F3222067-779C-43FC-A6E5-88FBD7C9A99D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{881589EE-639B-0A35-DBCE-5D94E4FC90C0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Common.Api", "Common\ItemsShop.Common.Api\ItemsShop.Common.Api.csproj", "{4B5698FA-1EC4-4334-BB84-716DAE264274}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Common.Application", "Common\ItemsShop.Common.Application\ItemsShop.Common.Application.csproj", "{2BF206BA-5A08-49AE-8EDA-103C58222CD9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Common.Domain", "Common\ItemsShop.Common.Domain\ItemsShop.Common.Domain.csproj", "{CF44D4A4-9A10-4AF5-9AB4-376C0911BDCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Common.Infrastructure", "Common\ItemsShop.Common.Infrastructure\ItemsShop.Common.Infrastructure.csproj", "{DF5C241E-F3F2-4382-955B-AC951BE6091E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8EC462FD-D22E-90A8-E5CE-7E832BA40C5D}"
 	ProjectSection(SolutionItems) = preProject
@@ -17,22 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.development.yml = docker-compose.development.yml
 		Catalog\Dockerfile = Catalog\Dockerfile
 	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{881589EE-639B-0A35-DBCE-5D94E4FC90C0}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Common.Api", "Common\ItemsShop.Common.Api\ItemsShop.Common.Api.csproj", "{4B5698FA-1EC4-4334-BB84-716DAE264274}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Common.Domain", "Common\ItemsShop.Common.Domain\ItemsShop.Common.Domain.csproj", "{CF44D4A4-9A10-4AF5-9AB4-376C0911BDCC}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Common.Infrastructure", "Common\ItemsShop.Common.Infrastructure\ItemsShop.Common.Infrastructure.csproj", "{DF5C241E-F3F2-4382-955B-AC951BE6091E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Catalog.Features", "Catalog\ItemsShop.Catalog.Features\ItemsShop.Catalog.Features.csproj", "{41908745-6386-4DD9-A628-A59B88C0CEFB}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Common.Application", "Common\ItemsShop.Common.Application\ItemsShop.Common.Application.csproj", "{2BF206BA-5A08-49AE-8EDA-103C58222CD9}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Catalog.Domain", "Catalog\ItemsShop.Catalog.Domain\ItemsShop.Catalog.Domain.csproj", "{F3CA5CA7-6B75-44E6-AF31-99AF313F23B3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsShop.Catalog.Infrastructure", "Catalog\ItemsShop.Catalog.Infrastructure\ItemsShop.Catalog.Infrastructure.csproj", "{F3222067-779C-43FC-A6E5-88FBD7C9A99D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,30 +40,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Debug|x64.Build.0 = Debug|Any CPU
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Debug|x86.Build.0 = Debug|Any CPU
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Release|Any CPU.Build.0 = Release|Any CPU
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Release|x64.ActiveCfg = Release|Any CPU
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Release|x64.Build.0 = Release|Any CPU
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Release|x86.ActiveCfg = Release|Any CPU
-		{49B9A888-9BD6-48B4-9458-B41D0C175734}.Release|x86.Build.0 = Release|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Debug|x64.Build.0 = Debug|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Debug|x86.Build.0 = Debug|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Release|x64.ActiveCfg = Release|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Release|x64.Build.0 = Release|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Release|x86.ActiveCfg = Release|Any CPU
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A}.Release|x86.Build.0 = Release|Any CPU
 		{4B5698FA-1EC4-4334-BB84-716DAE264274}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4B5698FA-1EC4-4334-BB84-716DAE264274}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4B5698FA-1EC4-4334-BB84-716DAE264274}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -157,8 +129,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{49B9A888-9BD6-48B4-9458-B41D0C175734} = {50761A8C-3A0B-6B1B-86AD-17AC9E1B806D}
-		{E8DBBFFF-E573-45F7-88C2-59ADB537931A} = {50761A8C-3A0B-6B1B-86AD-17AC9E1B806D}
 		{4B5698FA-1EC4-4334-BB84-716DAE264274} = {881589EE-639B-0A35-DBCE-5D94E4FC90C0}
 		{CF44D4A4-9A10-4AF5-9AB4-376C0911BDCC} = {881589EE-639B-0A35-DBCE-5D94E4FC90C0}
 		{DF5C241E-F3F2-4382-955B-AC951BE6091E} = {881589EE-639B-0A35-DBCE-5D94E4FC90C0}
