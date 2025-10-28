@@ -1,4 +1,4 @@
-namespace ItemsShop.Catalog.Domain.Entities;
+namespace ItemsShop.Catalogs.Domain.Entities;
 
 public class CartEntity
 {

@@ -1,4 +1,4 @@
-namespace ItemsShop.Catalog.Features.Shared.Responses;
+namespace ItemsShop.Catalogs.Features.Shared.Responses;
 
 public sealed record CategoryResponse(
     Guid Id,

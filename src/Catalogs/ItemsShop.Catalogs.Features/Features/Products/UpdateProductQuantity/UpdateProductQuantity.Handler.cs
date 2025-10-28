@@ -1,11 +1,11 @@
-using ItemsShop.Catalog.Infrastructure.Database;
+using ItemsShop.Catalogs.Infrastructure.Database;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ItemsShop.Catalog.Features.Features.Products.UpdateProductQuantity;
+namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductQuantity;
 
 public sealed record UpdateProductQuantityCommand(
     Guid ProductId,
@@ -35,6 +35,7 @@ public sealed class UpdateProductQuantityHandler(
         }
 
         product.Quantity = request.Quantity;
+        product.UpdatedAt = DateTime.UtcNow;
 
         await context.SaveChangesAsync(cancellationToken);
 

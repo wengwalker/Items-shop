@@ -1,6 +1,6 @@
-using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 
-namespace ItemsShop.Catalog.Features.Features.Categories.UpdateCategoryName;
+namespace ItemsShop.Catalogs.Features.Features.Categories.UpdateCategoryName;
 
 internal static class UpdateCategoryNameMappingExtensions
 {

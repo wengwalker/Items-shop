@@ -1,11 +1,11 @@
-using ItemsShop.Catalog.Infrastructure.Database;
+using ItemsShop.Catalogs.Infrastructure.Database;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ItemsShop.Catalog.Features.Features.Products.DeleteProduct;
+namespace ItemsShop.Catalogs.Features.Features.Products.DeleteProduct;
 
 public sealed record DeleteProductCommand(
     Guid ProductId) : IRequest<Result<DeleteProductResponse>>;

@@ -1,6 +1,6 @@
-using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 
-namespace ItemsShop.Catalog.Features.Features.CartItems.CreateCartItem;
+namespace ItemsShop.Catalogs.Features.Features.CartItems.CreateCartItem;
 
 internal static class CreateCartItemMappingExtensions
 {

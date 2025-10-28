@@ -1,12 +1,12 @@
 using FluentValidation;
-using ItemsShop.Catalog.Features.Features.Products.CreateProduct;
-using ItemsShop.Catalog.Infrastructure;
+using ItemsShop.Catalogs.Features.Features.Products.CreateProduct;
+using ItemsShop.Catalogs.Infrastructure;
 using ItemsShop.Common.Api.Extensions;
 using Mediator.Lite.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ItemsShop.Catalog.Features;
+namespace ItemsShop.Catalogs.Features;
 
 public static class DependencyInjection
 {

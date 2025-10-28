@@ -1,4 +1,4 @@
-namespace ItemsShop.Catalog.Features.Shared.Routes;
+namespace ItemsShop.Catalogs.Features.Shared.Routes;
 
 internal static class CartsRouteConsts
 {

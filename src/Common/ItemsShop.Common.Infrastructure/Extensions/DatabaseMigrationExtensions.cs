@@ -7,7 +7,7 @@ public static class DatabaseMigrationExtensions
 {
     public static async Task MigrateDatabasesAsync(this IServiceScope scope, CancellationToken cancellationToken = default)
     {
-        var migrators = scope.ServiceProvider.GetRequiredService<IEnumerable<IDatabaseMigrator>>();
+        var migrators = scope.ServiceProvider.GetRequiredService<IEnumerable<IModuleDatabaseMigrator>>();
 
         foreach (var migrator in migrators)
         {

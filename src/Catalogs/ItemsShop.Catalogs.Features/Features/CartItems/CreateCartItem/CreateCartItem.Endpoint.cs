@@ -1,5 +1,5 @@
 using FluentValidation;
-using ItemsShop.Catalog.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Routes;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.CartItems.CreateCartItem;
+namespace ItemsShop.Catalogs.Features.Features.CartItems.CreateCartItem;
 
 public sealed record CreateCartItemRequest(
     int Quantity,
@@ -18,7 +18,8 @@ public class CreateCartItemEndpoint : IEndpoint
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
         builder.MapPost(CartItemsRouteConsts.BaseRoute, Handle)
-            .WithName("CreateCart")
+            .WithName("CreateCartItemByCartId")
+            .WithTags("CartItems")
             .Produces<CreateCartItemResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
@@ -27,8 +28,8 @@ public class CreateCartItemEndpoint : IEndpoint
     private static async Task<IResult> Handle(
         [FromRoute] Guid cartId,
         [FromBody] CreateCartItemRequest request,
-        IValidator<CreateCartItemRequest> validator,
-        IMediator mediator,
+        [FromServices] IValidator<CreateCartItemRequest> validator,
+        [FromServices] IMediator mediator,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);

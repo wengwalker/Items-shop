@@ -1,9 +1,9 @@
-using ItemsShop.Catalog.Infrastructure.Database;
+using ItemsShop.Catalogs.Infrastructure.Database;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace ItemsShop.Catalog.Features.Features.Carts.CreateCart;
+namespace ItemsShop.Catalogs.Features.Features.Carts.CreateCart;
 
 public sealed record CreateCartCommand() : IRequest<Result<CreateCartResponse>>;
 

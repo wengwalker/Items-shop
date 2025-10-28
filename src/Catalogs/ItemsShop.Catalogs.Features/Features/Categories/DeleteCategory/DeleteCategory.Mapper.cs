@@ -1,4 +1,4 @@
-namespace ItemsShop.Catalog.Features.Features.Categories.DeleteCategory;
+namespace ItemsShop.Catalogs.Features.Features.Categories.DeleteCategory;
 
 internal static class DeleteCategoryMappingExtensions
 {

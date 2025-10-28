@@ -1,0 +1,48 @@
+networks:
+  itemsshop-network:
+    driver: bridge
+
+volumes:
+  itemsshop_db_data:
+
+services:
+  itemsshop-db:
+    image: postgres:18.0-alpine
+    container_name: itemsshop-db
+    hostname: itemsshop-db
+    restart: always
+    environment:
+      - POSTGRES_HOST=${DATABASE_HOST}
+      - POSTGRES_PORT=${DATABASE_INNER_PORT}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_DB}
+    volumes:
+      - itemsshop_db_data:/var/lib/postgresql/data
+    ports:
+      - ${DATABASE_PORTS:-5432:5432}
+    networks:
+      - itemsshop-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -p $${POSTGRES_PORT}"]
+      interval: 5s
+      timeout: 15s
+      retries: 3
+      start_period: 10s
+
+  itemsshop-service:
+    image: itemsshop-service:0.1
+    container_name: itemsshop-service
+    hostname: itemsshop-service
+    build:
+      context: .
+      dockerfile: Host/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - ${HOST_PORTS:-8080:8080}
+    networks:
+      - itemsshop-network
+    depends_on:
+      itemsshop-db:
+        condition: service_healthy

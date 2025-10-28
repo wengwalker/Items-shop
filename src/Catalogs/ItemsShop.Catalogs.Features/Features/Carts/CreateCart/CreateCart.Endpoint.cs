@@ -1,11 +1,12 @@
-using ItemsShop.Catalog.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Routes;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.Carts.CreateCart;
+namespace ItemsShop.Catalogs.Features.Features.Carts.CreateCart;
 
 public class CreateCartEndpoint : IEndpoint
 {
@@ -13,11 +14,12 @@ public class CreateCartEndpoint : IEndpoint
     {
         builder.MapPost(CartsRouteConsts.BaseRoute, Handle)
             .WithName("CreateCart")
+            .WithTags("Carts")
             .Produces<CreateCartResponse>();
     }
 
     private static async Task<IResult> Handle(
-        IMediator mediator,
+        [FromServices] IMediator mediator,
         CancellationToken cancellationToken)
     {
         var response = await mediator.Send(new CreateCartCommand(), cancellationToken);

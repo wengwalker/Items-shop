@@ -1,12 +1,12 @@
-using ItemsShop.Catalog.Features.Shared.Responses;
-using ItemsShop.Catalog.Infrastructure.Database;
+using ItemsShop.Catalogs.Features.Shared.Responses;
+using ItemsShop.Catalogs.Infrastructure.Database;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ItemsShop.Catalog.Features.Features.CartItems.GetCartItem;
+namespace ItemsShop.Catalogs.Features.Features.CartItems.GetCartItem;
 
 public sealed record GetCartItemCommand(Guid CartId, Guid ItemId) : IRequest<Result<GetCartItemResponse>>;
 

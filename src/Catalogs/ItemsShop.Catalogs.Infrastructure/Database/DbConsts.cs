@@ -1,4 +1,4 @@
-namespace ItemsShop.Catalog.Infrastructure.Database;
+namespace ItemsShop.Catalogs.Infrastructure.Database;
 
 public static class DbConsts
 {

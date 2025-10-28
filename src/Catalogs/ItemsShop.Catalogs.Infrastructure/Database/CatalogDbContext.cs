@@ -1,7 +1,7 @@
-using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace ItemsShop.Catalog.Infrastructure.Database;
+namespace ItemsShop.Catalogs.Infrastructure.Database;
 
 public class CatalogDbContext : DbContext
 {

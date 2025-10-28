@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace ItemsShop.Catalog.Features.Features.Products.DeleteProduct;
+namespace ItemsShop.Catalogs.Features.Features.Products.DeleteProduct;
 
 public class DeleteProductRequestValidator : AbstractValidator<DeleteProductRequest>
 {

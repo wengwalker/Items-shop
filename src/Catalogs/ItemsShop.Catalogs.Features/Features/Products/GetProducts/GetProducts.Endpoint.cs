@@ -1,6 +1,6 @@
 using FluentValidation;
-using ItemsShop.Catalog.Domain.Enums;
-using ItemsShop.Catalog.Features.Shared.Routes;
+using ItemsShop.Catalogs.Domain.Enums;
+using ItemsShop.Catalogs.Features.Shared.Routes;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -8,11 +8,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.Products.GetProducts;
+namespace ItemsShop.Catalogs.Features.Features.Products.GetProducts;
 
-public sealed record GetProductsRequest(
-    string? Name,
-    OrderQueryType? OrderType);
+public sealed record GetProductsRequest([FromQuery] string? Name, [FromQuery] OrderQueryType? OrderType);
 
 public class GetProductsEndpoint : IEndpoint
 {
@@ -20,14 +18,15 @@ public class GetProductsEndpoint : IEndpoint
     {
         builder.MapGet(ProductRouteConsts.BaseRoute, Handle)
             .WithName("GetProducts")
+            .WithTags("Products")
             .Produces<GetProductsResponse>()
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
-        [FromBody] GetProductsRequest request,
-        IValidator<GetProductsRequest> validator,
-        IMediator mediator,
+        [AsParameters] GetProductsRequest request,
+        [FromServices] IValidator<GetProductsRequest> validator,
+        [FromServices] IMediator mediator,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);

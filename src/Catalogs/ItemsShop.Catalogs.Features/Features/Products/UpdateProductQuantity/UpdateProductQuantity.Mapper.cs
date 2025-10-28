@@ -1,6 +1,6 @@
-﻿using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 
-namespace ItemsShop.Catalog.Features.Features.Products.UpdateProductQuantity;
+namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductQuantity;
 
 internal static class UpdateProductQuantityMappingExtensions
 {

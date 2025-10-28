@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace ItemsShop.Catalog.Features.Features.Products.UpdateProductQuantity;
+namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductQuantity;
 
 public class UpdateProductQuantityRequestValidator : AbstractValidator<UpdateProductQuantityRequest>
 {

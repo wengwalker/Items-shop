@@ -1,7 +1,7 @@
-using ItemsShop.Catalog.Domain.Entities;
-using ItemsShop.Catalog.Features.Shared.Responses;
+using ItemsShop.Catalogs.Features.Shared.Responses;
+using ItemsShop.Catalogs.Domain.Entities;
 
-namespace ItemsShop.Catalog.Features.Features.CartItems.GetCartItem;
+namespace ItemsShop.Catalogs.Features.Features.CartItems.GetCartItem;
 
 internal static class GetCartItemMappingExtensions
 {

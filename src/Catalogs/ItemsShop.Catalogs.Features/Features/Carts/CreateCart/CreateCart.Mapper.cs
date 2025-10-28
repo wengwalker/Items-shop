@@ -1,6 +1,6 @@
-using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 
-namespace ItemsShop.Catalog.Features.Features.Carts.CreateCart;
+namespace ItemsShop.Catalogs.Features.Features.Carts.CreateCart;
 
 internal static class CreateCartMappingExtensions
 {
@@ -12,6 +12,5 @@ internal static class CreateCartMappingExtensions
         };
 
     public static CreateCartResponse MapToResponse(this CartEntity cart)
-        => new(cart.Id,
-                cart.LastUpdated);
+        => new(cart.Id, cart.LastUpdated);
 }

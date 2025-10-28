@@ -1,6 +1,6 @@
-using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 
-namespace ItemsShop.Catalog.Features.Features.Products.CreateProduct;
+namespace ItemsShop.Catalogs.Features.Features.Products.CreateProduct;
 
 internal static class CreateProductMappingExtensions
 {
@@ -19,7 +19,9 @@ internal static class CreateProductMappingExtensions
             Description = command.Description,
             Price = command.Price,
             Quantity = command.StockQuantity,
-            CategoryId = command.CategoryId
+            CategoryId = command.CategoryId,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
         };
 
     public static CreateProductResponse MapToResponse(this ProductEntity product)

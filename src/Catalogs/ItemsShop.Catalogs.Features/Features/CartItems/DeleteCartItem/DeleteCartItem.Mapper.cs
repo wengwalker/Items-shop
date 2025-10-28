@@ -1,4 +1,4 @@
-namespace ItemsShop.Catalog.Features.Features.CartItems.DeleteCartItem;
+namespace ItemsShop.Catalogs.Features.Features.CartItems.DeleteCartItem;
 
 internal static class DeleteCartItemMappingExtensions
 {

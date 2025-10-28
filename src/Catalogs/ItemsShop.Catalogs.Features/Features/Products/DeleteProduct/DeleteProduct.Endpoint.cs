@@ -1,5 +1,5 @@
 using FluentValidation;
-using ItemsShop.Catalog.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Routes;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.Products.DeleteProduct;
+namespace ItemsShop.Catalogs.Features.Features.Products.DeleteProduct;
 
 public sealed record DeleteProductRequest([FromRoute] Guid id);
 
@@ -17,15 +17,16 @@ public class DeleteProductEndpoint : IEndpoint
     {
         builder.MapDelete(ProductRouteConsts.DeleteProduct, Handle)
             .WithName("DeleteProductById")
+            .WithTags("Products")
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
-        DeleteProductRequest request,
-        IValidator<DeleteProductRequest> validator,
-        IMediator mediator,
+        [AsParameters] DeleteProductRequest request,
+        [FromServices] IValidator<DeleteProductRequest> validator,
+        [FromServices] IMediator mediator,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);

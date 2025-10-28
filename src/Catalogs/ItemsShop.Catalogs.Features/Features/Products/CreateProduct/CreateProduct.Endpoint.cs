@@ -1,5 +1,5 @@
 using FluentValidation;
-using ItemsShop.Catalog.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Routes;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.Products.CreateProduct;
+namespace ItemsShop.Catalogs.Features.Features.Products.CreateProduct;
 
 public sealed record CreateProductRequest(
     string Name,
@@ -22,6 +22,7 @@ public class CreateProductEndpoint : IEndpoint
     {
         builder.MapPost(ProductRouteConsts.BaseRoute, Handle)
             .WithName("CreateProduct")
+            .WithTags("Products")
             .Produces<CreateProductResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
@@ -29,8 +30,8 @@ public class CreateProductEndpoint : IEndpoint
 
     private static async Task<IResult> Handle(
         [FromBody] CreateProductRequest request,
-        IValidator<CreateProductRequest> validator,
-        IMediator mediator,
+        [FromServices] IValidator<CreateProductRequest> validator,
+        [FromServices] IMediator mediator,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);

@@ -1,8 +1,8 @@
-using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ItemsShop.Catalog.Infrastructure.Database.Mapping;
+namespace ItemsShop.Catalogs.Infrastructure.Database.Mapping;
 
 public class ProductEntityConfiguration : IEntityTypeConfiguration<ProductEntity>
 {
@@ -33,13 +33,11 @@ public class ProductEntityConfiguration : IEntityTypeConfiguration<ProductEntity
 
         builder
             .Property(x => x.CreatedAt)
-            .HasColumnType("timestamp with time zone")
-            .HasDefaultValue(DateTime.UtcNow);
+            .HasColumnType("timestamp with time zone");
 
         builder
             .Property(x => x.UpdatedAt)
-            .HasColumnType("timestamp with time zone")
-            .HasDefaultValue(DateTime.UtcNow);
+            .HasColumnType("timestamp with time zone");
 
         builder
             .HasOne(x => x.Category)

@@ -1,8 +1,8 @@
-using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Catalog.Infrastructure.Configurations;
+namespace ItemsShop.Catalogs.Infrastructure.Database.Mapping;
 
 public class CartItemEntityConfiguration : IEntityTypeConfiguration<CartItemEntity>
 {

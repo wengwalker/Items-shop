@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace ItemsShop.Catalog.Features.Features.Categories.CreateCategory;
+namespace ItemsShop.Catalogs.Features.Features.Categories.CreateCategory;
 
 public class CreateCategoryRequestValidator : AbstractValidator<CreateCategoryRequest>
 {

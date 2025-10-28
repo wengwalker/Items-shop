@@ -1,6 +1,6 @@
-using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 
-namespace ItemsShop.Catalog.Features.Features.Carts.GetCart;
+namespace ItemsShop.Catalogs.Features.Features.Carts.GetCart;
 
 internal static class GetCartMappingExtensions
 {

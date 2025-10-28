@@ -4,8 +4,10 @@
 **/out
 **/.vs
 **/.idea
-**/.vscode/
-**/.dockerignore/
-**/docker-compose*.yml/
+**/.vscode
+**/.dockerignore
+**/docker-compose*.yml
 *.user
 *.csproj.user
+*.sln
+*.env

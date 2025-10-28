@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace ItemsShop.Catalog.Features.Features.Products.UpdateProductCategory;
+namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductCategory;
 
 public class UpdateProductCategory : AbstractValidator<UpdateProductCategoryRequest>
 {

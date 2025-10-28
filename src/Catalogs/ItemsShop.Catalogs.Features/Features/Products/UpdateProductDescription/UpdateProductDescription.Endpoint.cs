@@ -1,5 +1,5 @@
 using FluentValidation;
-using ItemsShop.Catalog.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Routes;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Catalog.Features.Features.Products.UpdateProductDescription;
+namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductDescription;
 
 public sealed record UpdateProductDescriptionRequest(
     string Description);
@@ -18,6 +18,7 @@ public class UpdateProductDescriptionEndpoint : IEndpoint
     {
         builder.MapPatch(ProductRouteConsts.UpdateProductDescription, Handle)
             .WithName("UpdateProductDescriptionById")
+            .WithTags("Products")
             .Produces<UpdateProductDescriptionResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
@@ -26,8 +27,8 @@ public class UpdateProductDescriptionEndpoint : IEndpoint
     private static async Task<IResult> Handle(
         [FromRoute] Guid id,
         [FromBody] UpdateProductDescriptionRequest request,
-        IValidator<UpdateProductDescriptionRequest> validator,
-        IMediator mediator,
+        [FromServices] IValidator<UpdateProductDescriptionRequest> validator,
+        [FromServices] IMediator mediator,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);

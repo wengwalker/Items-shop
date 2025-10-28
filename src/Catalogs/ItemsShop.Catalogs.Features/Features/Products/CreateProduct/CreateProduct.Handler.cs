@@ -1,11 +1,11 @@
-using ItemsShop.Catalog.Infrastructure.Database;
+using ItemsShop.Catalogs.Infrastructure.Database;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ItemsShop.Catalog.Features.Features.Products.CreateProduct;
+namespace ItemsShop.Catalogs.Features.Features.Products.CreateProduct;
 
 public sealed record CreateProductCommand(
     string Name,

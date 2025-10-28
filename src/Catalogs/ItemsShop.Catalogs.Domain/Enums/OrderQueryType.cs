@@ -1,4 +1,4 @@
-namespace ItemsShop.Catalog.Domain.Enums;
+namespace ItemsShop.Catalogs.Domain.Enums;
 
 public enum OrderQueryType
 {

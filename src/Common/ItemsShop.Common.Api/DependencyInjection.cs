@@ -2,6 +2,7 @@ using ItemsShop.Common.Api.ErrorHandling;
 using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 
@@ -33,5 +34,14 @@ public static class DependencyInjection
     {
         builder.Host.UseSerilog((context, config) =>
             config.ReadFrom.Configuration(context.Configuration));
+    }
+
+    public static void AddServiceProviderValidation(this WebApplicationBuilder builder)
+    {
+        builder.Host.UseDefaultServiceProvider((context, options) =>
+        {
+            options.ValidateOnBuild = true;
+            options.ValidateScopes = true;
+        });
     }
 }

@@ -1,6 +1,6 @@
-using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 
-namespace ItemsShop.Catalog.Features.Features.Categories.CreateCategory;
+namespace ItemsShop.Catalogs.Features.Features.Categories.CreateCategory;
 
 internal static class CreateCategoryMappingExtensions
 {

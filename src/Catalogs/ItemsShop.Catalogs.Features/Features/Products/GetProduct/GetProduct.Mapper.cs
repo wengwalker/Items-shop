@@ -1,7 +1,7 @@
-using ItemsShop.Catalog.Domain.Entities;
-using ItemsShop.Catalog.Features.Shared.Responses;
+using ItemsShop.Catalogs.Domain.Entities;
+using ItemsShop.Catalogs.Features.Shared.Responses;
 
-namespace ItemsShop.Catalog.Features.Features.Products.GetProduct;
+namespace ItemsShop.Catalogs.Features.Features.Products.GetProduct;
 
 internal static class GetProductMappingExtensions
 {

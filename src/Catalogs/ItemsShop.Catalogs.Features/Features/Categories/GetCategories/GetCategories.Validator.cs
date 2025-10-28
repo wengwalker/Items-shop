@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace ItemsShop.Catalog.Features.Features.Categories.GetCategories;
+namespace ItemsShop.Catalogs.Features.Features.Categories.GetCategories;
 
 public class GetCategoriesRequestValidator : AbstractValidator<GetCategoriesRequest>
 {

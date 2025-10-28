@@ -1,12 +1,12 @@
-using ItemsShop.Catalog.Domain.Enums;
-using ItemsShop.Catalog.Features.Shared.Responses;
-using ItemsShop.Catalog.Infrastructure.Database;
+using ItemsShop.Catalogs.Domain.Enums;
+using ItemsShop.Catalogs.Features.Shared.Responses;
+using ItemsShop.Catalogs.Infrastructure.Database;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
-namespace ItemsShop.Catalog.Features.Features.Products.GetProducts;
+namespace ItemsShop.Catalogs.Features.Features.Products.GetProducts;
 
 public sealed record GetProductsCommand(
     string? Name,

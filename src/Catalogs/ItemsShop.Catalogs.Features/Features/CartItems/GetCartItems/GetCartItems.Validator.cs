@@ -1,6 +1,6 @@
 using FluentValidation;
 
-namespace ItemsShop.Catalog.Features.Features.CartItems.GetCartItems;
+namespace ItemsShop.Catalogs.Features.Features.CartItems.GetCartItems;
 
 public class GetCartItemsRequestValidator : AbstractValidator<GetCartItemsRequest>
 {

@@ -2,9 +2,9 @@ using ItemsShop.Common.Infrastructure.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ItemsShop.Catalog.Infrastructure.Database;
+namespace ItemsShop.Catalogs.Infrastructure.Database;
 
-public class CatalogDatabaseMigrator : IDatabaseMigrator
+public class CatalogDatabaseMigrator : IModuleDatabaseMigrator
 {
     public async Task MigrateAsync(IServiceScope scope, CancellationToken cancellationToken = default)
     {

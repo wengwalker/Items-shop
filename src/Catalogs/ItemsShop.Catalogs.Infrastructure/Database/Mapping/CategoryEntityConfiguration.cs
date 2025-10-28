@@ -1,8 +1,8 @@
-using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ItemsShop.Catalog.Infrastructure.Database.Mapping;
+namespace ItemsShop.Catalogs.Infrastructure.Database.Mapping;
 
 public class CategoryEntityConfiguration : IEntityTypeConfiguration<CategoryEntity>
 {

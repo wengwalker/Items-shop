@@ -1,8 +1,8 @@
-using ItemsShop.Catalog.Domain.Entities;
+using ItemsShop.Catalogs.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace ItemsShop.Catalog.Infrastructure.Database.Mapping;
+namespace ItemsShop.Catalogs.Infrastructure.Database.Mapping;
 
 public class CartEntityConfiguration : IEntityTypeConfiguration<CartEntity>
 {
@@ -14,7 +14,6 @@ public class CartEntityConfiguration : IEntityTypeConfiguration<CartEntity>
 
         builder
             .Property(x => x.LastUpdated)
-            .HasColumnType("timestamp with time zone")
-            .HasDefaultValue(DateTime.UtcNow);
+            .HasColumnType("timestamp with time zone");
     }
 }
