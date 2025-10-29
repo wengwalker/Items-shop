@@ -13,6 +13,6 @@ internal static class GetCategoriesMappingExtensions
                 category.Name,
                 category.Description);
 
-    public static GetCategoriesResponse MapToResponse(this List<CategoryResponse> responses)
+    public static GetCategoriesResponse MapToResponse(this ICollection<CategoryResponse> responses)
         => new(responses);
 }

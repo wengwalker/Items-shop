@@ -13,7 +13,7 @@ public sealed record GetCategoriesCommand(
     OrderQueryType? OrderType) : IRequest<Result<GetCategoriesResponse>>;
 
 public sealed record GetCategoriesResponse(
-    List<CategoryResponse> Categories);
+    ICollection<CategoryResponse> Categories);
 
 public sealed class GetCategoriesHandler(
     CatalogDbContext context,

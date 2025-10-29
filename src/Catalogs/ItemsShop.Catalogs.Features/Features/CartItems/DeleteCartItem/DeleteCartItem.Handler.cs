@@ -43,10 +43,7 @@ public sealed class DeleteCartItemHandler(
                 .Failure($"CartItem with ID {request.ItemId} from Cart with ID {request.CartId} does not exists", StatusCodes.Status404NotFound);
         }
 
-        context.CartItems.Remove(cartItem!);    // TODO: refactor this ! expression
-
-        // TODO: change to
-        // context.Entry(cartItem).State = EntityState.Deleted;
+        context.CartItems.Remove(cartItem!);
 
         await context.SaveChangesAsync(cancellationToken);
 

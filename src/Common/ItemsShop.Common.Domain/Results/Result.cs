@@ -1,6 +1,6 @@
 namespace ItemsShop.Common.Domain.Results;
 
-public class Result<T>
+public sealed class Result<T>
 {
     public bool IsSuccess { get; set; }
 

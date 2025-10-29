@@ -12,8 +12,7 @@ public sealed record GetProductsCommand(
     string? Name,
     OrderQueryType? OrderType) : IRequest<Result<GetProductsResponse>>;
 
-public sealed record GetProductsResponse(
-    List<ProductResponse> Products);
+public sealed record GetProductsResponse(ICollection<ProductResponse> Products);
 
 public sealed class GetProductsHandler(
     CatalogDbContext context,

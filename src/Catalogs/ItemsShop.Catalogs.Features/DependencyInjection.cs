@@ -8,7 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ItemsShop.Catalogs.Features;
 
-public static class DependencyInjection
+public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddCatalogApi(this IServiceCollection services, IConfiguration configuration)
     {

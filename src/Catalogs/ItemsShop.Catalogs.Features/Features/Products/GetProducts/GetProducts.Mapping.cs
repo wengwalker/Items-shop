@@ -18,6 +18,6 @@ internal static class GetProductsMappingExtensions
                 product.UpdatedAt,
                 product.CategoryId);
 
-    public static GetProductsResponse MapToResponse(this List<ProductResponse> responses)
+    public static GetProductsResponse MapToResponse(this ICollection<ProductResponse> responses)
         => new(responses);
 }

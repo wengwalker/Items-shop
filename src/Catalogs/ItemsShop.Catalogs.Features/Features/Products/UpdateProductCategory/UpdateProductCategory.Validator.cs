@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductCategory;
 
-public class UpdateProductCategory : AbstractValidator<UpdateProductCategoryRequest>
+public class UpdateProductCategoryRequestValidator : AbstractValidator<UpdateProductCategoryRequest>
 {
-    public UpdateProductCategory()
+    public UpdateProductCategoryRequestValidator()
     {
         RuleFor(x => x.CategoryId)
             .NotEmpty()

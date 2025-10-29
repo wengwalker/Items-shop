@@ -8,7 +8,7 @@ using Serilog;
 
 namespace ItemsShop.Common.Api;
 
-public static class DependencyInjection
+public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddCoreApiInfrastructure(this IServiceCollection services)
     {

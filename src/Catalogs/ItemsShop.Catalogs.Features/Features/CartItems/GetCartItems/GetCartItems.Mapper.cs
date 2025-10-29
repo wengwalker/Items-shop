@@ -7,6 +7,6 @@ internal static class GetCartItemsMappingExtensions
     public static GetCartItemsCommand MapToCommand(this GetCartItemsRequest request)
         => new (request.cartId);
 
-    public static GetCartItemsResponse MapToResponse(this List<CartItemResponse> items)
+    public static GetCartItemsResponse MapToResponse(this ICollection<CartItemResponse> items)
         => new (items);
 }

@@ -6,12 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ItemsShop.Catalogs.Infrastructure;
 
-public static class DependencyInjection
+public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddCatalogInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var postgresConnectionString = configuration.GetConnectionString(nameof(CatalogDbContext));
-
         services.AddDbContext<CatalogDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString(nameof(CatalogDbContext)), npgsqlOptions =>

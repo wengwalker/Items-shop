@@ -47,6 +47,6 @@ public sealed class GetCartItemHandler(
 
         logger.LogInformation("Fetched CartItem with ID {ItemId} from Cart with ID {CartId}", request.ItemId, request.CartId);
 
-        return Result<GetCartItemResponse>.Success();
+        return Result<GetCartItemResponse>.Success(response);
     }
 }

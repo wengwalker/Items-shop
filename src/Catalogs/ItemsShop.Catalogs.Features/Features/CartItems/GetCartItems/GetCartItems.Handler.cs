@@ -10,7 +10,7 @@ namespace ItemsShop.Catalogs.Features.Features.CartItems.GetCartItems;
 
 public sealed record GetCartItemsCommand(Guid CartId) : IRequest<Result<GetCartItemsResponse>>;
 
-public sealed record GetCartItemsResponse(List<CartItemResponse> Items);
+public sealed record GetCartItemsResponse(ICollection<CartItemResponse> Items);
 
 public sealed class GetCartItemsHandler(
     CatalogDbContext context,
