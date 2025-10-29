@@ -15,7 +15,7 @@ public class GetProductEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapGet(ProductRouteConsts.GetProduct, Handle)
+        builder.MapGet(ProductsRouteConsts.GetProduct, Handle)
             .WithName("GetProductById")
             .WithTags("Products")
             .Produces<GetProductResponse>()

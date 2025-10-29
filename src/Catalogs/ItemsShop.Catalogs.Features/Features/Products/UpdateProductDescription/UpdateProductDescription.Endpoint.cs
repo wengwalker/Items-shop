@@ -16,7 +16,7 @@ public class UpdateProductDescriptionEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPatch(ProductRouteConsts.UpdateProductDescription, Handle)
+        builder.MapPatch(ProductsRouteConsts.UpdateProductDescription, Handle)
             .WithName("UpdateProductDescriptionById")
             .WithTags("Products")
             .Produces<UpdateProductDescriptionResponse>()

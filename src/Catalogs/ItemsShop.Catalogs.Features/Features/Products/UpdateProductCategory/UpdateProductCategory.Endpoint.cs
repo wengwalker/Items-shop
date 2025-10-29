@@ -16,7 +16,7 @@ public class UpdateProductCategoryEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPatch(ProductRouteConsts.UpdateProductCategory, Handle)
+        builder.MapPatch(ProductsRouteConsts.UpdateProductCategory, Handle)
             .WithName("UpdateProductCategoryById")
             .WithTags("Products")
             .Produces<UpdateProductCategoryResponse>()

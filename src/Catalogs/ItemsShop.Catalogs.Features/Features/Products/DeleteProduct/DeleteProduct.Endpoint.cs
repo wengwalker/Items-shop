@@ -15,7 +15,7 @@ public class DeleteProductEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapDelete(ProductRouteConsts.DeleteProduct, Handle)
+        builder.MapDelete(ProductsRouteConsts.DeleteProduct, Handle)
             .WithName("DeleteProductById")
             .WithTags("Products")
             .Produces(StatusCodes.Status204NoContent)

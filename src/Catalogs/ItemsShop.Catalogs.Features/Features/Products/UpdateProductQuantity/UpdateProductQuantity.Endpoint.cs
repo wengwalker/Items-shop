@@ -16,7 +16,7 @@ public class UpdateProductQuantityEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPatch(ProductRouteConsts.UpdateProductQuantity, Handle)
+        builder.MapPatch(ProductsRouteConsts.UpdateProductQuantity, Handle)
             .WithName("UpdateProductQuantityById")
             .WithTags("Products")
             .Produces<UpdateProductQuantityResponse>()

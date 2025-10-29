@@ -16,7 +16,7 @@ public class UpdateProductPriceEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPatch(ProductRouteConsts.UpdateProductPrice, Handle)
+        builder.MapPatch(ProductsRouteConsts.UpdateProductPrice, Handle)
             .WithName("UpdateProductPriceById")
             .WithTags("Products")
             .Produces<UpdateProductPriceResponse>()
