@@ -10,9 +10,13 @@ builder.AddCoreHostLogging();
 
 builder.Services.AddCoreApiInfrastructure();
 
-builder.Services.AddCoreInfrastructure(builder.Configuration);
+builder.Services.AddCoreInfrastructure(
+[
+    CatalogsModuleExtensions.ActivityModuleName
+]);
 
-builder.Services.AddCatalogApi(builder.Configuration);
+builder.Services
+    .AddCatalogModule(builder.Configuration);
 
 builder.AddServiceProviderValidation();
 
@@ -31,6 +35,8 @@ if (app.Environment.IsDevelopment())
 
     app.UseSwaggerUI();
 }
+
+app.UseModuleMiddlewares();
 
 app.MapEndpoints();
 
