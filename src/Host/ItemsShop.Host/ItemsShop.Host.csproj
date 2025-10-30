@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\Catalogs\ItemsShop.Catalogs.Features\ItemsShop.Catalogs.Features.csproj" />
     <ProjectReference Include="..\..\Common\ItemsShop.Common.Api\ItemsShop.Common.Api.csproj" />
     <ProjectReference Include="..\..\Common\ItemsShop.Common.Infrastructure\ItemsShop.Common.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Orders\ItemsShop.Orders.Features\ItemsShop.Orders.Features.csproj" />
   </ItemGroup>
 
 </Project>

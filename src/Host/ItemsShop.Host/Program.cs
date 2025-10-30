@@ -3,6 +3,7 @@ using ItemsShop.Common.Api;
 using ItemsShop.Common.Api.Extensions;
 using ItemsShop.Common.Infrastructure;
 using ItemsShop.Common.Infrastructure.Extensions;
+using ItemsShop.Orders.Features;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +13,13 @@ builder.Services.AddCoreApiInfrastructure();
 
 builder.Services.AddCoreInfrastructure(
 [
-    CatalogsModuleExtensions.ActivityModuleName
+    CatalogsModuleExtensions.ActivityModuleName,
+    OrdersModuleExtensions.ActivityModuleName
 ]);
 
 builder.Services
-    .AddCatalogModule(builder.Configuration);
+    .AddCatalogModule(builder.Configuration)
+    .AddOrderModule(builder.Configuration);
 
 builder.AddServiceProviderValidation();
 

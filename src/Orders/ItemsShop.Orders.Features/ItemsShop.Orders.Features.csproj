@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <ItemGroup>
+    <Folder Include="Features\OrderItems\CreateOrderItem\" />
+    <Folder Include="Features\OrderItems\DeleteOrderItem\" />
+    <Folder Include="Features\OrderItems\GetOrderItem\" />
+    <Folder Include="Features\OrderItems\GetOrderItems\" />
+    <Folder Include="Features\OrderItems\UpdateOrderItemQuantity\" />
+    <Folder Include="Features\Orders\CreateOrder\" />
+    <Folder Include="Features\Orders\DeleteOrder\" />
+    <Folder Include="Features\Orders\GetOrders\" />
+    <Folder Include="Features\Orders\UpdateOrderPrice\" />
+    <Folder Include="Shared\Responses\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="Mediator.Lite" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ItemsShop.Common.Api\ItemsShop.Common.Api.csproj" />
+    <ProjectReference Include="..\ItemsShop.Orders.Infrastructure\ItemsShop.Orders.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
