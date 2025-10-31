@@ -30,10 +30,10 @@ services:
       retries: 3
       start_period: 10s
 
-  itemsshop-service:
-    image: itemsshop-service:0.1
-    container_name: itemsshop-service
-    hostname: itemsshop-service
+  itemsshop-host:
+    image: itemsshop-host:0.1
+    container_name: itemsshop-host
+    hostname: itemsshop-host
     restart: always
     build:
       context: .
