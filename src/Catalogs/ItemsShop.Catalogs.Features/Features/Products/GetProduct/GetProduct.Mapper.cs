@@ -5,7 +5,7 @@ namespace ItemsShop.Catalogs.Features.Features.Products.GetProduct;
 
 internal static class GetProductMappingExtensions
 {
-    public static GetProductCommand MapToCommand(this GetProductRequest request)
+    public static GetProductQuery MapToCommand(this GetProductRequest request)
         => new(request.id);
 
     public static GetProductResponse MapToResponse(this ProductEntity product)

@@ -1,4 +1,4 @@
-namespace ItemsShop.Catalogs.Features.Shared.Routes;
+namespace ItemsShop.Catalogs.Features.Shared.Consts;
 
 internal static class CartItemsRouteConsts
 {
@@ -7,4 +7,11 @@ internal static class CartItemsRouteConsts
     internal const string GetCartItem = BaseRoute + "/{itemId:guid}";
 
     internal const string DeleteCartItem = BaseRoute + "/{itemId:guid}";
+
+    internal const string UpdateCartItemQuantity = BaseRoute + "/{itemId:guid}";
+}
+
+internal static class CartItemsTagConsts
+{
+    internal static readonly string[] CartItemsEndpointTags = ["CartItems"];
 }

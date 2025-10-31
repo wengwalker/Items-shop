@@ -1,4 +1,4 @@
-using ItemsShop.Catalogs.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -14,7 +14,7 @@ public class CreateCartEndpoint : IEndpoint
     {
         builder.MapPost(CartsRouteConsts.BaseRoute, Handle)
             .WithName("CreateCart")
-            .WithTags("Carts")
+            .WithTags(CartsTagConsts.CartsEndpointTags)
             .Produces<CreateCartResponse>();
     }
 

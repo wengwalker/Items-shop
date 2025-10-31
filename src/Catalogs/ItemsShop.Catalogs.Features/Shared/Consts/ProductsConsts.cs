@@ -1,4 +1,4 @@
-namespace ItemsShop.Catalogs.Features.Shared.Routes;
+namespace ItemsShop.Catalogs.Features.Shared.Consts;
 
 internal static class ProductsRouteConsts
 {
@@ -15,4 +15,9 @@ internal static class ProductsRouteConsts
     internal const string UpdateProductPrice = BaseRoute + "/{id:guid}/price";
 
     internal const string UpdateProductQuantity = BaseRoute + "/{id:guid}/quantity";
+}
+
+internal static class ProductsTagConsts
+{
+    internal static readonly string[] ProductsEndpointTags = ["Products"];
 }

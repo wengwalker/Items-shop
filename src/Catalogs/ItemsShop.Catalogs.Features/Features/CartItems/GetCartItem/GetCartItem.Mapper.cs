@@ -5,7 +5,7 @@ namespace ItemsShop.Catalogs.Features.Features.CartItems.GetCartItem;
 
 internal static class GetCartItemMappingExtensions
 {
-    public static GetCartItemCommand MapToCommand(this GetCartItemRequest request)
+    public static GetCartItemQuery MapToCommand(this GetCartItemRequest request)
         => new (request.cartId, request.itemId);
 
     public static GetCartItemResponse MapToResponse(this CartItemEntity cartItem)

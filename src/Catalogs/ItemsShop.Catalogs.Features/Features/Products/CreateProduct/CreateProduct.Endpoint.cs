@@ -1,5 +1,5 @@
 using FluentValidation;
-using ItemsShop.Catalogs.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -22,7 +22,7 @@ public class CreateProductEndpoint : IEndpoint
     {
         builder.MapPost(ProductsRouteConsts.BaseRoute, Handle)
             .WithName("CreateProduct")
-            .WithTags("Products")
+            .WithTags(ProductsTagConsts.ProductsEndpointTags)
             .Produces<CreateProductResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();

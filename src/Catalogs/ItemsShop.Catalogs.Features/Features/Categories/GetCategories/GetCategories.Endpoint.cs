@@ -1,6 +1,6 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Domain.Enums;
-using ItemsShop.Catalogs.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -16,9 +16,9 @@ public class GetCategoriesEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapGet(CategoriesRouteConsts.BaseRoute, Handle)
+        builder.MapGet(CategoriesConsts.BaseRoute, Handle)
             .WithName("GetCategories")
-            .WithTags("Categories")
+            .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
             .Produces<GetCategoriesResponse>()
             .ProducesValidationProblem();
     }

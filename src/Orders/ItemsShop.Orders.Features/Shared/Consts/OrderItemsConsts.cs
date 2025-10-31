@@ -1,4 +1,4 @@
-namespace ItemsShop.Orders.Features.Shared.Routes;
+namespace ItemsShop.Orders.Features.Shared.Consts;
 
 internal static class OrderItemsRouteConsts
 {
@@ -9,4 +9,9 @@ internal static class OrderItemsRouteConsts
     internal const string GetOrderItem = BaseRoute + "/{id:guid}";
 
     internal const string UpdateOrderItemQuantity = BaseRoute + "/{id:guid}";
+}
+
+internal static class OrderItemsTagConsts
+{
+    internal static readonly string[] OrderItemsEndpointTags = ["OrderItems"];
 }

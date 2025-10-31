@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Categories.GetCategories;
 
-public sealed record GetCategoriesCommand(
+public sealed record GetCategoriesQuery(
     string? Name,
     OrderQueryType? OrderType) : IRequest<Result<GetCategoriesResponse>>;
 
@@ -17,9 +17,9 @@ public sealed record GetCategoriesResponse(
 
 public sealed class GetCategoriesHandler(
     CatalogDbContext context,
-    ILogger<GetCategoriesHandler> logger) : IRequestHandler<GetCategoriesCommand, Result<GetCategoriesResponse>>
+    ILogger<GetCategoriesHandler> logger) : IRequestHandler<GetCategoriesQuery, Result<GetCategoriesResponse>>
 {
-    public async Task<Result<GetCategoriesResponse>> Handle(GetCategoriesCommand request, CancellationToken cancellationToken)
+    public async Task<Result<GetCategoriesResponse>> Handle(GetCategoriesQuery request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching categories");
 

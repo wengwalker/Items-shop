@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Carts.GetCart;
 
-public sealed record GetCartCommand(Guid CartId) : IRequest<Result<GetCartResponse>>;
+public sealed record GetCartQuery(Guid CartId) : IRequest<Result<GetCartResponse>>;
 
 public sealed record GetCartResponse(
     Guid CartId,
@@ -15,9 +15,9 @@ public sealed record GetCartResponse(
 
 public sealed class GetCartHandler(
     CatalogDbContext context,
-    ILogger<GetCartHandler> logger) : IRequestHandler<GetCartCommand, Result<GetCartResponse>>
+    ILogger<GetCartHandler> logger) : IRequestHandler<GetCartQuery, Result<GetCartResponse>>
 {
-    public async Task<Result<GetCartResponse>> Handle(GetCartCommand request, CancellationToken cancellationToken)
+    public async Task<Result<GetCartResponse>> Handle(GetCartQuery request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching cart");
 

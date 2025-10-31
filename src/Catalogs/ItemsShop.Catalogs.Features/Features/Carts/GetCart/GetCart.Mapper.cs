@@ -4,7 +4,7 @@ namespace ItemsShop.Catalogs.Features.Features.Carts.GetCart;
 
 internal static class GetCartMappingExtensions
 {
-    public static GetCartCommand MapToCommand(this GetCartRequest request)
+    public static GetCartQuery MapToCommand(this GetCartRequest request)
         => new (request.id);
 
     public static GetCartResponse MapToResponse(this CartEntity cart)

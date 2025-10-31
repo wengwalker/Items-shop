@@ -1,6 +1,6 @@
-namespace ItemsShop.Catalogs.Features.Shared.Routes;
+namespace ItemsShop.Catalogs.Features.Shared.Consts;
 
-internal static class CategoriesRouteConsts
+internal static class CategoriesConsts
 {
     internal const string BaseRoute = "/api/v1/categories";
 
@@ -11,4 +11,9 @@ internal static class CategoriesRouteConsts
     internal const string UpdateCategoryName = BaseRoute + "/{id:guid}/name";
 
     internal const string UpdateCategoryDescription = BaseRoute + "/{id:guid}/description";
+}
+
+internal static class CategoriesTagConsts
+{
+    internal static readonly string[] CategoriesEndpointTags = ["Categories"];
 }

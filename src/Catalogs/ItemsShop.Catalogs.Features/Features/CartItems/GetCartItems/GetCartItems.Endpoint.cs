@@ -1,5 +1,5 @@
 using FluentValidation;
-using ItemsShop.Catalogs.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -17,7 +17,7 @@ public class GetCartItemsEndpoint : IEndpoint
     {
         builder.MapGet(CartItemsRouteConsts.BaseRoute, Handle)
             .WithName("GetCartItemsByCartId")
-            .WithTags("CartItems")
+            .WithTags(CartItemsTagConsts.CartItemsEndpointTags)
             .Produces<GetCartItemsResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();

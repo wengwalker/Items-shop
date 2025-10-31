@@ -1,5 +1,5 @@
 using FluentValidation;
-using ItemsShop.Catalogs.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -15,9 +15,9 @@ public class DeleteCategoryEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapDelete(CategoriesRouteConsts.DeleteCategory, Handle)
+        builder.MapDelete(CategoriesConsts.DeleteCategory, Handle)
             .WithName("DeleteCategoryById")
-            .WithTags("Categories")
+            .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();

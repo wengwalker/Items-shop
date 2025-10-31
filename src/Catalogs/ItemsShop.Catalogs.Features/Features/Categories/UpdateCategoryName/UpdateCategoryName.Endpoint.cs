@@ -1,5 +1,5 @@
 using FluentValidation;
-using ItemsShop.Catalogs.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -16,9 +16,9 @@ public class UpdateCategoryNameEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPatch(CategoriesRouteConsts.UpdateCategoryName, Handle)
+        builder.MapPatch(CategoriesConsts.UpdateCategoryName, Handle)
             .WithName("UpdateCategoryNameById")
-            .WithTags("Categories")
+            .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
             .Produces<UpdateCategoryNameResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();

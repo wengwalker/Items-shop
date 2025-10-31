@@ -1,5 +1,5 @@
 using FluentValidation;
-using ItemsShop.Catalogs.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -18,7 +18,7 @@ public class UpdateProductCategoryEndpoint : IEndpoint
     {
         builder.MapPatch(ProductsRouteConsts.UpdateProductCategory, Handle)
             .WithName("UpdateProductCategoryById")
-            .WithTags("Products")
+            .WithTags(ProductsTagConsts.ProductsEndpointTags)
             .Produces<UpdateProductCategoryResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();

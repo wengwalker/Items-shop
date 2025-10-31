@@ -8,15 +8,15 @@ using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.CartItems.GetCartItems;
 
-public sealed record GetCartItemsCommand(Guid CartId) : IRequest<Result<GetCartItemsResponse>>;
+public sealed record GetCartItemsQuery(Guid CartId) : IRequest<Result<GetCartItemsResponse>>;
 
 public sealed record GetCartItemsResponse(ICollection<CartItemResponse> Items);
 
 public sealed class GetCartItemsHandler(
     CatalogDbContext context,
-    ILogger<GetCartItemsHandler> logger) : IRequestHandler<GetCartItemsCommand, Result<GetCartItemsResponse>>
+    ILogger<GetCartItemsHandler> logger) : IRequestHandler<GetCartItemsQuery, Result<GetCartItemsResponse>>
 {
-    public async Task<Result<GetCartItemsResponse>> Handle(GetCartItemsCommand request, CancellationToken cancellationToken)
+    public async Task<Result<GetCartItemsResponse>> Handle(GetCartItemsQuery request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching CartItems from Cart with ID {CartId}", request.CartId);
 

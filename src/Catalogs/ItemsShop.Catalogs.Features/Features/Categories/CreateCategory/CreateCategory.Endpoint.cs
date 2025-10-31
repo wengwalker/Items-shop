@@ -1,5 +1,5 @@
 using FluentValidation;
-using ItemsShop.Catalogs.Features.Shared.Routes;
+using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -17,9 +17,9 @@ public class CreateCategoryEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost(CategoriesRouteConsts.BaseRoute, Handle)
+        builder.MapPost(CategoriesConsts.BaseRoute, Handle)
             .WithName("CreateCategory")
-            .WithTags("Categories")
+            .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
             .Produces<CreateCategoryResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesValidationProblem();
@@ -43,7 +43,7 @@ public class CreateCategoryEndpoint : IEndpoint
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
-            ? Results.Created(CategoriesRouteConsts.BaseRoute, response.Value)
+            ? Results.Created(CategoriesConsts.BaseRoute, response.Value)
             : Results.Problem(
                 detail: response.Error,
                 statusCode: response.StatusCode);
