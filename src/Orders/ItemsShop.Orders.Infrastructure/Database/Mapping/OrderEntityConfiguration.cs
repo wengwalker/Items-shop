@@ -22,8 +22,12 @@ public class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEntity>
             .IsRequired();
 
         builder
+            .Property(x => x.CreatedAt)
+            .HasColumnType("timestamp with time zone");        
+
+        builder
             .Property(x => x.UpdatedAt)
-            .HasDefaultValue(DateTime.UtcNow);
+            .HasColumnType("timestamp with time zone");
 
         builder
             .HasMany(x => x.OrderItems)

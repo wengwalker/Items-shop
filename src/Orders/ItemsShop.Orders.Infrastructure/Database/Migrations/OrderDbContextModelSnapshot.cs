@@ -3,20 +3,17 @@ using System;
 using ItemsShop.Orders.Infrastructure.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace ItemsShop.Orders.Infrastructure.Migrations
+namespace ItemsShop.Orders.Infrastructure.Database.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    [Migration("20251031143626_initial_create_orders_v1")]
-    partial class initial_create_orders_v1
+    partial class OrderDbContextModelSnapshot : ModelSnapshot
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,9 +41,7 @@ namespace ItemsShop.Orders.Infrastructure.Migrations
                         .HasColumnType("numeric");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasDefaultValue(new DateTime(2025, 10, 31, 14, 36, 26, 29, DateTimeKind.Utc).AddTicks(5690));
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 

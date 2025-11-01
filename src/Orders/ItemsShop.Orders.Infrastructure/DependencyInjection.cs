@@ -10,9 +10,11 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddOrderInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        var postgresConnectionString = configuration.GetConnectionString("Postgres");
+
         services.AddDbContext<OrderDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString(nameof(OrderDbContext)), npgsqlOptions =>
+            options.UseNpgsql(postgresConnectionString, npgsqlOptions =>
                 npgsqlOptions.MigrationsHistoryTable(DbConsts.MigrationHistoryTableName));
         });
 

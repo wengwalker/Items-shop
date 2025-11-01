@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace ItemsShop.Orders.Infrastructure.Migrations
+namespace ItemsShop.Orders.Infrastructure.Database.Migrations
 {
     /// <inheritdoc />
     public partial class initial_create_orders_v1 : Migration
@@ -23,7 +23,7 @@ namespace ItemsShop.Orders.Infrastructure.Migrations
                     Status = table.Column<int>(type: "integer", nullable: false, defaultValue: 0),
                     TotalPrice = table.Column<decimal>(type: "numeric", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValue: new DateTime(2025, 10, 31, 14, 36, 26, 29, DateTimeKind.Utc).AddTicks(5690))
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {

@@ -10,9 +10,11 @@ public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddCatalogInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        var postgresConnectionString = configuration.GetConnectionString("Postgres");
+
         services.AddDbContext<CatalogDbContext>(options =>
         {
-            options.UseNpgsql(configuration.GetConnectionString(nameof(CatalogDbContext)), npgsqlOptions =>
+            options.UseNpgsql(postgresConnectionString, npgsqlOptions =>
                 npgsqlOptions.MigrationsHistoryTable(DbConsts.MigrationHistoryTableName));
         });
 
