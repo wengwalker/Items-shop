@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Categories.DeleteCategory;
 
-public sealed record DeleteCategoryRequest([FromRoute] Guid id);
+public sealed record DeleteCategoryRequest([FromRoute] Guid categoryId);
 
 public class DeleteCategoryEndpoint : IEndpoint
 {
@@ -18,6 +18,8 @@ public class DeleteCategoryEndpoint : IEndpoint
         builder.MapDelete(CategoriesConsts.DeleteCategory, Handle)
             .WithName("DeleteCategoryById")
             .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
+            .WithSummary("Deletes a category")
+            .WithDescription("Deletes a category by providing category id in route")
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();

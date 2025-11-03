@@ -22,9 +22,9 @@ public class CreateProductRequestValidator : AbstractValidator<CreateProductRequ
             .NotEmpty()
             .WithMessage("Price must be set");
 
-        RuleFor(x => x.StockQuantity)
+        RuleFor(x => x.Quantity)
             .GreaterThanOrEqualTo(0)
-            .WithMessage("StockQuantity must be set");
+            .WithMessage("Quantity must be set");
 
         RuleFor(x => x.CategoryId)
             .NotEmpty()

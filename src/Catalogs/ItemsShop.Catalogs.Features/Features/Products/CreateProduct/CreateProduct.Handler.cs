@@ -11,7 +11,7 @@ public sealed record CreateProductCommand(
     string Name,
     string Description,
     decimal Price,
-    long StockQuantity,
+    long Quantity,
     Guid CategoryId) : IRequest<Result<CreateProductResponse>>;
 
 public sealed record CreateProductResponse(
@@ -19,7 +19,7 @@ public sealed record CreateProductResponse(
     string Name,
     string Description,
     decimal Price,
-    long StockQuantity,
+    long Quantity,
     DateTime CreatedAt,
     DateTime UpdatedAt,
     Guid CategoryId);

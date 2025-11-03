@@ -13,7 +13,7 @@ public sealed record CreateProductRequest(
     string Name,
     string Description,
     decimal Price,
-    long StockQuantity,
+    long Quantity,
     Guid CategoryId);
 
 public class CreateProductEndpoint : IEndpoint
@@ -23,6 +23,8 @@ public class CreateProductEndpoint : IEndpoint
         builder.MapPost(ProductsRouteConsts.BaseRoute, Handle)
             .WithName("CreateProduct")
             .WithTags(ProductsTagConsts.ProductsEndpointTags)
+            .WithSummary("Creates a new product")
+            .WithDescription("Creates a new product by providing name, description, price, quantity and category id in body")
             .Produces<CreateProductResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();

@@ -8,7 +8,7 @@ internal static class CreateProductMappingExtensions
         => new(request.Name,
                 request.Description,
                 request.Price,
-                request.StockQuantity,
+                request.Quantity,
                 request.CategoryId);
 
     public static ProductEntity MapToProduct(this CreateProductCommand command)
@@ -18,7 +18,7 @@ internal static class CreateProductMappingExtensions
             Name = command.Name,
             Description = command.Description,
             Price = command.Price,
-            Quantity = command.StockQuantity,
+            Quantity = command.Quantity,
             CategoryId = command.CategoryId,
             CreatedAt = DateTime.UtcNow,
             UpdatedAt = DateTime.UtcNow

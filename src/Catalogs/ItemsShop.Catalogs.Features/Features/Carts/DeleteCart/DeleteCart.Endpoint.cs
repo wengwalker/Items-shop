@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Carts.DeleteCart;
 
-public sealed record DeleteCartRequest([FromRoute] Guid id);
+public sealed record DeleteCartRequest([FromRoute] Guid cartId);
 
 public class DeleteCartEndpoint : IEndpoint
 {
@@ -18,6 +18,8 @@ public class DeleteCartEndpoint : IEndpoint
         builder.MapDelete(CartsRouteConsts.DeleteCart, Handle)
             .WithName("DeleteCartById")
             .WithTags(CartsTagConsts.CartsEndpointTags)
+            .WithSummary("Deletes an cart")
+            .WithDescription("Deletes an cart by providing cart id in route")
             .Produces<DeleteCartResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();

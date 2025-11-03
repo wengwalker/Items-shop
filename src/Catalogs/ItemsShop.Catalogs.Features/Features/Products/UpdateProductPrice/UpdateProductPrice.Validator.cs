@@ -7,7 +7,7 @@ public class UpdateProductPriceRequestValidator : AbstractValidator<UpdateProduc
     public UpdateProductPriceRequestValidator()
     {
         RuleFor(x => x.Price)
-            .NotEmpty()
-            .WithMessage("Price must be set");
+            .GreaterThan(0)
+            .WithMessage("Price must greater than 0");
     }
 }

@@ -18,6 +18,8 @@ public class GetCartItemsEndpoint : IEndpoint
         builder.MapGet(CartItemsRouteConsts.BaseRoute, Handle)
             .WithName("GetCartItemsByCartId")
             .WithTags(CartItemsTagConsts.CartItemsEndpointTags)
+            .WithSummary("Returns all items from cart")
+            .WithDescription("Returns all items from cart by providing cart id in route")
             .Produces<GetCartItemsResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.DeleteProduct;
 
-public sealed record DeleteProductRequest([FromRoute] Guid id);
+public sealed record DeleteProductRequest([FromRoute] Guid productId);
 
 public class DeleteProductEndpoint : IEndpoint
 {
@@ -18,6 +18,8 @@ public class DeleteProductEndpoint : IEndpoint
         builder.MapDelete(ProductsRouteConsts.DeleteProduct, Handle)
             .WithName("DeleteProductById")
             .WithTags(ProductsTagConsts.ProductsEndpointTags)
+            .WithSummary("Deletes an product")
+            .WithDescription("Deletes an product by providing product id in route")
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();

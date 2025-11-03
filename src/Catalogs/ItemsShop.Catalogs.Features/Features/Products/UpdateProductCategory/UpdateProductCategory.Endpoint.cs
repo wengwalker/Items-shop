@@ -19,13 +19,15 @@ public class UpdateProductCategoryEndpoint : IEndpoint
         builder.MapPatch(ProductsRouteConsts.UpdateProductCategory, Handle)
             .WithName("UpdateProductCategoryById")
             .WithTags(ProductsTagConsts.ProductsEndpointTags)
+            .WithSummary("Updates an category in product")
+            .WithDescription("Updates an category in product by providing product id in route and category id in body")
             .Produces<UpdateProductCategoryResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
-        [FromRoute] Guid id,
+        [FromRoute] Guid productId,
         [FromBody] UpdateProductCategoryRequest request,
         [FromServices] IValidator<UpdateProductCategoryRequest> validator,
         [FromServices] IMediator mediator,
@@ -38,7 +40,7 @@ public class UpdateProductCategoryEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand(id);
+        var command = request.MapToCommand(productId);
 
         var response = await mediator.Send(command, cancellationToken);
 

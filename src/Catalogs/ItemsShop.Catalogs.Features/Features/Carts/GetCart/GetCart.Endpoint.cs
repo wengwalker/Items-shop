@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Carts.GetCart;
 
-public sealed record GetCartRequest([FromRoute] Guid id);
+public sealed record GetCartRequest([FromRoute] Guid cartId);
 
 public class GetCartEndpoint : IEndpoint
 {
@@ -18,6 +18,8 @@ public class GetCartEndpoint : IEndpoint
         builder.MapGet(CartsRouteConsts.GetCart, Handle)
             .WithName("GetCartById")
             .WithTags(CartsTagConsts.CartsEndpointTags)
+            .WithSummary("Returns one cart")
+            .WithDescription("Returns one cart by providing cart id in route")
             .Produces<GetCartResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
@@ -41,7 +43,7 @@ public class GetCartEndpoint : IEndpoint
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
-            ? Results.NoContent()
+            ? Results.Ok(response)
             : Results.Problem(
                 detail: response.Error,
                 statusCode: response.StatusCode);

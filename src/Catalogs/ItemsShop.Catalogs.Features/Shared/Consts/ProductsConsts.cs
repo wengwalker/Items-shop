@@ -4,17 +4,17 @@ internal static class ProductsRouteConsts
 {
     internal const string BaseRoute = "/api/v1/products";
 
-    internal const string GetProduct = BaseRoute + "/{id:guid}";
+    internal const string GetProduct = BaseRoute + "/{productId:guid}";
 
-    internal const string DeleteProduct = BaseRoute + "/{id:guid}";
+    internal const string DeleteProduct = BaseRoute + "/{productId:guid}";
 
-    internal const string UpdateProductCategory = BaseRoute + "/{id:guid}/category";
+    internal const string UpdateProductCategory = BaseRoute + "/{productId:guid}/category";
 
-    internal const string UpdateProductDescription = BaseRoute + "/{id:guid}/description";
+    internal const string UpdateProductDescription = BaseRoute + "/{productId:guid}/description";
 
-    internal const string UpdateProductPrice = BaseRoute + "/{id:guid}/price";
+    internal const string UpdateProductPrice = BaseRoute + "/{productId:guid}/price";
 
-    internal const string UpdateProductQuantity = BaseRoute + "/{id:guid}/quantity";
+    internal const string UpdateProductQuantity = BaseRoute + "/{productId:guid}/quantity";
 }
 
 internal static class ProductsTagConsts

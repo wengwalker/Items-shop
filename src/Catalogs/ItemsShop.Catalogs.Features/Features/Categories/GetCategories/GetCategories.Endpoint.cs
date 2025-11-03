@@ -19,6 +19,8 @@ public class GetCategoriesEndpoint : IEndpoint
         builder.MapGet(CategoriesConsts.BaseRoute, Handle)
             .WithName("GetCategories")
             .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
+            .WithSummary("Returns list of cartegories")
+            .WithDescription("Returns list of categories and accepts query params: name and order")
             .Produces<GetCategoriesResponse>()
             .ProducesValidationProblem();
     }

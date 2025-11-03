@@ -20,7 +20,10 @@ public class CreateCartItemEndpoint : IEndpoint
         builder.MapPost(CartItemsRouteConsts.BaseRoute, Handle)
             .WithName("CreateCartItemByCartId")
             .WithTags(CartItemsTagConsts.CartItemsEndpointTags)
+            .WithSummary("Creates a new item in cart")
+            .WithDescription("Creates a new item in cart by providing cart id in route and new quantity and product id in body")
             .Produces<CreateCartItemResponse>()
+            .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }

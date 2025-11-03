@@ -4,9 +4,9 @@ internal static class CartsRouteConsts
 {
     internal const string BaseRoute = "/api/v1/carts";
 
-    internal const string GetCart = BaseRoute + "/{id:guid}";
+    internal const string GetCart = BaseRoute + "/{cartId:guid}";
 
-    internal const string DeleteCart = BaseRoute + "/{id:guid}";
+    internal const string DeleteCart = BaseRoute + "/{cartId:guid}";
 }
 
 internal static class CartsTagConsts

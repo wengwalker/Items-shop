@@ -20,6 +20,8 @@ public class CreateCategoryEndpoint : IEndpoint
         builder.MapPost(CategoriesConsts.BaseRoute, Handle)
             .WithName("CreateCategory")
             .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
+            .WithSummary("Creates a new category")
+            .WithDescription("Creates a new category by providing name and description in body")
             .Produces<CreateCategoryResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesValidationProblem();

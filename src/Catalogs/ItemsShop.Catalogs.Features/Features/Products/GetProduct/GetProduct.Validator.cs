@@ -6,7 +6,7 @@ public class GetProductRequestValidator : AbstractValidator<GetProductRequest>
 {
     public GetProductRequestValidator()
     {
-        RuleFor(x => x.id)
+        RuleFor(x => x.productId)
             .NotEmpty()
             .WithMessage("ProductId must be set");
     }

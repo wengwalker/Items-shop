@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.GetProduct;
 
-public sealed record GetProductRequest([FromRoute] Guid id);
+public sealed record GetProductRequest([FromRoute] Guid productId);
 
 public class GetProductEndpoint : IEndpoint
 {
@@ -18,6 +18,8 @@ public class GetProductEndpoint : IEndpoint
         builder.MapGet(ProductsRouteConsts.GetProduct, Handle)
             .WithName("GetProductById")
             .WithTags(ProductsTagConsts.ProductsEndpointTags)
+            .WithSummary("Returns one product")
+            .WithDescription("Returns one product by providing product id in route")
             .Produces<GetProductResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();

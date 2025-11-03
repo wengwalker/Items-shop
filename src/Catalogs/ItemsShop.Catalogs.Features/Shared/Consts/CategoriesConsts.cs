@@ -4,13 +4,13 @@ internal static class CategoriesConsts
 {
     internal const string BaseRoute = "/api/v1/categories";
 
-    internal const string GetCategory = BaseRoute + "/{id:guid}";
+    internal const string GetCategory = BaseRoute + "/{categoryId:guid}";
 
-    internal const string DeleteCategory = BaseRoute + "/{id:guid}";
+    internal const string DeleteCategory = BaseRoute + "/{categoryId:guid}";
 
-    internal const string UpdateCategoryName = BaseRoute + "/{id:guid}/name";
+    internal const string UpdateCategoryName = BaseRoute + "/{categoryId:guid}/name";
 
-    internal const string UpdateCategoryDescription = BaseRoute + "/{id:guid}/description";
+    internal const string UpdateCategoryDescription = BaseRoute + "/{categoryId:guid}/description";
 }
 
 internal static class CategoriesTagConsts

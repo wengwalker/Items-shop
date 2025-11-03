@@ -6,7 +6,7 @@ public class DeleteProductRequestValidator : AbstractValidator<DeleteProductRequ
 {
     public DeleteProductRequestValidator()
     {
-        RuleFor(x => x.id)
+        RuleFor(x => x.productId)
             .NotEmpty()
             .WithMessage("Id must be set");
     }

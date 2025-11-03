@@ -19,6 +19,8 @@ public class GetProductsEndpoint : IEndpoint
         builder.MapGet(ProductsRouteConsts.BaseRoute, Handle)
             .WithName("GetProducts")
             .WithTags(ProductsTagConsts.ProductsEndpointTags)
+            .WithSummary("Returns list of products")
+            .WithDescription("Returns list of products and accepts query params: name and order")
             .Produces<GetProductsResponse>()
             .ProducesValidationProblem();
     }

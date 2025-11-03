@@ -6,7 +6,7 @@ public class GetCartRequestValidator : AbstractValidator<GetCartRequest>
 {
     public GetCartRequestValidator()
     {
-        RuleFor(x => x.id)
+        RuleFor(x => x.cartId)
             .NotEmpty()
             .WithMessage("CartId must be set");
     }

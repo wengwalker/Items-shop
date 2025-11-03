@@ -38,6 +38,7 @@ public sealed class CreateCartItemHandler(
         }
 
         var product = await context.Products
+            .AsNoTracking()
             .FirstOrDefaultAsync(x => x.Id == request.ProductId, cancellationToken);
 
         if (product == null)

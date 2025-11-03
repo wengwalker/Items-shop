@@ -19,13 +19,15 @@ public class UpdateProductDescriptionEndpoint : IEndpoint
         builder.MapPatch(ProductsRouteConsts.UpdateProductDescription, Handle)
             .WithName("UpdateProductDescriptionById")
             .WithTags(ProductsTagConsts.ProductsEndpointTags)
+            .WithSummary("Updates an description in product")
+            .WithDescription("Updates an description in product by providing product id in route and description in body")
             .Produces<UpdateProductDescriptionResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
-        [FromRoute] Guid id,
+        [FromRoute] Guid productId,
         [FromBody] UpdateProductDescriptionRequest request,
         [FromServices] IValidator<UpdateProductDescriptionRequest> validator,
         [FromServices] IMediator mediator,
@@ -38,7 +40,7 @@ public class UpdateProductDescriptionEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand(id);
+        var command = request.MapToCommand(productId);
 
         var response = await mediator.Send(command, cancellationToken);
 

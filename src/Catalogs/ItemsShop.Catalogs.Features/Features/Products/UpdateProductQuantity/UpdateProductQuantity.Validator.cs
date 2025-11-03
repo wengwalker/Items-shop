@@ -7,7 +7,7 @@ public class UpdateProductQuantityRequestValidator : AbstractValidator<UpdatePro
     public UpdateProductQuantityRequestValidator()
     {
         RuleFor(x => x.Quantity)
-            .NotEmpty()
-            .WithMessage("Quantity must be set");
+            .GreaterThan(0)
+            .WithMessage("Quantity must be greater than 0");
     }
 }

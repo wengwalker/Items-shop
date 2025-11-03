@@ -18,7 +18,10 @@ public class UpdateCartItemQuantityEndpoint : IEndpoint
         builder.MapPatch(CartItemsRouteConsts.UpdateCartItemQuantity, Handle)
             .WithName("UpdateCartItemQuantityById")
             .WithTags(CartItemsTagConsts.CartItemsEndpointTags)
+            .WithSummary("Updates the quantity of the required product in cart")
+            .WithDescription("Updates the quantity of the required product in cart by providing cart id and item id in route and new quantity in body")
             .Produces<UpdateCartItemQuantityResponse>()
+            .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }

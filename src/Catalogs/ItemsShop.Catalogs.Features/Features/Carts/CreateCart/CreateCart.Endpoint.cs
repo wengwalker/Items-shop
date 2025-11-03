@@ -15,6 +15,8 @@ public class CreateCartEndpoint : IEndpoint
         builder.MapPost(CartsRouteConsts.BaseRoute, Handle)
             .WithName("CreateCart")
             .WithTags(CartsTagConsts.CartsEndpointTags)
+            .WithSummary("Creates a new cart")
+            .WithDescription("Creates a new cart")
             .Produces<CreateCartResponse>();
     }
 

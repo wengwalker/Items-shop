@@ -18,6 +18,8 @@ public class DeleteCartItemEndpoint : IEndpoint
         builder.MapDelete(CartItemsRouteConsts.DeleteCartItem, Handle)
             .WithName("DeleteCartItemById")
             .WithTags(CartItemsTagConsts.CartItemsEndpointTags)
+            .WithSummary("Deletes an item from cart")
+            .WithDescription("Deletes an item from cart by providing cart id and item id in route")
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
