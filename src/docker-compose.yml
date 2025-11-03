@@ -47,6 +47,12 @@ services:
       - ${HOST_PORTS:-8080:8080}
     networks:
       - itemsshop-network
+    healthcheck:
+      test: ["CMD", "curl --fail http://localhost:8080/healthz || exit"]
+      interval: 5s
+      timeout: 3s
+      retries: 2
+      start_period: 5s
     depends_on:
       itemsshop-db:
         condition: service_healthy

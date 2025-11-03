@@ -11,7 +11,7 @@ builder.AddCoreHostLogging();
 
 builder.Services.AddCoreApiInfrastructure();
 
-builder.Services.AddCoreInfrastructure(
+builder.Services.AddCoreInfrastructure(builder.Configuration,
 [
     CatalogsModuleExtensions.ActivityModuleName,
     OrdersModuleExtensions.ActivityModuleName
@@ -39,7 +39,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseRouting();
+
 app.UseModuleMiddlewares();
+
+app.MapHealthChecksEndpoints();
 
 app.MapEndpoints();
 
