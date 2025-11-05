@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Catalogs\ItemsShop.Catalogs.Features\ItemsShop.Catalogs.Features.csproj" />
+    <ProjectReference Include="..\..\Common\ItemsShop.Common.Api\ItemsShop.Common.Api.csproj" />
+    <ProjectReference Include="..\..\Common\ItemsShop.Common.Infrastructure\ItemsShop.Common.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Orders\ItemsShop.Orders.Features\ItemsShop.Orders.Features.csproj" />
+  </ItemGroup>
+
+</Project>

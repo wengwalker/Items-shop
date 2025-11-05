@@ -12,8 +12,8 @@ jobs:
       contents: read
       pull-requests: read
     env:
-      SOLUTION_FILE: ./src/items-shop.sln
-      PROJECT_PATH: ./src/Catalog/Catalog.Api/Catalog.Api.csproj
+      SOLUTION_FILE: ./src/ItemsShop.sln
+      PROJECT_PATH: ./src/Host/ItemsShop.Host/ItemsShop.Host.csproj
 
     steps:
       - uses: actions/checkout@v5
@@ -23,7 +23,7 @@ jobs:
       - name: Setup dotnet
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 8.0.*
+          dotnet-version: 9.0.*
 
       - name: Install dependencies
         run: dotnet restore ${{ env.SOLUTION_FILE }}
