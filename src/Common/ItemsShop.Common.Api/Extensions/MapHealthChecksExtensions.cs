@@ -14,8 +14,6 @@ public static class MapHealthChecksExtensions
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
         });
 
-        app.MapHealthChecksUI();
-
         return app;
     }
 }

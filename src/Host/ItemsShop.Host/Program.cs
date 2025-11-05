@@ -43,6 +43,8 @@ app.UseRouting();
 
 app.UseModuleMiddlewares();
 
+app.UseOpenTelemetryPrometheusScrapingEndpoint();
+
 app.MapHealthChecksEndpoints();
 
 app.MapEndpoints();

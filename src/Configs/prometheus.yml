@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: itemsshop_host
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["itemsshop-host:8080"]
+  - job_name: itemsshop_db
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["itemsshop-db-exporter:9187"]

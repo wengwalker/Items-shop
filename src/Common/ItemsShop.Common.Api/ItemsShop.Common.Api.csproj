@@ -2,10 +2,9 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI" />
-    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" />
   </ItemGroup>
 
 </Project>
