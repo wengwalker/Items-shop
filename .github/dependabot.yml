@@ -12,19 +12,12 @@ updates:
       - "dependencies"
       - "dependabot"
     ignore:
-      - dependency-name: "Microsoft.AspNetCore.*"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "Microsoft.EntityFrameworkCore.*"
         update-types: ["version-update:semver-major"]
       - dependency-name: "Npgsql.EntityFrameworkCore.*"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "FluentValidation"
+      - dependency-name: "Npgsql.OpenTelemetry"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "Swashbuckle.AspNetCore"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "Serilog.AspNetCore"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "FluentValidation.*"
     assignees:
       - "wengwalker"
 
