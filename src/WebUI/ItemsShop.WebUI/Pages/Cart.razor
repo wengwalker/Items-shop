@@ -1,0 +1,165 @@
+@page "/carts/{Id:guid}"
+@inject ItemsShop.WebUI.Services.CatalogApiClient Api
+@inject NavigationManager Nav
+
+<h1>Cart</h1>
+
+<div class="card">
+    <div class="row gap">
+        <span class="badge">Id: @Id</span>
+        <span class="badge">LastUpdated: @_cart?.LastUpdated</span>
+        <span class="right"></span>
+        <button class="btn btn-danger" @onclick="DeleteCartAsync">Delete cart</button>
+    </div>
+    <p class="muted mt">@_status</p>
+</div>
+
+<h3>Items</h3>
+
+<div class="card">
+    <h3>Add item</h3>
+    <EditForm class="form-grid" Model="_add" OnValidSubmit="AddItemAsync">
+        <div class="field">
+            <label>ProductId</label>
+            <InputText class="input" @bind-Value="_add.ProductId" />
+        </div>
+        <div class="field">
+            <label>Quantity</label>
+            <InputNumber class="input" @bind-Value="_add.Quantity" />
+        </div>
+        <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary" type="submit">Add</button>
+        </div>
+    </EditForm>
+    <p class="muted mt">@_addStatus</p>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ItemId</th>
+            <th>ProductId</th>
+            <th>Quantity</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var it in _items)
+        {
+            <tr>
+                <td>@it.Id</td>
+                <td>@it.ProductId</td>
+                <td>
+                    <InputNumber class="input" @bind-Value="it.Quantity" />
+                </td>
+                <td>
+                    <button class="btn btn-secondary mr" @onclick="() => UpdateItemQtyAsync(it)">Update</button>
+                    <button class="btn btn-danger" @onclick="() => DeleteItemAsync(it)">Delete</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private ItemsShop.WebUI.Models.Catalog.CartDto? _cart;
+    private List<ItemsShop.WebUI.Models.Catalog.CartItemDto> _items = new();
+    private string _status = string.Empty;
+    private string _addStatus = string.Empty;
+
+    private AddModel _add = new AddModel();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await ReloadAsync();
+    }
+
+    private async Task ReloadAsync()
+    {
+        _status = "Loading...";
+        try
+        {
+            _cart = await Api.GetCartAsync(Id);
+            _items = (await Api.GetCartItemsAsync(Id)).ToList();
+            _status = $"Loaded {_items.Count} items";
+        }
+        catch (Exception ex)
+        {
+            _status = ex.Message;
+        }
+    }
+
+    private async Task AddItemAsync()
+    {
+        _addStatus = "Adding...";
+        try
+        {
+            if (!Guid.TryParse(_add.ProductId, out var productId))
+            {
+                _addStatus = "Invalid ProductId";
+                return;
+            }
+            await Api.CreateCartItemAsync(Id, new(_add.Quantity, productId));
+            _add = new();
+            await ReloadAsync();
+            _addStatus = "Added";
+        }
+        catch (Exception ex)
+        {
+            _addStatus = ex.Message;
+        }
+    }
+
+    private async Task UpdateItemQtyAsync(ItemsShop.WebUI.Models.Catalog.CartItemDto item)
+    {
+        try
+        {
+            await Api.UpdateCartItemQuantityAsync(Id, item.Id, item.Quantity);
+        }
+        catch (Exception ex)
+        {
+            _status = ex.Message;
+        }
+    }
+
+    private async Task DeleteItemAsync(ItemsShop.WebUI.Models.Catalog.CartItemDto item)
+    {
+        try
+        {
+            await Api.DeleteCartItemAsync(Id, item.Id);
+            await ReloadAsync();
+        }
+        catch (Exception ex)
+        {
+            _status = ex.Message;
+        }
+    }
+
+    private async Task DeleteCartAsync()
+    {
+        try
+        {
+            await Api.DeleteCartAsync(Id);
+            Nav.NavigateTo("/carts");
+        }
+        catch (Exception ex)
+        {
+            _status = ex.Message;
+        }
+    }
+
+    private sealed class AddModel
+    {
+        public string? ProductId { get; set; }
+        public int Quantity { get; set; } = 1;
+    }
+}
+
+<style>
+/* page-specific tweaks if needed */
+</style>
+
+

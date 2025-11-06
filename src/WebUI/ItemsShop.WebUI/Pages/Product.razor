@@ -1,0 +1,122 @@
+@page "/products/{Id:guid}"
+@inject ItemsShop.WebUI.Services.CatalogApiClient Api
+@inject NavigationManager Nav
+
+<h1>Product</h1>
+
+@if (_product is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="card">
+        <p class="muted"><b>Id:</b> @_product.Id</p>
+        <EditForm class="form-grid" Model="_edit" OnValidSubmit="SaveAsync">
+            <div class="field">
+                <label>Name</label>
+                <InputText class="input" @bind-Value="_edit.Name" disabled />
+            </div>
+            <div class="field">
+                <label>Description</label>
+                <InputText class="input" @bind-Value="_edit.Description" />
+            </div>
+            <div class="field">
+                <label>Price</label>
+                <InputNumber class="input" @bind-Value="_edit.Price" />
+            </div>
+            <div class="field">
+                <label>Quantity</label>
+                <InputNumber class="input" @bind-Value="_edit.Quantity" />
+            </div>
+            <div class="field">
+                <label>CategoryId</label>
+                <InputText class="input" @bind-Value="_edit.CategoryId" />
+            </div>
+            <div class="field">
+                <label>&nbsp;</label>
+                <div class="row gap">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button class="btn btn-danger" @onclick="DeleteAsync" type="button">Delete</button>
+                </div>
+            </div>
+        </EditForm>
+        <p class="muted mt">@_status</p>
+    </div>
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private ItemsShop.WebUI.Models.Catalog.ProductDto? _product;
+    private EditModel _edit = new();
+    private string _status = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _status = string.Empty;
+        _product = await Api.GetProductAsync(Id);
+        if (_product is not null)
+        {
+            _edit = new EditModel
+            {
+                Name = _product.Name,
+                Description = _product.Description,
+                Price = _product.Price,
+                Quantity = _product.Quantity,
+                CategoryId = _product.CategoryId.ToString()
+            };
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        if (_product is null) return;
+        _status = "Saving...";
+        try
+        {
+            await Api.UpdateProductDescriptionAsync(_product.Id, _edit.Description ?? string.Empty);
+            await Api.UpdateProductPriceAsync(_product.Id, _edit.Price);
+            await Api.UpdateProductQuantityAsync(_product.Id, _edit.Quantity);
+            if (Guid.TryParse(_edit.CategoryId, out var catId) && catId != _product.CategoryId)
+            {
+                await Api.UpdateProductCategoryAsync(_product.Id, catId);
+            }
+            _status = "Saved";
+        }
+        catch (Exception ex)
+        {
+            _status = ex.Message;
+        }
+    }
+
+    private async Task DeleteAsync()
+    {
+        if (_product is null) return;
+        _status = "Deleting...";
+        try
+        {
+            await Api.DeleteProductAsync(_product.Id);
+            Nav.NavigateTo("/products");
+        }
+        catch (Exception ex)
+        {
+            _status = ex.Message;
+        }
+    }
+
+    private sealed class EditModel
+    {
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public decimal Price { get; set; }
+        public long Quantity { get; set; }
+        public string? CategoryId { get; set; }
+    }
+}
+
+<style>
+/* page-specific tweaks if needed */
+</style>
+
+

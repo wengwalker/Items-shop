@@ -1,0 +1,95 @@
+@page "/categories/{Id:guid}"
+@inject ItemsShop.WebUI.Services.CatalogApiClient Api
+@inject NavigationManager Nav
+
+<h1>Category</h1>
+
+@if (_category is null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="card">
+        <p class="muted"><b>Id:</b> @_category.Id</p>
+        <EditForm class="form-grid" Model="_edit" OnValidSubmit="SaveAsync">
+            <div class="field">
+                <label>Name</label>
+                <InputText class="input" @bind-Value="_edit.Name" />
+            </div>
+            <div class="field">
+                <label>Description</label>
+                <InputText class="input" @bind-Value="_edit.Description" />
+            </div>
+            <div class="field">
+                <label>&nbsp;</label>
+                <div class="row gap">
+                    <button class="btn btn-primary" type="submit">Save</button>
+                    <button class="btn btn-danger" @onclick="DeleteAsync" type="button">Delete</button>
+                </div>
+            </div>
+        </EditForm>
+        <p class="muted mt">@_status</p>
+    </div>
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private ItemsShop.WebUI.Models.Catalog.CategoryDto? _category;
+    private EditModel _edit = new();
+    private string _status = string.Empty;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _status = string.Empty;
+        _category = await Api.GetCategoryAsync(Id);
+        if (_category is not null)
+        {
+            _edit = new EditModel { Name = _category.Name, Description = _category.Description };
+        }
+    }
+
+    private async Task SaveAsync()
+    {
+        if (_category is null) return;
+        _status = "Saving...";
+        try
+        {
+            await Api.UpdateCategoryNameAsync(_category.Id, _edit.Name ?? string.Empty);
+            await Api.UpdateCategoryDescriptionAsync(_category.Id, _edit.Description);
+            _status = "Saved";
+        }
+        catch (Exception ex)
+        {
+            _status = ex.Message;
+        }
+    }
+
+    private async Task DeleteAsync()
+    {
+        if (_category is null) return;
+        _status = "Deleting...";
+        try
+        {
+            await Api.DeleteCategoryAsync(_category.Id);
+            Nav.NavigateTo("/categories");
+        }
+        catch (Exception ex)
+        {
+            _status = ex.Message;
+        }
+    }
+
+    private sealed class EditModel
+    {
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+    }
+}
+
+<style>
+.danger { margin-left: .5rem; background: #dc2626; color: white; }
+</style>
+
+

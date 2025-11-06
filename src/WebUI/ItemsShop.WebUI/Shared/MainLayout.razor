@@ -1,0 +1,24 @@
+@inherits LayoutComponentBase
+
+<div class="page">
+    <aside class="sidebar">
+        <NavMenu />
+    </aside>
+    <section class="main">
+        <div class="top-row">
+            <a class="brand" href="/">
+                <span class="brand-badge"></span>
+                ItemsShop
+            </a>
+            <div class="row gap">
+                <span class="badge">Blazor Server</span>
+                <a class="btn btn-secondary" href="https://learn.microsoft.com/aspnet/core/" target="_blank">Docs</a>
+            </div>
+        </div>
+        <div class="content">
+            @Body
+        </div>
+    </section>
+</div>
+
+

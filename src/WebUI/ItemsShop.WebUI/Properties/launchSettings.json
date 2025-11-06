@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "ItemsShop.WebUI": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:59196;http://localhost:59197"
+    }
+  }
+}

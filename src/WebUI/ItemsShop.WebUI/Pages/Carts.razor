@@ -1,0 +1,64 @@
+@page "/carts"
+@inject ItemsShop.WebUI.Services.CatalogApiClient Api
+@inject NavigationManager Nav
+
+<h1>Carts</h1>
+
+<div class="card">
+    <div class="row gap">
+        <button class="btn btn-primary" @onclick="CreateCartAsync">Create Cart</button>
+        <span class="muted">@_status</span>
+    </div>
+</div>
+
+<div class="card">
+    <h3>Open existing</h3>
+    <EditForm class="form-grid" Model="_open" OnValidSubmit="OpenCart">
+        <div class="field">
+            <label>Cart Id</label>
+            <InputText class="input" @bind-Value="_open.CartId" placeholder="00000000-0000-0000-0000-000000000000" />
+        </div>
+        <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn btn-secondary" type="submit">Open</button>
+        </div>
+    </EditForm>
+    
+</div>
+
+@code {
+    private string _status = string.Empty;
+    private OpenModel _open = new();
+
+    private async Task CreateCartAsync()
+    {
+        _status = "Creating...";
+        try
+        {
+            var cart = await Api.CreateCartAsync();
+            if (cart is not null)
+            {
+                Nav.NavigateTo($"/carts/{cart.CartId}");
+            }
+        }
+        catch (Exception ex)
+        {
+            _status = ex.Message;
+        }
+    }
+
+    private void OpenCart()
+    {
+        if (Guid.TryParse(_open.CartId, out var id))
+        {
+            Nav.NavigateTo($"/carts/{id}");
+        }
+    }
+
+    private sealed class OpenModel
+    {
+        public string? CartId { get; set; }
+    }
+}
+
+

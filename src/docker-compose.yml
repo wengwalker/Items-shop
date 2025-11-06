@@ -117,3 +117,22 @@ services:
     depends_on:
       itemsshop-db:
         condition: service_healthy
+
+  itemsshop-webui:
+    image: itemsshop-webui:0.1
+    container_name: itemsshop-webui
+    hostname: itemsshop-webui
+    restart: always
+    build:
+      context: .
+      dockerfile: ./WebUI/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://*:8081
+    ports:
+      - 8081:8081
+    networks:
+      - itemsshop-network
+    depends_on:
+      itemsshop-host:
+        condition: service_healthy

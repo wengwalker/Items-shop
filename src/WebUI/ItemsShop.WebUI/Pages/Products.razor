@@ -1,0 +1,152 @@
+@page "/products"
+@inject ItemsShop.WebUI.Services.CatalogApiClient Api
+
+<h1>Products</h1>
+
+<div class="card">
+    <EditForm class="form-grid" Model="_search" OnValidSubmit="LoadAsync">
+        <div class="field">
+            <label>Name</label>
+            <InputText class="input" @bind-Value="_search.Name" placeholder="Search by name" />
+        </div>
+        <div class="field">
+            <label>Order</label>
+            <select class="input" @bind="_search.OrderType">
+                <option value="">No order</option>
+                <option value="Ascending">Ascending</option>
+                <option value="Descending">Descending</option>
+            </select>
+        </div>
+        <div class="field">
+            <label>&nbsp;</label>
+            <div class="row gap">
+                <button class="btn btn-secondary" type="submit">Search</button>
+                <button class="btn" type="button" @onclick="ClearFilters">Reset</button>
+            </div>
+        </div>
+        <div class="field">
+            <label>Status</label>
+            <span class="muted">@_status</span>
+        </div>
+    </EditForm>
+</div>
+
+<div class="card">
+    <h3>Create Product</h3>
+    <EditForm class="form-grid" Model="_create" OnValidSubmit="CreateAsync">
+        <div class="field">
+            <label>Name</label>
+            <InputText class="input" @bind-Value="_create.Name" />
+        </div>
+        <div class="field">
+            <label>Description</label>
+            <InputText class="input" @bind-Value="_create.Description" />
+        </div>
+        <div class="field">
+            <label>Price</label>
+            <InputNumber class="input" @bind-Value="_create.Price" />
+        </div>
+        <div class="field">
+            <label>Quantity</label>
+            <InputNumber class="input" @bind-Value="_create.Quantity" />
+        </div>
+        <div class="field">
+            <label>CategoryId</label>
+            <InputText class="input" @bind-Value="_create.CategoryId" />
+        </div>
+        <div class="field">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary" type="submit">Create</button>
+        </div>
+    </EditForm>
+</div>
+
+<table class="table mt">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Qty</th>
+            <th>Category</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in _products)
+        {
+            <tr>
+                <td>@p.Name</td>
+                <td>@p.Price</td>
+                <td>@p.Quantity</td>
+                <td>@p.CategoryId</td>
+                <td><NavLink class="btn btn-secondary" href=@($"/products/{p.Id}")>Open</NavLink></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    private List<ItemsShop.WebUI.Models.Catalog.ProductDto> _products = new();
+    private string _status = string.Empty;
+
+    private SearchModel _search = new();
+    private CreateModel _create = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        _status = "Loading...";
+        try
+        {
+            var items = await Api.GetProductsAsync(_search.Name, _search.OrderType);
+            _products = items.ToList();
+            _status = $"Loaded {_products.Count} products";
+        }
+        catch (Exception ex)
+        {
+            _status = ex.Message;
+        }
+    }
+
+    private void ClearFilters()
+    {
+        _search = new();
+    }
+
+    private async Task CreateAsync()
+    {
+        try
+        {
+            await Api.CreateProductAsync(new(_create.Name ?? string.Empty, _create.Description ?? string.Empty, _create.Price, _create.Quantity, _create.CategoryIdParsed));
+            _create = new();
+            await LoadAsync();
+        }
+        catch (Exception ex)
+        {
+            _status = ex.Message;
+        }
+    }
+
+    private sealed class SearchModel
+    {
+        public string? Name { get; set; }
+        public string? OrderType { get; set; }
+    }
+
+    private sealed class CreateModel
+    {
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public decimal Price { get; set; }
+        public long Quantity { get; set; }
+        public string? CategoryId { get; set; }
+
+        public Guid CategoryIdParsed => Guid.TryParse(CategoryId, out var g) ? g : Guid.Empty;
+    }
+}
+
+
