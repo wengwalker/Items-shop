@@ -6,6 +6,8 @@ public class UpdateOrderPriceRequestValidator : AbstractValidator<UpdateOrderPri
 {
     public UpdateOrderPriceRequestValidator()
     {
-        
+        RuleFor(x => x.Price)
+            .NotEmpty()
+            .WithMessage("Price must be set");
     }
 }

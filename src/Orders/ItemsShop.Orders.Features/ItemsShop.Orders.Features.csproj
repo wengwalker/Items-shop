@@ -1,12 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <ItemGroup>
-    <Folder Include="Features\OrderItems\GetOrderItem\" />
-    <Folder Include="Features\OrderItems\GetOrderItems\" />
-    <Folder Include="Features\OrderItems\UpdateOrderItemQuantity\" />
-    <Folder Include="Shared\Responses\" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="FluentValidation" />
@@ -15,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\ItemsShop.Common.Api\ItemsShop.Common.Api.csproj" />
+    <ProjectReference Include="..\..\Common\ItemsShop.Common.Application\ItemsShop.Common.Application.csproj" />
     <ProjectReference Include="..\..\Common\ItemsShop.Common.Domain\ItemsShop.Common.Domain.csproj" />
     <ProjectReference Include="..\ItemsShop.Orders.Infrastructure\ItemsShop.Orders.Infrastructure.csproj" />
   </ItemGroup>

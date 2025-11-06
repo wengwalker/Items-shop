@@ -1,5 +1,5 @@
+using ItemsShop.Common.Application.Enums;
 using ItemsShop.Common.Domain.Results;
-using ItemsShop.Orders.Domain.Enums;
 using ItemsShop.Orders.Infrastructure.Database;
 using Mediator.Lite.Interfaces;
 using Microsoft.Extensions.Logging;
