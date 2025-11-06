@@ -8,6 +8,7 @@ WORKDIR /src
 COPY ["Directory.Packages.props", "Directory.Build.props", "./"]
 COPY ["Host/ItemsShop.Host/ItemsShop.Host.csproj", "Host/ItemsShop.Host/"]
 COPY ["Common/ItemsShop.Common.Api/ItemsShop.Common.Api.csproj", "Common/ItemsShop.Common.Api/"]
+COPY ["Common/ItemsShop.Common.Application/ItemsShop.Common.Application.csproj", "Common/ItemsShop.Common.Application/"]
 COPY ["Common/ItemsShop.Common.Domain/ItemsShop.Common.Domain.csproj", "Common/ItemsShop.Common.Domain/"]
 COPY ["Common/ItemsShop.Common.Infrastructure/ItemsShop.Common.Infrastructure.csproj", "Common/ItemsShop.Common.Infrastructure/"]
 COPY ["Catalogs/ItemsShop.Catalogs.Domain/ItemsShop.Catalogs.Domain.csproj", "Catalogs/ItemsShop.Catalogs.Domain/"]
@@ -20,6 +21,7 @@ RUN dotnet restore "Host/ItemsShop.Host/ItemsShop.Host.csproj"
 
 COPY ["Host/ItemsShop.Host", "Host/ItemsShop.Host"]
 COPY ["Common/ItemsShop.Common.Api", "Common/ItemsShop.Common.Api"]
+COPY ["Common/ItemsShop.Common.Application", "Common/ItemsShop.Common.Application"]
 COPY ["Common/ItemsShop.Common.Domain", "Common/ItemsShop.Common.Domain"]
 COPY ["Common/ItemsShop.Common.Infrastructure", "Common/ItemsShop.Common.Infrastructure"]
 COPY ["Catalogs/ItemsShop.Catalogs.Domain", "Catalogs/ItemsShop.Catalogs.Domain"]

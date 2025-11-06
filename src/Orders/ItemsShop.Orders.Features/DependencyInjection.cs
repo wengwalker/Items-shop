@@ -1,6 +1,10 @@
+using FluentValidation;
 using ItemsShop.Common.Api.Abstractions;
+using ItemsShop.Common.Api.Extensions;
+using ItemsShop.Orders.Features.Features.Orders.GetOrders;
 using ItemsShop.Orders.Features.Shared.Tracing;
 using ItemsShop.Orders.Infrastructure;
+using Mediator.Lite.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,11 +24,11 @@ public static class OrdersModuleExtensions
 
     public static IServiceCollection AddOrderModuleApi(this IServiceCollection services)
     {
-        //services.RegisterEndpointsFromAssemblyContaining(typeof(CreateProductEndpoint));
+        services.RegisterEndpointsFromAssemblyContaining(typeof(GetOrdersEndpoint));
 
-        //services.AddMediator(typeof(CreateProductHandler).Assembly);
+        services.AddMediator(typeof(GetOrdersHandler).Assembly);
 
-        //services.AddValidatorsFromAssembly(typeof(CreateProductRequestValidator).Assembly);
+        services.AddValidatorsFromAssembly(typeof(GetOrdersRequestValidator).Assembly);
 
         return services;
     }
