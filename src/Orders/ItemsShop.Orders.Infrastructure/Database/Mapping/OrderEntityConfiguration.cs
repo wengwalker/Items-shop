@@ -1,5 +1,4 @@
 using ItemsShop.Orders.Domain.Entities;
-using ItemsShop.Orders.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,7 +14,7 @@ public class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEntity>
 
         builder
             .Property(x => x.Status)
-            .HasDefaultValue(OrderStatus.Draft);
+            .HasDefaultValue(0);
 
         builder
             .Property(x => x.TotalPrice)
