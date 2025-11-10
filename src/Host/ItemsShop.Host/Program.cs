@@ -4,6 +4,7 @@ using ItemsShop.Common.Api.Extensions;
 using ItemsShop.Common.Infrastructure;
 using ItemsShop.Common.Infrastructure.Extensions;
 using ItemsShop.Orders.Features;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +40,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseSerilogRequestLogging();
+
+app.UseExceptionHandler();
+
 app.UseRouting();
 
 app.UseModuleMiddlewares();
@@ -50,3 +55,5 @@ app.MapHealthChecksEndpoints();
 app.MapEndpoints();
 
 await app.RunAsync();
+
+await Log.CloseAndFlushAsync();

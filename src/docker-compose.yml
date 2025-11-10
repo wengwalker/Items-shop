@@ -4,6 +4,7 @@ networks:
 
 volumes:
   db_data:
+  seq_data:
 
 services:
   itemsshop-db:
@@ -53,8 +54,9 @@ services:
     image: prom/prometheus:v3.7.3
     container_name: prometheus
     hostname: prometheus
+    restart: always
     ports:
-      - ${PROMETHEUS_PORT:-9090:9090}
+      - ${PROMETHEUS_PORTS:-9090:9090}
     volumes:
       - ./Configs/prometheus.yml:/etc/prometheus/prometheus.yml
     command:
@@ -69,7 +71,7 @@ services:
   grafana:
     image: grafana/grafana:12.2
     container_name: grafana
-    restart: always
+    restart: unless-stopped
     environment:
       - GF_AUTH_ANONYMOUS_ENABLED=${GRAFANA_AUTH_ANONYMOUS_ENABLED}
       - GF_AUTH_ANONYMOUS_ORG_ROLE=${GRAFANA_AUTH_ANONYMOUS_ORG_ROLE}
@@ -79,17 +81,32 @@ services:
       - ./Configs/grafana-configs/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
       - ./Configs/grafana-dashboards:/var/lib/grafana/dashboards
     ports:
-      - ${GRAFANA_PORT:-3000:3000}
+      - ${GRAFANA_PORTS:-3000:3000}
     networks:
       - itemsshop-network
 
   jaeger:
     image: jaegertracing/all-in-one:1.74.0
     container_name: jaeger
-    restart: always
+    restart: unless-stopped
     ports:
-      - ${JAEGER_UI_PORT:-16686:16686}
-      - ${JAEGER_OTLP_PORT:-4317:4317}
+      - ${JAEGER_UI_PORTS:-16686:16686}
+      - ${JAEGER_OTLP_PORTS:-4317:4317}
+    networks:
+      - itemsshop-network
+
+  seq:
+    image: datalust/seq:2025.2
+    container_name: seq
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_NOAUTHENTICATION=True
+    volumes:
+      - seq_data:/data
+    ports:
+      - ${SEQ_PORTS:-5341:5341}
+      - ${SEQ_UI_PORTS:-8080:80}
     networks:
       - itemsshop-network
 
