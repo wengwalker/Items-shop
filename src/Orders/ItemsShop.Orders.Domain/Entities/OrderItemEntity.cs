@@ -12,5 +12,7 @@ public class OrderItemEntity
 
     public decimal ItemPrice { get; set; }
 
+    //public Guid OrderId { get; set; }
+
     public OrderEntity Order { get; set; } = null!;
 }
