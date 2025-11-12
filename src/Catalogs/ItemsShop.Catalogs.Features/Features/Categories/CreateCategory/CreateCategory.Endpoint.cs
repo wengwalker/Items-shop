@@ -17,7 +17,7 @@ public class CreateCategoryEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost(CategoriesConsts.BaseRoute, Handle)
+        builder.MapPost(CategoriesRouteConsts.BaseRoute, Handle)
             .WithName("CreateCategory")
             .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
             .WithSummary("Creates a new category")
@@ -45,7 +45,7 @@ public class CreateCategoryEndpoint : IEndpoint
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
-            ? Results.Created(CategoriesConsts.BaseRoute, response.Value)
+            ? Results.Created(CategoriesRouteConsts.BaseRoute, response.Value)
             : Results.Problem(
                 detail: response.Error,
                 statusCode: response.StatusCode);

@@ -15,7 +15,7 @@ public class DeleteCategoryEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapDelete(CategoriesConsts.DeleteCategory, Handle)
+        builder.MapDelete(CategoriesRouteConsts.DeleteCategory, Handle)
             .WithName("DeleteCategoryById")
             .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
             .WithSummary("Deletes a category")

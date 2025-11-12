@@ -14,9 +14,9 @@ public class GetCategoriesRequestValidator : AbstractValidator<GetCategoriesRequ
                 .When(x => x.Name != null)
                 .WithMessage("Name length exceeds 100 characters limit if specified");
 
-        RuleFor(x => x.OrderType)
+        RuleFor(x => x.SortType)
             .IsInEnum()
-                .When(x => x.OrderType != null)
+                .When(x => x.SortType != null)
                 .WithMessage("OrderType cannot be invalid if specified");
     }
 }

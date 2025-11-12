@@ -1,7 +1,7 @@
 using FluentValidation;
-using ItemsShop.Catalogs.Domain.Enums;
 using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
+using ItemsShop.Common.Application.Enums;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -10,13 +10,13 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Categories.GetCategories;
 
-public sealed record GetCategoriesRequest([FromQuery] string? Name, [FromQuery] OrderQueryType? OrderType);
+public sealed record GetCategoriesRequest([FromQuery] string? Name, [FromQuery] QuerySortType? SortType);
 
 public class GetCategoriesEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapGet(CategoriesConsts.BaseRoute, Handle)
+        builder.MapGet(CategoriesRouteConsts.BaseRoute, Handle)
             .WithName("GetCategories")
             .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
             .WithSummary("Returns list of cartegories")

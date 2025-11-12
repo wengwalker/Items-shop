@@ -16,7 +16,7 @@ public class UpdateCategoryDescriptionEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPatch(CategoriesConsts.UpdateCategoryDescription, Handle)
+        builder.MapPatch(CategoriesRouteConsts.UpdateCategoryDescription, Handle)
             .WithName("UpdateCategoryDescriptionById")
             .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
             .WithSummary("Updates an category description")

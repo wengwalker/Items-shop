@@ -1,6 +1,6 @@
 namespace ItemsShop.Catalogs.Features.Shared.Consts;
 
-internal static class CategoriesConsts
+internal static class CategoriesRouteConsts
 {
     internal const string BaseRoute = "/api/v1/categories";
 

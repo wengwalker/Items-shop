@@ -1,6 +1,6 @@
-using ItemsShop.Catalogs.Domain.Enums;
 using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Common.Application.Enums;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -10,7 +10,7 @@ namespace ItemsShop.Catalogs.Features.Features.Categories.GetCategories;
 
 public sealed record GetCategoriesQuery(
     string? Name,
-    OrderQueryType? OrderType) : IRequest<Result<GetCategoriesResponse>>;
+    QuerySortType? SortType) : IRequest<Result<GetCategoriesResponse>>;
 
 public sealed record GetCategoriesResponse(
     ICollection<CategoryResponse> Categories);
@@ -34,11 +34,11 @@ public sealed class GetCategoriesHandler(
             query = query.Where(x => EF.Functions.ILike(x.Name, $"%{request.Name}%"));
         }
 
-        if (request.OrderType is not null)
+        if (request.SortType is not null)
         {
-            logger.LogInformation("Fetching categories in specified order: {OrderType}", request.OrderType);
+            logger.LogInformation("Fetching categories in specified order: {OrderType}", request.SortType);
 
-            query = request.OrderType == OrderQueryType.Ascending
+            query = request.SortType == QuerySortType.Ascending
                 ? query.OrderBy(x => x.Name)
                 : query.OrderByDescending(x => x.Name);
         }

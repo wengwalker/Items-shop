@@ -46,7 +46,7 @@ public class CatalogsTracingMiddleware(RequestDelegate next)
     private static bool DetermineCatalogsModulePaths(HttpContext context)
     {
         return context.Request.Path.StartsWithSegments(ProductsRouteConsts.BaseRoute, StringComparison.Ordinal)
-            || context.Request.Path.StartsWithSegments(CategoriesConsts.BaseRoute, StringComparison.Ordinal)
+            || context.Request.Path.StartsWithSegments(CategoriesRouteConsts.BaseRoute, StringComparison.Ordinal)
             || context.Request.Path.StartsWithSegments(CartsRouteConsts.BaseRoute, StringComparison.Ordinal)
             || context.Request.Path.StartsWithSegments(CartItemsRouteConsts.BaseRoute, StringComparison.Ordinal);
     }

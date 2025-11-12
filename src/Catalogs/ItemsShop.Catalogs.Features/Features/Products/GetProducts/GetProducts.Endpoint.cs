@@ -1,7 +1,7 @@
 using FluentValidation;
-using ItemsShop.Catalogs.Domain.Enums;
 using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
+using ItemsShop.Common.Application.Enums;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.GetProducts;
 
-public sealed record GetProductsRequest([FromQuery] string? Name, [FromQuery] OrderQueryType? OrderType);
+public sealed record GetProductsRequest(
+    [FromQuery] string? Name,
+    [FromQuery] QuerySortType? SortType);
 
 public class GetProductsEndpoint : IEndpoint
 {
