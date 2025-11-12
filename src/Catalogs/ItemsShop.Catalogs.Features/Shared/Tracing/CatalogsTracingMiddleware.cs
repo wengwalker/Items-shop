@@ -45,15 +45,10 @@ public class CatalogsTracingMiddleware(RequestDelegate next)
 
     private static bool DetermineCatalogsModulePaths(HttpContext context)
     {
-        if(context.Request.Path.StartsWithSegments(ProductsRouteConsts.BaseRoute, StringComparison.Ordinal)
+        return context.Request.Path.StartsWithSegments(ProductsRouteConsts.BaseRoute, StringComparison.Ordinal)
             || context.Request.Path.StartsWithSegments(CategoriesConsts.BaseRoute, StringComparison.Ordinal)
             || context.Request.Path.StartsWithSegments(CartsRouteConsts.BaseRoute, StringComparison.Ordinal)
-            || context.Request.Path.StartsWithSegments(CartItemsRouteConsts.BaseRoute, StringComparison.Ordinal))
-        {
-            return true;
-        }
-
-        return false;
+            || context.Request.Path.StartsWithSegments(CartItemsRouteConsts.BaseRoute, StringComparison.Ordinal);
     }
 
     private static string GetOperationName(HttpContext context)

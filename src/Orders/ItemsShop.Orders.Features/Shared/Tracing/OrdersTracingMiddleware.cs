@@ -45,13 +45,8 @@ public class OrdersTracingMiddleware(RequestDelegate next)
 
     private static bool DetermineOrdersModulePaths(HttpContext context)
     {
-        if (context.Request.Path.StartsWithSegments(OrdersRouteConsts.BaseRoute, StringComparison.Ordinal)
-            || context.Request.Path.StartsWithSegments(OrderItemsRouteConsts.BaseRoute, StringComparison.Ordinal))
-        {
-            return true;
-        }
-
-        return false;
+        return context.Request.Path.StartsWithSegments(OrdersRouteConsts.BaseRoute, StringComparison.Ordinal)
+            || context.Request.Path.StartsWithSegments(OrderItemsRouteConsts.BaseRoute, StringComparison.Ordinal);
     }
 
     private static string GetOperationName(HttpContext context)

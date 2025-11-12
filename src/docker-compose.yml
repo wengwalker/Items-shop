@@ -11,7 +11,7 @@ services:
     image: postgres:18.0-alpine
     container_name: itemsshop-db
     hostname: itemsshop-db
-    restart: always
+    restart: unless-stopped
     environment:
       - POSTGRES_HOST=${DATABASE_HOST}
       - POSTGRES_PORT=${DATABASE_INNER_PORT}
@@ -31,42 +31,9 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -p $${POSTGRES_PORT}"]
       interval: 5s
-      timeout: 15s
+      timeout: 10s
       retries: 3
-      start_period: 10s
-
-  postgres-exporter:
-    image: quay.io/prometheuscommunity/postgres-exporter:v0.18.1
-    hostname: itemsshop-db-exporter
-    restart: always
-    environment:
-      - DATA_SOURCE_NAME=postgresql://postgres:password@itemsshop-db:5432/postgres?sslmode=disable
-    command: ["--collector.stat_statements"]
-    ports:
-      - ${EXPORTER_PORTS:-9187:9187}
-    networks:
-      - itemsshop-network
-    depends_on:
-      itemsshop-db:
-        condition: service_healthy
-
-  prometheus:
-    image: prom/prometheus:v3.7.3
-    container_name: prometheus
-    hostname: prometheus
-    restart: always
-    ports:
-      - ${PROMETHEUS_PORTS:-9090:9090}
-    volumes:
-      - ./Configs/prometheus.yml:/etc/prometheus/prometheus.yml
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.enable-admin-api'
-    networks:
-      - itemsshop-network
-    depends_on:
-      - postgres-exporter
+      start_period: 15s
 
   grafana:
     image: grafana/grafana:12.2
@@ -86,8 +53,9 @@ services:
       - itemsshop-network
 
   jaeger:
-    image: jaegertracing/all-in-one:1.74.0
+    image: jaegertracing/jaeger:2.11.0
     container_name: jaeger
+    hostname: jaeger
     restart: unless-stopped
     ports:
       - ${JAEGER_UI_PORTS:-16686:16686}
@@ -106,7 +74,35 @@ services:
       - seq_data:/data
     ports:
       - ${SEQ_PORTS:-5341:5341}
-      - ${SEQ_UI_PORTS:-8080:80}
+      - ${SEQ_UI_PORTS:-8081:80}
+    networks:
+      - itemsshop-network
+
+  prometheus:
+    image: prom/prometheus:v3.7.3
+    container_name: prometheus
+    hostname: prometheus
+    restart: always
+    ports:
+      - ${PROMETHEUS_PORTS:-9090:9090}
+    volumes:
+      - ./Configs/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-admin-api'
+    networks:
+      - itemsshop-network
+
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.18.1
+    hostname: itemsshop-db-exporter
+    restart: always
+    environment:
+      - DATA_SOURCE_NAME=postgresql://postgres:password@itemsshop-db:5432/postgres?sslmode=disable
+    command: ["--collector.stat_statements"]
+    ports:
+      - ${EXPORTER_PORTS:-9187:9187}
     networks:
       - itemsshop-network
 
@@ -114,13 +110,13 @@ services:
     image: itemsshop-host:0.1
     container_name: itemsshop-host
     hostname: itemsshop-host
-    restart: always
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./Host/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - OTEL_EXPORTER_ENDPOINT=${JAEGER_EXPORTER_TRACING_ENDPOINT}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${JAEGER_EXPORTER_TRACING_ENDPOINT}
     ports:
       - ${HOST_PORTS:-8080:8080}
     networks:
@@ -130,7 +126,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 2
-      start_period: 5s
+      start_period: 10s
     depends_on:
       itemsshop-db:
         condition: service_healthy
