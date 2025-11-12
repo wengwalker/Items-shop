@@ -4,13 +4,14 @@ networks:
 
 volumes:
   db_data:
+  seq_data:
 
 services:
   itemsshop-db:
     image: postgres:18.0-alpine
     container_name: itemsshop-db
     hostname: itemsshop-db
-    restart: always
+    restart: unless-stopped
     environment:
       - POSTGRES_HOST=${DATABASE_HOST}
       - POSTGRES_PORT=${DATABASE_INNER_PORT}
@@ -30,9 +31,68 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -p $${POSTGRES_PORT}"]
       interval: 5s
-      timeout: 15s
+      timeout: 10s
       retries: 3
-      start_period: 10s
+      start_period: 15s
+
+  grafana:
+    image: grafana/grafana:12.2
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=${GRAFANA_AUTH_ANONYMOUS_ENABLED}
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=${GRAFANA_AUTH_ANONYMOUS_ORG_ROLE}
+      - GF_AUTH_DISABLE_LOGIN_FORM=${GRAFANA_AUTH_DISABLE_LOGIN_FORM}
+    volumes:
+      - ./Configs/grafana-configs/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./Configs/grafana-configs/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./Configs/grafana-dashboards:/var/lib/grafana/dashboards
+    ports:
+      - ${GRAFANA_PORTS:-3000:3000}
+    networks:
+      - itemsshop-network
+
+  jaeger:
+    image: jaegertracing/jaeger:2.11.0
+    container_name: jaeger
+    hostname: jaeger
+    restart: unless-stopped
+    ports:
+      - ${JAEGER_UI_PORTS:-16686:16686}
+      - ${JAEGER_OTLP_PORTS:-4317:4317}
+    networks:
+      - itemsshop-network
+
+  seq:
+    image: datalust/seq:2025.2
+    container_name: seq
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_NOAUTHENTICATION=True
+    volumes:
+      - seq_data:/data
+    ports:
+      - ${SEQ_PORTS:-5341:5341}
+      - ${SEQ_UI_PORTS:-8081:80}
+    networks:
+      - itemsshop-network
+
+  prometheus:
+    image: prom/prometheus:v3.7.3
+    container_name: prometheus
+    hostname: prometheus
+    restart: always
+    ports:
+      - ${PROMETHEUS_PORTS:-9090:9090}
+    volumes:
+      - ./Configs/prometheus.yml:/etc/prometheus/prometheus.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-admin-api'
+    networks:
+      - itemsshop-network
 
   postgres-exporter:
     image: quay.io/prometheuscommunity/postgres-exporter:v0.18.1
@@ -45,65 +105,18 @@ services:
       - ${EXPORTER_PORTS:-9187:9187}
     networks:
       - itemsshop-network
-    depends_on:
-      itemsshop-db:
-        condition: service_healthy
-
-  prometheus:
-    image: prom/prometheus:v3.7.3
-    container_name: prometheus
-    hostname: prometheus
-    ports:
-      - ${PROMETHEUS_PORT:-9090:9090}
-    volumes:
-      - ./Configs/prometheus.yml:/etc/prometheus/prometheus.yml
-    command:
-      - '--config.file=/etc/prometheus/prometheus.yml'
-      - '--storage.tsdb.path=/prometheus'
-      - '--web.enable-admin-api'
-    networks:
-      - itemsshop-network
-    depends_on:
-      - postgres-exporter
-
-  grafana:
-    image: grafana/grafana:12.2
-    container_name: grafana
-    restart: always
-    environment:
-      - GF_AUTH_ANONYMOUS_ENABLED=${GRAFANA_AUTH_ANONYMOUS_ENABLED}
-      - GF_AUTH_ANONYMOUS_ORG_ROLE=${GRAFANA_AUTH_ANONYMOUS_ORG_ROLE}
-      - GF_AUTH_DISABLE_LOGIN_FORM=${GRAFANA_AUTH_DISABLE_LOGIN_FORM}
-    volumes:
-      - ./Configs/grafana-configs/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
-      - ./Configs/grafana-configs/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
-      - ./Configs/grafana-dashboards:/var/lib/grafana/dashboards
-    ports:
-      - ${GRAFANA_PORT:-3000:3000}
-    networks:
-      - itemsshop-network
-
-  jaeger:
-    image: jaegertracing/all-in-one:1.74.0
-    container_name: jaeger
-    restart: always
-    ports:
-      - ${JAEGER_UI_PORT:-16686:16686}
-      - ${JAEGER_OTLP_PORT:-4317:4317}
-    networks:
-      - itemsshop-network
 
   itemsshop-host:
     image: itemsshop-host:0.1
     container_name: itemsshop-host
     hostname: itemsshop-host
-    restart: always
+    restart: unless-stopped
     build:
       context: .
       dockerfile: ./Host/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - OTEL_EXPORTER_ENDPOINT=${JAEGER_EXPORTER_TRACING_ENDPOINT}
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${JAEGER_EXPORTER_TRACING_ENDPOINT}
     ports:
       - ${HOST_PORTS:-8080:8080}
     networks:
@@ -113,7 +126,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 2
-      start_period: 5s
+      start_period: 10s
     depends_on:
       itemsshop-db:
         condition: service_healthy

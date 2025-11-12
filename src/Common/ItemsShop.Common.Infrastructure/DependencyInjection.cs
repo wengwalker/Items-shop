@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Npgsql;
-using OpenTelemetry.Exporter;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
@@ -16,7 +15,7 @@ public static class DependencyInjectionExtensions
         string[] activityModuleNames)
     {
         services
-            .AddHostOpenTelemetry(configuration, activityModuleNames)
+            .AddHostOpenTelemetry(activityModuleNames)
             .AddHostHealthChecks(configuration);
 
         return services;
@@ -24,7 +23,6 @@ public static class DependencyInjectionExtensions
 
     private static IServiceCollection AddHostOpenTelemetry(
         this IServiceCollection services,
-        IConfiguration configuration,
         string[] activityModuleNames)
     {
         services
@@ -47,17 +45,13 @@ public static class DependencyInjectionExtensions
             {
                 tracing
                     .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("ItemsShop"))
+                    .AddSource(activityModuleNames)
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddNpgsql()
-                    .AddSource(activityModuleNames);
+                    .AddNpgsql();
 
                 tracing
-                    .AddOtlpExporter(exporter =>
-                    {
-                        exporter.Endpoint = new Uri(configuration["OTEL_EXPORTER_ENDPOINT"]!);
-                        exporter.Protocol = OtlpExportProtocol.HttpProtobuf;
-                    });
+                    .AddOtlpExporter();
             });
 
         return services;
