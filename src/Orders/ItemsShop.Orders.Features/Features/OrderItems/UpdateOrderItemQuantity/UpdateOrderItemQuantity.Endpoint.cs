@@ -7,22 +7,20 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
-namespace ItemsShop.Orders.Features.Features.OrderItems.CreateOrderItem;
+namespace ItemsShop.Orders.Features.Features.OrderItems.UpdateOrderItemQuantity;
 
-public sealed record CreateOrderItemRequest(
-    int Quantity,
-    Guid ProductId);
+public sealed record UpdateOrderItemQuantityRequest(int Quantity);
 
-public class CreateOrderItemEndpoint : IEndpoint
+public class UpdateOrderItemQuantityEndpoint : IEndpoint
 {
     public void MapEndpoint(IEndpointRouteBuilder builder)
     {
-        builder.MapPost(OrderItemsRouteConsts.BaseRoute, Handle)
-            .WithName("CreateOrderItemByOrderId")
+        builder.MapPatch(OrderItemsRouteConsts.UpdateOrderItemQuantity, Handle)
+            .WithName("UpdateOrderItemQuantityById")
             .WithTags(OrderItemsTagConsts.OrderItemsEndpointTags)
-            .WithSummary("Creates a new item in order")
-            .WithDescription("Creates a new item in order by providing order id in route and quantity and product id in body")
-            .Produces<CreateOrderItemResponse>()
+            .WithSummary("Updates the quantity of the specified product in order item")
+            .WithDescription("Updates the quantity of the specified product in order item by providing order id and item id in route and new quantity in body")
+            .Produces<UpdateOrderItemQuantityResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
@@ -30,8 +28,9 @@ public class CreateOrderItemEndpoint : IEndpoint
 
     private static async Task<IResult> Handle(
         [FromRoute] Guid orderId,
-        [FromBody] CreateOrderItemRequest request,
-        [FromServices] IValidator<CreateOrderItemRequest> validator,
+        [FromRoute] Guid itemId,
+        [FromBody] UpdateOrderItemQuantityRequest request,
+        [FromServices] IValidator<UpdateOrderItemQuantityRequest> validator,
         [FromServices] IMediator mediator,
         CancellationToken cancellationToken)
     {
@@ -42,12 +41,12 @@ public class CreateOrderItemEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand(orderId);
+        var command = request.MapToCommand(orderId, itemId);
 
         var response = await mediator.Send(command, cancellationToken);
 
         return response.IsSuccess
-            ? Results.Created(OrderItemsRouteConsts.BaseRoute, response.Value)
+            ? Results.Ok(response.Value)
             : Results.Problem(
                 detail: response.Error,
                 statusCode: response.StatusCode);
