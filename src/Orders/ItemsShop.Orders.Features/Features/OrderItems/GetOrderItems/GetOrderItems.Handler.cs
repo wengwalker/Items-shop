@@ -33,9 +33,7 @@ public sealed class GetOrderItemsHandler(
 
         List<OrderItemResponse> orderItems = await context.OrderItems
             .AsNoTracking()
-            // TODO: change relationship between order and order item
-            .Include(x => x.Order)
-            .Where(x => x.Order.Id == request.OrderId)
+            .Where(x => x.OrderId == request.OrderId)
             .Select(x => new OrderItemResponse(x.Id, x.ProductId, x.ProductPrice, x.ProductQuantity, x.ItemPrice))
             .ToListAsync(cancellationToken);
 

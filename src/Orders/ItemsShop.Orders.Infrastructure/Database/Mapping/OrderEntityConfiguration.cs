@@ -22,15 +22,10 @@ public class OrderEntityConfiguration : IEntityTypeConfiguration<OrderEntity>
 
         builder
             .Property(x => x.CreatedAt)
-            .HasColumnType("timestamp with time zone");        
+            .HasColumnType("timestamp with time zone");
 
         builder
             .Property(x => x.UpdatedAt)
             .HasColumnType("timestamp with time zone");
-
-        builder
-            .HasMany(x => x.OrderItems)
-            .WithOne(x => x.Order)
-            .OnDelete(DeleteBehavior.Cascade);
     }
 }
