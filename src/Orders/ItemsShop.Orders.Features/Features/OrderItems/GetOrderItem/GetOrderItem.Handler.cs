@@ -33,7 +33,7 @@ public sealed class GetOrderItemHandler(
 
         var orderItem = await context.OrderItems
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == request.ItemId && x.Id == request.ItemId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.ItemId && x.OrderId == request.OrderId, cancellationToken);
 
         if (orderItem == null)
         {

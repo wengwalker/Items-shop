@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Routing;
 namespace ItemsShop.Orders.Features.Features.OrderItems.CreateOrderItem;
 
 public sealed record CreateOrderItemRequest(
-    int Quantity,
+    long Quantity,
     Guid ProductId);
 
 public class CreateOrderItemEndpoint : IEndpoint

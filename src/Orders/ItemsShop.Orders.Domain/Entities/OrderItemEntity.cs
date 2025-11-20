@@ -8,7 +8,7 @@ public class OrderItemEntity
 
     public decimal ProductPrice { get; set; }
 
-    public int ProductQuantity { get; set; }
+    public long ProductQuantity { get; set; }
 
     public decimal ItemPrice { get; set; }
 
