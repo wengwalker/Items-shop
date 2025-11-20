@@ -1,7 +1,9 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Features.Products.CreateProduct;
+using ItemsShop.Catalogs.Features.InternalApi;
 using ItemsShop.Catalogs.Features.Shared.Tracing;
 using ItemsShop.Catalogs.Infrastructure;
+using ItemsShop.Catalogs.PublicApi;
 using ItemsShop.Common.Api.Abstractions;
 using ItemsShop.Common.Api.Extensions;
 using Mediator.Lite.Extensions;
@@ -24,6 +26,8 @@ public static class CatalogsModuleExtensions
 
     private static IServiceCollection AddCatalogModuleApi(this IServiceCollection services)
     {
+        services.AddScoped<ICatalogModuleApi, CatalogModuleApi>();
+
         services.RegisterEndpointsFromAssemblyContaining(typeof(CreateProductEndpoint));
 
         services.AddMediator(typeof(CreateProductHandler).Assembly);

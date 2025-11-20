@@ -1,5 +1,5 @@
-using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Catalogs.PublicApi.Contracts;
 using ItemsShop.Common.Domain.Results;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Http;
@@ -9,8 +9,6 @@ using Microsoft.Extensions.Logging;
 namespace ItemsShop.Catalogs.Features.Features.Products.GetProduct;
 
 public sealed record GetProductQuery(Guid ProductId) : IRequest<Result<GetProductResponse>>;
-
-public sealed record GetProductResponse(ProductResponse Product);
 
 public sealed class GetProductHandler(
     CatalogDbContext context,

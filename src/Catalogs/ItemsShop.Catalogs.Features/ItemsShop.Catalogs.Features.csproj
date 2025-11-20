@@ -12,6 +12,7 @@
     <ProjectReference Include="..\..\Common\ItemsShop.Common.Domain\ItemsShop.Common.Domain.csproj" />
     <ProjectReference Include="..\ItemsShop.Catalogs.Domain\ItemsShop.Catalogs.Domain.csproj" />
     <ProjectReference Include="..\ItemsShop.Catalogs.Infrastructure\ItemsShop.Catalogs.Infrastructure.csproj" />
+    <ProjectReference Include="..\ItemsShop.Catalogs.PublicApi\ItemsShop.Catalogs.PublicApi.csproj" />
   </ItemGroup>
 
 </Project>

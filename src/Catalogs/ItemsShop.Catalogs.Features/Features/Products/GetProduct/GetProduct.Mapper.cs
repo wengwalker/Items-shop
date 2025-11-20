@@ -1,15 +1,12 @@
 using ItemsShop.Catalogs.Domain.Entities;
-using ItemsShop.Catalogs.Features.Shared.Responses;
+using ItemsShop.Catalogs.PublicApi.Contracts;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.GetProduct;
 
 internal static class GetProductMappingExtensions
 {
-    public static GetProductQuery MapToCommand(this GetProductRequest request)
-        => new(request.productId);
-
     public static GetProductResponse MapToResponse(this ProductEntity product)
-        => new (new ProductResponse(
+        => new (new ProductItem(
                 product.Id,
                 product.Name,
                 product.Description,

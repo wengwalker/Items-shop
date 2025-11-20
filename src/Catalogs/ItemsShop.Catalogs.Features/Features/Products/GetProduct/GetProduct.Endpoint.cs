@@ -1,5 +1,6 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
+using ItemsShop.Catalogs.PublicApi.Contracts;
 using ItemsShop.Common.Api.Abstractions;
 using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -8,8 +9,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.GetProduct;
-
-public sealed record GetProductRequest([FromRoute] Guid productId);
 
 public class GetProductEndpoint : IEndpoint
 {
@@ -26,21 +25,11 @@ public class GetProductEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] GetProductRequest request,
-        [FromServices] IValidator<GetProductRequest> validator,
+        [FromRoute] Guid productId,
         [FromServices] IMediator mediator,
         CancellationToken cancellationToken)
     {
-        var validationResult = await validator.ValidateAsync(request, cancellationToken);
-
-        if (!validationResult.IsValid)
-        {
-            return Results.ValidationProblem(validationResult.ToDictionary());
-        }
-
-        var command = request.MapToCommand();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await mediator.Send(new GetProductQuery(productId), cancellationToken);
 
         return response.IsSuccess
             ? Results.Ok(response.Value)
