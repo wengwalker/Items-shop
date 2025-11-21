@@ -1,30 +1,24 @@
 using ItemsShop.Common.Application.Enums;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
 using ItemsShop.Orders.Features.Shared.Responses;
 using ItemsShop.Orders.Infrastructure.Database;
-using Mediator.Lite.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Orders.Features.Features.Orders.GetOrders;
 
-public sealed record GetOrdersQuery(
-    QuerySortType? SortType,
-    OrderStatus? Status,
-    decimal? BiggerOrEqualPrice,
-    decimal? LessOrEqualPrice,
-    DateTime? CreatedBefore,
-    DateTime? CreatedAfter,
-    DateTime? UpdatedBefore,
-    DateTime? UpdatedAfter) : IRequest<Result<GetOrdersResponse>>;
-
-public sealed record GetOrdersResponse(ICollection<OrderResponse> Orders);
-
-public sealed class GetOrdersHandler(
-    OrderDbContext context,
-    ILogger<GetOrdersHandler> logger) : IRequestHandler<GetOrdersQuery, Result<GetOrdersResponse>>
+internal interface IGetOrdersHandler : IHandler
 {
-    public async Task<Result<GetOrdersResponse>> Handle(GetOrdersQuery request, CancellationToken cancellationToken)
+    Task<Result<List<OrderResponse>>> HandleAsync(GetOrdersRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class GetOrdersHandler(
+    OrderDbContext context,
+    ILogger<GetOrdersHandler> logger)
+    : IGetOrdersHandler
+{
+    public async Task<Result<List<OrderResponse>>> HandleAsync(GetOrdersRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching orders");
 
@@ -32,34 +26,34 @@ public sealed class GetOrdersHandler(
             .AsQueryable()
             .AsNoTracking();
 
-        if (request.Status is not null)
+        if (request.status is not null)
         {
-            logger.LogInformation("Fetching orders with specified status: {Status}", request.Status);
+            logger.LogInformation("Fetching orders with specified status: {Status}", request.status);
 
-            query = query.Where(x => x.Status == (byte)request.Status);
+            query = query.Where(x => x.Status == (byte)request.status);
         }
 
-        if (request.BiggerOrEqualPrice is not null)
+        if (request.biggerOrEqualPrice is not null)
         {
-            logger.LogInformation("Fetching orders with a price greated than or equal to: {Price}", request.BiggerOrEqualPrice);
+            logger.LogInformation("Fetching orders with a price greated than or equal to: {Price}", request.biggerOrEqualPrice);
 
-            query = query.Where(x => x.TotalPrice >= request.BiggerOrEqualPrice);
+            query = query.Where(x => x.TotalPrice >= request.biggerOrEqualPrice);
         }
 
-        if (request.LessOrEqualPrice is not null)
+        if (request.lessOrEqualPrice is not null)
         {
-            logger.LogInformation("Fetching orders with a price less than or equal to: {Price}", request.LessOrEqualPrice);
+            logger.LogInformation("Fetching orders with a price less than or equal to: {Price}", request.lessOrEqualPrice);
 
-            query = query.Where(x => x.TotalPrice <= request.LessOrEqualPrice);
+            query = query.Where(x => x.TotalPrice <= request.lessOrEqualPrice);
         }
 
         // TODO: conditions for CreatedBefore/CreatedAfter/UpdatedBefore/UpdatedAfter
 
-        if (request.SortType is not null)
+        if (request.sortType is not null)
         {
-            logger.LogInformation("Fetching orders in specified order: {SortType}", request.SortType);
+            logger.LogInformation("Fetching orders in specified order: {SortType}", request.sortType);
 
-            query = request.SortType == QuerySortType.Ascending
+            query = request.sortType == QuerySortType.Ascending
                 ? query.OrderBy(x => x.TotalPrice)
                 : query.OrderByDescending(x => x.TotalPrice);
         }
@@ -68,10 +62,8 @@ public sealed class GetOrdersHandler(
             .Select(x => x.MapToResponse())
             .ToListAsync(cancellationToken);
 
-        var response = orders.MapToResponse();
+        logger.LogInformation("Fetched {Count} orders", orders.Count);
 
-        logger.LogInformation("Fetched {Count} orders", response.Orders.Count);
-
-        return Result<GetOrdersResponse>.Success(response);
+        return Result<List<OrderResponse>>.Success(orders);
     }
 }

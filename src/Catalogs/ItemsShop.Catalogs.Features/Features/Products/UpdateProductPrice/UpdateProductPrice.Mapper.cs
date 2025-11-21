@@ -1,12 +1,17 @@
 using ItemsShop.Catalogs.Domain.Entities;
+using ItemsShop.Catalogs.PublicApi.Contracts;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductPrice;
 
 internal static class UpdateProductPriceMappingExtensions
 {
-    public static UpdateProductPriceCommand MapToCommand(this UpdateProductPriceRequest request, Guid productId)
-        => new(productId, request.Price);
-
-    public static UpdateProductPriceResponse MapToResponse(this ProductEntity product)
-        => new(product.Id, product.Price);
+    public static ProductResponse MapToResponse(this ProductEntity product)
+        => new(product.Id,
+                product.Name,
+                product.Description,
+                product.Price,
+                product.Quantity,
+                product.CreatedAt,
+                product.UpdatedAt,
+                product.CategoryId);
 }

@@ -1,7 +1,8 @@
 using FluentValidation;
 using ItemsShop.Common.Api.Abstractions;
+using ItemsShop.Common.Api.Extensions;
 using ItemsShop.Orders.Features.Shared.Consts;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Orders.Features.Shared.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,8 +11,9 @@ using Microsoft.AspNetCore.Routing;
 namespace ItemsShop.Orders.Features.Features.OrderItems.CreateOrderItem;
 
 public sealed record CreateOrderItemRequest(
-    long Quantity,
-    Guid ProductId);
+    [FromRoute] Guid orderId,
+    [FromBody] long Quantity,
+    [FromBody] Guid ProductId);
 
 public class CreateOrderItemEndpoint : IEndpoint
 {
@@ -22,7 +24,7 @@ public class CreateOrderItemEndpoint : IEndpoint
             .WithTags(OrderItemsTagConsts.OrderItemsEndpointTags)
             .WithSummary("Creates a new item in order")
             .WithDescription("Creates a new item in order by providing order id in route and quantity and product id in body")
-            .Produces<CreateOrderItemResponse>()
+            .Produces<OrderItemResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
@@ -32,7 +34,7 @@ public class CreateOrderItemEndpoint : IEndpoint
         [FromRoute] Guid orderId,
         [FromBody] CreateOrderItemRequest request,
         [FromServices] IValidator<CreateOrderItemRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] ICreateOrderItemHandler handler,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -42,14 +44,12 @@ public class CreateOrderItemEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand(orderId);
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Created(OrderItemsRouteConsts.BaseRoute, response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

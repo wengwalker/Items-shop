@@ -1,42 +1,40 @@
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Carts.DeleteCart;
 
-public sealed record DeleteCartCommand(
-    Guid CartId) : IRequest<Result<DeleteCartResponse>>;
-
-public sealed record DeleteCartResponse();
-
-public sealed class DeleteCartHandler(
-    CatalogDbContext context,
-    ILogger<DeleteCartHandler> logger) : IRequestHandler<DeleteCartCommand, Result<DeleteCartResponse>>
+internal interface IDeleteCartHandler : IHandler
 {
-    public async Task<Result<DeleteCartResponse>> Handle(DeleteCartCommand request, CancellationToken cancellationToken)
+    Task<Result> HandleAsync(DeleteCartRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class DeleteCartHandler(
+    CatalogDbContext context,
+    ILogger<DeleteCartHandler> logger)
+    : IDeleteCartHandler
+{
+    public async Task<Result> HandleAsync(DeleteCartRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Deleting cart with Id {CartId}", request.CartId);
+        logger.LogInformation("Deleting cart with Id {CartId}", request.cartId);
 
         var cart = await context.Carts
-            .FirstOrDefaultAsync(x => x.Id == request.CartId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.cartId, cancellationToken);
 
         if (cart == null)
         {
-            logger.LogInformation("Cart with ID {CartId} does not exists", request.CartId);
+            logger.LogInformation("Cart with ID {CartId} does not exists", request.cartId);
 
-            return Result<DeleteCartResponse>
-                .Failure($"Cart with ID {request.CartId} does not exists", StatusCodes.Status404NotFound);
+            return Result.Failure($"Cart with ID {request.cartId} does not exists", ErrorType.NotFound);
         }
 
         context.Carts.Remove(cart);
-
         await context.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Deleted cart with Id {CartId}", request.CartId);
+        logger.LogInformation("Deleted cart with Id {CartId}", request.cartId);
 
-        return Result<DeleteCartResponse>.Success();
+        return Result.Success();
     }
 }

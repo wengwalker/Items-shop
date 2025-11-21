@@ -1,1 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+    <ItemGroup>
+    <ProjectReference Include="..\ItemsShop.Common.Domain\ItemsShop.Common.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

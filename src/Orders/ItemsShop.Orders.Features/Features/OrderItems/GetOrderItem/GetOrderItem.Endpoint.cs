@@ -1,7 +1,8 @@
 using FluentValidation;
 using ItemsShop.Common.Api.Abstractions;
+using ItemsShop.Common.Api.Extensions;
 using ItemsShop.Orders.Features.Shared.Consts;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Orders.Features.Shared.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Orders.Features.Features.OrderItems.GetOrderItem;
 
-public sealed record GetOrderItemRequest([FromRoute] Guid orderId, [FromRoute] Guid itemId);
+public sealed record GetOrderItemRequest(
+    [FromRoute] Guid orderId,
+    [FromRoute] Guid itemId);
 
 public class GetOrderItemEndpoint : IEndpoint
 {
@@ -20,7 +23,7 @@ public class GetOrderItemEndpoint : IEndpoint
             .WithTags(OrderItemsTagConsts.OrderItemsEndpointTags)
             .WithSummary("Returns one item from order")
             .WithDescription("Returns one item from order by providing order id and item id in route")
-            .Produces<GetOrderItemResponse>()
+            .Produces<OrderItemResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
@@ -28,7 +31,7 @@ public class GetOrderItemEndpoint : IEndpoint
     private static async Task<IResult> Handle(
         [AsParameters] GetOrderItemRequest request,
         [FromServices] IValidator<GetOrderItemRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IGetOrderItemHandler handler,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -38,14 +41,12 @@ public class GetOrderItemEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Ok(response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

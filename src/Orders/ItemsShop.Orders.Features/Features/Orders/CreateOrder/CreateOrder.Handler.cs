@@ -1,29 +1,35 @@
 using ItemsShop.Common.Application.Enums;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
+using ItemsShop.Orders.Domain.Entities;
+using ItemsShop.Orders.Features.Shared.Responses;
 using ItemsShop.Orders.Infrastructure.Database;
-using Mediator.Lite.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Orders.Features.Features.Orders.CreateOrder;
 
-public sealed record CreateOrderCommand() : IRequest<Result<CreateOrderResponse>>;
-
-public sealed record CreateOrderResponse(
-    Guid OrderId,
-    OrderStatus Status,
-    decimal TotalPrice,
-    DateTime CreatedAt,
-    DateTime UpdatedAt);
-
-public sealed class CreateOrderHandler(
-    OrderDbContext context,
-    ILogger<CreateOrderHandler> logger): IRequestHandler<CreateOrderCommand, Result<CreateOrderResponse>>
+internal interface ICreateOrderHandler : IHandler
 {
-    public async Task<Result<CreateOrderResponse>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
+    Task<Result<OrderResponse>> HandleAsync(CancellationToken cancellationToken);
+}
+
+internal sealed class CreateOrderHandler(
+    OrderDbContext context,
+    ILogger<CreateOrderHandler> logger)
+    : ICreateOrderHandler
+{
+    public async Task<Result<OrderResponse>> HandleAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("Creating order entity");
 
-        var order = request.MapToOrder();
+        var order = new OrderEntity()
+        {
+            Id = Guid.NewGuid(),
+            Status = (byte)OrderStatus.Draft,
+            TotalPrice = 0,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        };
 
         context.Orders.Add(order);
 
@@ -31,8 +37,6 @@ public sealed class CreateOrderHandler(
 
         logger.LogInformation("Created order entity with Id {OrderId}", order.Id);
 
-        var response = order.MapToResponse();
-
-        return Result<CreateOrderResponse>.Success(response);
+        return Result<OrderResponse>.Success(order.MapToResponse());
     }
 }

@@ -1,38 +1,34 @@
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
+using ItemsShop.Orders.Features.Shared.Responses;
 using ItemsShop.Orders.Infrastructure.Database;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Orders.Features.Features.Orders.UpdateOrderPrice;
 
-public sealed record UpdateOrderPriceCommand(
-    Guid OrderId,
-    decimal Price) : IRequest<Result<UpdateOrderPriceResponse>>;
-
-public sealed record UpdateOrderPriceResponse(
-    Guid OrderId,
-    DateTime UpdatedAt,
-    decimal Price);
-
-public sealed class UpdateOrderPriceHandler(
-    OrderDbContext context,
-    ILogger<UpdateOrderPriceHandler> logger) : IRequestHandler<UpdateOrderPriceCommand, Result<UpdateOrderPriceResponse>>
+internal interface IUpdateOrderPriceHandler : IHandler
 {
-    public async Task<Result<UpdateOrderPriceResponse>> Handle(UpdateOrderPriceCommand request, CancellationToken cancellationToken)
+    Task<Result<OrderResponse>> HandleAsync(UpdateOrderPriceRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class UpdateOrderPriceHandler(
+    OrderDbContext context,
+    ILogger<UpdateOrderPriceHandler> logger)
+    : IUpdateOrderPriceHandler
+{
+    public async Task<Result<OrderResponse>> HandleAsync(UpdateOrderPriceRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Updating order with Id: {OrderId}, to new price", request.OrderId);
+        logger.LogInformation("Updating order with Id: {OrderId}, to new price", request.orderId);
 
         var order = await context.Orders
-            .FirstOrDefaultAsync(x => x.Id == request.OrderId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.orderId, cancellationToken);
 
         if (order == null)
         {
-            logger.LogInformation("Order with Id {OrderId} does not exists", request.OrderId);
+            logger.LogInformation("Order with Id {OrderId} does not exists", request.orderId);
 
-            return Result<UpdateOrderPriceResponse>
-                .Failure($"Order with Id {request.OrderId} does not exists", StatusCodes.Status404NotFound);
+            return Result<OrderResponse>.Failure($"Order with Id {request.orderId} does not exists", ErrorType.NotFound);
         }
 
         order.TotalPrice = request.Price;
@@ -40,10 +36,8 @@ public sealed class UpdateOrderPriceHandler(
 
         await context.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Updated order with Id: {OrderId}, to new price", request.OrderId);
+        logger.LogInformation("Updated order with Id: {OrderId}, to new price", request.orderId);
 
-        var response = order.MapToResponse();
-
-        return Result<UpdateOrderPriceResponse>.Success(response);
+        return Result<OrderResponse>.Success(order.MapToResponse());
     }
 }

@@ -6,6 +6,10 @@ public class UpdateProductPriceRequestValidator : AbstractValidator<UpdateProduc
 {
     public UpdateProductPriceRequestValidator()
     {
+        RuleFor(x => x.productId)
+            .NotEmpty()
+            .WithMessage("ProductId must be set");
+
         RuleFor(x => x.Price)
             .GreaterThan(0)
             .WithMessage("Price must greater than 0");

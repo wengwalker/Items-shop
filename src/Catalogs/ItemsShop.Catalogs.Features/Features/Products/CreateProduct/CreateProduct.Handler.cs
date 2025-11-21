@@ -1,35 +1,23 @@
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Catalogs.PublicApi.Contracts;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.CreateProduct;
 
-public sealed record CreateProductCommand(
-    string Name,
-    string Description,
-    decimal Price,
-    long Quantity,
-    Guid CategoryId) : IRequest<Result<CreateProductResponse>>;
+internal interface ICreateProductHandler : IHandler
+{
+    Task<Result<ProductResponse>> HandleAsync(CreateProductRequest request, CancellationToken cancellationToken);
+}
 
-public sealed record CreateProductResponse(
-    Guid Id,
-    string Name,
-    string Description,
-    decimal Price,
-    long Quantity,
-    DateTime CreatedAt,
-    DateTime UpdatedAt,
-    Guid CategoryId);
-
-public sealed class CreateProductHandler(
+internal sealed class CreateProductHandler(
     CatalogDbContext context,
     ILogger<CreateProductHandler> logger)
-    : IRequestHandler<CreateProductCommand, Result<CreateProductResponse>>
+    : ICreateProductHandler
 {
-    public async Task<Result<CreateProductResponse>> Handle(CreateProductCommand request, CancellationToken cancellationToken)
+    public async Task<Result<ProductResponse>> HandleAsync(CreateProductRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Creating product with name: {Name}", request.Name);
 
@@ -40,8 +28,8 @@ public sealed class CreateProductHandler(
         {
             logger.LogInformation("Category with Id {CategoryId} does not exists", request.CategoryId);
 
-            return Result<CreateProductResponse>
-                .Failure($"Category with ID {request.CategoryId} does not exists", StatusCodes.Status404NotFound);
+            return Result<ProductResponse>
+                .Failure($"Category with ID {request.CategoryId} does not exists", ErrorType.NotFound);
         }
 
         var product = request.MapToProduct();
@@ -51,8 +39,6 @@ public sealed class CreateProductHandler(
 
         logger.LogInformation("Created product with Id {ProductId}", product.Id);
 
-        var response = product.MapToResponse();
-
-        return Result<CreateProductResponse>.Success(response);
+        return Result<ProductResponse>.Success(product.MapToResponse());
     }
 }

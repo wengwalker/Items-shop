@@ -1,7 +1,7 @@
 using FluentValidation;
 using ItemsShop.Common.Api.Abstractions;
+using ItemsShop.Common.Api.Extensions;
 using ItemsShop.Orders.Features.Shared.Consts;
-using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,8 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Orders.Features.Features.Orders.DeleteOrder;
 
-public sealed record DeleteOrderRequest([FromRoute] Guid orderId);
+public sealed record DeleteOrderRequest(
+    [FromRoute] Guid orderId);
 
 public class DeleteOrderEndpoint : IEndpoint
 {
@@ -28,7 +29,7 @@ public class DeleteOrderEndpoint : IEndpoint
     private static async Task<IResult> Handle(
         [AsParameters] DeleteOrderRequest request,
         [FromServices] IValidator<DeleteOrderRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IDeleteOrderHandler handler,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -38,14 +39,12 @@ public class DeleteOrderEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.NoContent()
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

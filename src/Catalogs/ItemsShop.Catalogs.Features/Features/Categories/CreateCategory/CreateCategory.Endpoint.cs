@@ -1,7 +1,8 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Common.Api.Abstractions;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ public class CreateCategoryEndpoint : IEndpoint
             .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
             .WithSummary("Creates a new category")
             .WithDescription("Creates a new category by providing name and description in body")
-            .Produces<CreateCategoryResponse>(StatusCodes.Status201Created)
+            .Produces<CategoryResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status409Conflict)
             .ProducesValidationProblem();
     }
@@ -30,7 +31,7 @@ public class CreateCategoryEndpoint : IEndpoint
     private static async Task<IResult> Handle(
         [FromBody] CreateCategoryRequest request,
         [FromServices] IValidator<CreateCategoryRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] ICreateCategoryHandler handler,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -40,14 +41,12 @@ public class CreateCategoryEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Created(CategoriesRouteConsts.BaseRoute, response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

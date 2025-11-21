@@ -1,15 +1,19 @@
+using ItemsShop.Catalogs.PublicApi.Contracts;
 using ItemsShop.Orders.Domain.Entities;
+using ItemsShop.Orders.Features.Shared.Responses;
 
 namespace ItemsShop.Orders.Features.Features.OrderItems.UpdateOrderItemQuantity;
 
 internal static class UpdateOrderItemQuantityMappingExtensions
 {
-    public static UpdateOrderItemQuantityCommand MapToCommand(this UpdateOrderItemQuantityRequest request, Guid OrderId, Guid ItemId)
-        => new (OrderId, ItemId, request.Quantity);
+    public static GetProductRequest MapToRequest(this OrderItemEntity orderItem)
+        => new (orderItem.ProductId);
 
-    public static UpdateOrderItemQuantityResponse MapToResponse(this OrderItemEntity orderItem)
+    public static OrderItemResponse MapToResponse(this OrderItemEntity orderItem)
         => new (orderItem.Id,
-                orderItem.OrderId,
+                orderItem.ProductId,
+                orderItem.ProductPrice,
                 orderItem.ProductQuantity,
-                orderItem.ProductId);
+                orderItem.ItemPrice,
+                orderItem.OrderId);
 }

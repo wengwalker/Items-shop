@@ -1,37 +1,34 @@
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Catalogs.PublicApi.Contracts;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductPrice;
 
-public sealed record UpdateProductPriceCommand(
-    Guid ProductId,
-    decimal Price) : IRequest<Result<UpdateProductPriceResponse>>;
-
-public sealed record UpdateProductPriceResponse(
-    Guid ProductId,
-    decimal Price);
-
-public sealed class UpdateProductPriceHandler(
-    CatalogDbContext context,
-    ILogger<UpdateProductPriceHandler> logger) : IRequestHandler<UpdateProductPriceCommand, Result<UpdateProductPriceResponse>>
+internal interface IUpdateProductPriceHandler : IHandler
 {
-    public async Task<Result<UpdateProductPriceResponse>> Handle(UpdateProductPriceCommand request, CancellationToken cancellationToken)
+    Task<Result<ProductResponse>> HandleAsync(UpdateProductPriceRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class UpdateProductPriceHandler(
+    CatalogDbContext context,
+    ILogger<UpdateProductPriceHandler> logger)
+    : IUpdateProductPriceHandler
+{
+    public async Task<Result<ProductResponse>> HandleAsync(UpdateProductPriceRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Updating product with Id: {ProductId}, to new price", request.ProductId);
+        logger.LogInformation("Updating product with Id: {ProductId}, to new price", request.productId);
 
         var product = await context.Products
-            .FirstOrDefaultAsync(x => x.Id == request.ProductId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.productId, cancellationToken);
 
         if (product == null)
         {
-            logger.LogInformation("Product with Id {ProductId} does not exists", request.ProductId);
+            logger.LogInformation("Product with Id {ProductId} does not exists", request.productId);
 
-            return Result<UpdateProductPriceResponse>
-                .Failure($"Product with ID {request.ProductId} does not exists", StatusCodes.Status404NotFound);
+            return Result<ProductResponse>.Failure($"Product with ID {request.productId} does not exists", ErrorType.NotFound);
         }
 
         product.Price = request.Price;
@@ -39,10 +36,8 @@ public sealed class UpdateProductPriceHandler(
 
         await context.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Updated product with Id: {ProductId}, to new price", request.ProductId);
+        logger.LogInformation("Updated product with Id: {ProductId}, to new price", request.productId);
 
-        var response = product.MapToResponse();
-
-        return Result<UpdateProductPriceResponse>.Success(response);
+        return Result<ProductResponse>.Success(product.MapToResponse());
     }
 }

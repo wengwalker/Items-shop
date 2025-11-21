@@ -1,33 +1,33 @@
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
 using ItemsShop.Orders.Infrastructure.Database;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Orders.Features.Features.Orders.DeleteOrder;
 
-public sealed record DeleteOrderCommand(Guid OrderId) : IRequest<Result<DeleteOrderResponse>>;
-
-public sealed record DeleteOrderResponse();
-
-public sealed class DeleteOrderHandler(
-    OrderDbContext context,
-    ILogger<DeleteOrderHandler> logger) : IRequestHandler<DeleteOrderCommand, Result<DeleteOrderResponse>>
+internal interface IDeleteOrderHandler : IHandler
 {
-    public async Task<Result<DeleteOrderResponse>> Handle(DeleteOrderCommand request, CancellationToken cancellationToken)
+    Task<Result> HandleAsync(DeleteOrderRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class DeleteOrderHandler(
+    OrderDbContext context,
+    ILogger<DeleteOrderHandler> logger)
+    : IDeleteOrderHandler
+{
+    public async Task<Result> HandleAsync(DeleteOrderRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Deleting order with Id: {OrderId}", request.OrderId);
+        logger.LogInformation("Deleting order with Id: {OrderId}", request.orderId);
 
         var order = await context.Orders
-            .FirstOrDefaultAsync(x => x.Id == request.OrderId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.orderId, cancellationToken);
 
         if (order == null)
         {
-            logger.LogInformation("Order with Id {OrderId} does not exists", request.OrderId);
+            logger.LogInformation("Order with Id {OrderId} does not exists", request.orderId);
 
-            return Result<DeleteOrderResponse>
-                .Failure($"Order with Id {request.OrderId} does not exists", StatusCodes.Status404NotFound);
+            return Result.Failure($"Order with Id {request.orderId} does not exists", ErrorType.NotFound);
         }
 
         context.Orders.Remove(order);
@@ -35,6 +35,6 @@ public sealed class DeleteOrderHandler(
 
         logger.LogInformation("Deleted order with Id: {OrderId}", order.Id);
 
-        return Result<DeleteOrderResponse>.Success();
+        return Result.Success();
     }
 }

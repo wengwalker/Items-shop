@@ -6,7 +6,11 @@ public class UpdateProductCategoryRequestValidator : AbstractValidator<UpdatePro
 {
     public UpdateProductCategoryRequestValidator()
     {
-        RuleFor(x => x.CategoryId)
+        RuleFor(x => x.productId)
+            .NotEmpty()
+            .WithMessage("ProductId must be set");
+
+        RuleFor(x => x.categoryId)
             .NotEmpty()
             .WithMessage("CategoryId must be set");
     }

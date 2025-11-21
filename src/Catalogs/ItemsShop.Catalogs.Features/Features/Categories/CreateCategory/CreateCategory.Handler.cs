@@ -1,26 +1,23 @@
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Categories.CreateCategory;
 
-public sealed record CreateCategoryCommand(
-    string Name,
-    string? Description) : IRequest<Result<CreateCategoryResponse>>;
-
-public sealed record CreateCategoryResponse(
-    Guid CategoryId,
-    string Name,
-    string? Description);
-
-public sealed class CreateCategoryHandler(
-    CatalogDbContext context,
-    ILogger<CreateCategoryHandler> logger) : IRequestHandler<CreateCategoryCommand, Result<CreateCategoryResponse>>
+internal interface ICreateCategoryHandler : IHandler
 {
-    public async Task<Result<CreateCategoryResponse>> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
+    Task<Result<CategoryResponse>> HandleAsync(CreateCategoryRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class CreateCategoryHandler(
+    CatalogDbContext context,
+    ILogger<CreateCategoryHandler> logger)
+    : ICreateCategoryHandler
+{
+    public async Task<Result<CategoryResponse>> HandleAsync(CreateCategoryRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Creating category with name: {Name}", request.Name);
 
@@ -31,8 +28,7 @@ public sealed class CreateCategoryHandler(
         {
             logger.LogInformation("Category with Name {Name} already exists", request.Name);
 
-            return Result<CreateCategoryResponse>
-                .Failure($"Category with Name {request.Name} already exists", StatusCodes.Status409Conflict);
+            return Result<CategoryResponse>.Failure($"Category with Name {request.Name} already exists", ErrorType.Conflict);
         }
 
         var category = request.MapToCategory();
@@ -42,8 +38,6 @@ public sealed class CreateCategoryHandler(
 
         logger.LogInformation("Created category with Id: {Id}", category.Id);
 
-        var response = category.MapToResponse();
-
-        return Result<CreateCategoryResponse>.Success(response);
+        return Result<CategoryResponse>.Success(category.MapToResponse());
     }
 }

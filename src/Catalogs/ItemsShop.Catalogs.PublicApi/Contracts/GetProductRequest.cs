@@ -1,3 +1,3 @@
 namespace ItemsShop.Catalogs.PublicApi.Contracts;
 
-public record GetProductRequest(Guid ProdutId);
+public record GetProductRequest(Guid ProductId);

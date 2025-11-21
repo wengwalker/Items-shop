@@ -5,4 +5,5 @@ public sealed record OrderItemResponse(
     Guid ProductId,
     decimal ProductPrice,
     long ProductQuantity,
-    decimal ItemPrice);
+    decimal ItemPrice,
+    Guid OrderId);

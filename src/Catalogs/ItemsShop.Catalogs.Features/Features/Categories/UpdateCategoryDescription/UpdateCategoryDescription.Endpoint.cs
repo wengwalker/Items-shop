@@ -1,7 +1,8 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Common.Api.Abstractions;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,8 @@ using Microsoft.AspNetCore.Routing;
 namespace ItemsShop.Catalogs.Features.Features.Categories.UpdateCategoryDescription;
 
 public sealed record UpdateCategoryDescriptionRequest(
-    string? Description);
+    [FromRoute] Guid categoryId,
+    [FromBody] string? Description);
 
 public class UpdateCategoryDescriptionEndpoint : IEndpoint
 {
@@ -21,16 +23,15 @@ public class UpdateCategoryDescriptionEndpoint : IEndpoint
             .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
             .WithSummary("Updates an category description")
             .WithDescription("Updates an category description by providing category id in route and description in body")
-            .Produces<UpdateCategoryDescriptionResponse>()
+            .Produces<CategoryResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
-        [FromRoute] Guid categoryId,
-        [FromBody] UpdateCategoryDescriptionRequest request,
+        [AsParameters] UpdateCategoryDescriptionRequest request,
         [FromServices] IValidator<UpdateCategoryDescriptionRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IUpdateCategoryDescriptionHandler handler,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -40,14 +41,12 @@ public class UpdateCategoryDescriptionEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand(categoryId);
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Ok(response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

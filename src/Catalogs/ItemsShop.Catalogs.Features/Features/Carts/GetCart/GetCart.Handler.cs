@@ -1,42 +1,39 @@
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Carts.GetCart;
 
-public sealed record GetCartQuery(Guid CartId) : IRequest<Result<GetCartResponse>>;
-
-public sealed record GetCartResponse(
-    Guid CartId,
-    DateTime LastUpdated);
-
-public sealed class GetCartHandler(
-    CatalogDbContext context,
-    ILogger<GetCartHandler> logger) : IRequestHandler<GetCartQuery, Result<GetCartResponse>>
+internal interface IGetCartHandler : IHandler
 {
-    public async Task<Result<GetCartResponse>> Handle(GetCartQuery request, CancellationToken cancellationToken)
+    Task<Result<CartResponse>> HandleAsync(GetCartRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class GetCartHandler(
+    CatalogDbContext context,
+    ILogger<GetCartHandler> logger)
+    : IGetCartHandler
+{
+    public async Task<Result<CartResponse>> HandleAsync(GetCartRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching cart");
 
         var cart = await context.Carts
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == request.CartId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.cartId, cancellationToken);
 
         if (cart == null)
         {
-            logger.LogInformation("Cart with ID {CartId} does not exists", request.CartId);
+            logger.LogInformation("Cart with ID {CartId} does not exists", request.cartId);
 
-            return Result<GetCartResponse>
-                .Failure($"Cart with ID {request.CartId} does not exists", StatusCodes.Status404NotFound);
+            return Result<CartResponse>.Failure($"Cart with ID {request.cartId} does not exists", ErrorType.NotFound);
         }
 
-        var response = cart.MapToResponse();
+        logger.LogInformation("Fetched cart with ID: {CartId}", request.cartId);
 
-        logger.LogInformation("Fetched cart with ID: {CartId}", response.CartId);
-
-        return Result<GetCartResponse>.Success(response);
+        return Result<CartResponse>.Success(cart.MapToResponse());
     }
 }

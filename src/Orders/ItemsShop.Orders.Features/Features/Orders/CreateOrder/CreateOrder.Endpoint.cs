@@ -1,6 +1,7 @@
 using ItemsShop.Common.Api.Abstractions;
+using ItemsShop.Common.Api.Extensions;
 using ItemsShop.Orders.Features.Shared.Consts;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Orders.Features.Shared.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,19 +18,19 @@ public class CreateOrderEndpoint : IEndpoint
             .WithTags(OrdersTagConsts.OrdersEndpointTags)
             .WithSummary("Creates a new order")
             .WithDescription("Creates a new order")
-            .Produces<CreateOrderResponse>();
+            .Produces<OrderResponse>();
     }
 
     private static async Task<IResult> Handle(
-        [FromServices] IMediator mediator,
+        [FromServices] ICreateOrderHandler handler,
         CancellationToken cancellationToken)
     {
-        var response = await mediator.Send(new CreateOrderCommand(), cancellationToken);
+        var response = await handler.HandleAsync(cancellationToken);
 
         return response.IsSuccess
             ? Results.Created(OrdersRouteConsts.BaseRoute, response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

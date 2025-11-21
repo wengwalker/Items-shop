@@ -1,8 +1,9 @@
 using FluentValidation;
 using ItemsShop.Common.Api.Abstractions;
+using ItemsShop.Common.Api.Extensions;
 using ItemsShop.Common.Application.Enums;
 using ItemsShop.Orders.Features.Shared.Consts;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Orders.Features.Shared.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,14 +30,14 @@ public class GetOrdersEndpoint : IEndpoint
             .WithTags(OrdersTagConsts.OrdersEndpointTags)
             .WithSummary("Returns list of orders")
             .WithDescription("Returns list of orders and accepts query params: ")
-            .Produces<GetOrdersResponse>()
+            .Produces<List<OrderResponse>>()
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
         [AsParameters] GetOrdersRequest request,
         [FromServices] IValidator<GetOrdersRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IGetOrdersHandler handler,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -46,14 +47,12 @@ public class GetOrdersEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToQuery();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Ok(response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

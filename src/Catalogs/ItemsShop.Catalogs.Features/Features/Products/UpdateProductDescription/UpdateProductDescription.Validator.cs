@@ -6,6 +6,10 @@ public class UpdateProductDescriptionRequestValidator : AbstractValidator<Update
 {
     public UpdateProductDescriptionRequestValidator()
     {
+        RuleFor(x => x.productId)
+            .NotEmpty()
+                .WithMessage("ProductId must be set");
+
         RuleFor(x => x.Description)
             .NotEmpty()
                 .WithMessage("Description must be set")

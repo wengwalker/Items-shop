@@ -1,8 +1,9 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Common.Api.Abstractions;
+using ItemsShop.Common.Api.Extensions;
 using ItemsShop.Common.Application.Enums;
-using Mediator.Lite.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,14 +22,14 @@ public class GetCategoriesEndpoint : IEndpoint
             .WithTags(CategoriesTagConsts.CategoriesEndpointTags)
             .WithSummary("Returns list of cartegories")
             .WithDescription("Returns list of categories and accepts query params: name and order")
-            .Produces<GetCategoriesResponse>()
+            .Produces<List<CategoryResponse>>()
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
         [AsParameters] GetCategoriesRequest request,
         [FromServices] IValidator<GetCategoriesRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IGetCategoriesHandler handler,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -38,14 +39,12 @@ public class GetCategoriesEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Ok(response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

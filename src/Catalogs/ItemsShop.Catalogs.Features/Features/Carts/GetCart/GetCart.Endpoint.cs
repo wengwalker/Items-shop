@@ -1,7 +1,8 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Common.Api.Abstractions;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ public class GetCartEndpoint : IEndpoint
             .WithTags(CartsTagConsts.CartsEndpointTags)
             .WithSummary("Returns one cart")
             .WithDescription("Returns one cart by providing cart id in route")
-            .Produces<GetCartResponse>()
+            .Produces<CartResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
@@ -28,7 +29,7 @@ public class GetCartEndpoint : IEndpoint
     private static async Task<IResult> Handle(
         [AsParameters] GetCartRequest request,
         [FromServices] IValidator<GetCartRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IGetCartHandler handler,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -38,14 +39,12 @@ public class GetCartEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Ok(response)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

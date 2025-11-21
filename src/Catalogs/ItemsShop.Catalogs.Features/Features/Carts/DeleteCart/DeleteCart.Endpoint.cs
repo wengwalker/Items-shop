@@ -1,7 +1,7 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +20,7 @@ public class DeleteCartEndpoint : IEndpoint
             .WithTags(CartsTagConsts.CartsEndpointTags)
             .WithSummary("Deletes an cart")
             .WithDescription("Deletes an cart by providing cart id in route")
-            .Produces<DeleteCartResponse>()
+            .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
@@ -28,7 +28,7 @@ public class DeleteCartEndpoint : IEndpoint
     private static async Task<IResult> Handle(
         [AsParameters] DeleteCartRequest request,
         [FromServices] IValidator<DeleteCartRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IDeleteCartHandler handler,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -38,14 +38,12 @@ public class DeleteCartEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.NoContent()
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

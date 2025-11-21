@@ -3,7 +3,6 @@
   <ItemGroup>
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="FluentValidation" />
-    <PackageReference Include="Mediator.Lite" />
   </ItemGroup>
 
   <ItemGroup>

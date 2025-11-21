@@ -1,47 +1,42 @@
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Categories.UpdateCategoryName;
 
-public sealed record UpdateCategoryNameCommand(
-    Guid CategoryId,
-    string Name) : IRequest<Result<UpdateCategoryNameResponse>>;
-
-public sealed record UpdateCategoryNameResponse(
-    Guid CategoryId,
-    string Name);
-
-public sealed class UpdateCategoryNameHandler(
-    CatalogDbContext context,
-    ILogger<UpdateCategoryNameHandler> logger) : IRequestHandler<UpdateCategoryNameCommand, Result<UpdateCategoryNameResponse>>
+internal interface IUpdateCategoryNameHandler : IHandler
 {
-    public async Task<Result<UpdateCategoryNameResponse>> Handle(UpdateCategoryNameCommand request, CancellationToken cancellationToken)
+    Task<Result<CategoryResponse>> HandleAsync(UpdateCategoryNameRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class UpdateCategoryNameHandler(
+    CatalogDbContext context,
+    ILogger<UpdateCategoryNameHandler> logger)
+    : IUpdateCategoryNameHandler
+{
+    public async Task<Result<CategoryResponse>> HandleAsync(UpdateCategoryNameRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Updating category with Id: {CategoryId}, to new name", request.CategoryId);
+        logger.LogInformation("Updating category with Id: {CategoryId}, to new name", request.categoryId);
 
         var category = await context.Categories
-            .FirstOrDefaultAsync(x => x.Id == request.CategoryId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.categoryId, cancellationToken);
 
         if (category == null)
         {
-            logger.LogInformation("Category with Id {CategoryId} does not exists", request.CategoryId);
+            logger.LogInformation("Category with Id {CategoryId} does not exists", request.categoryId);
 
-            return Result<UpdateCategoryNameResponse>
-                .Failure($"Category with ID {request.CategoryId} does not exists", StatusCodes.Status404NotFound);
+            return Result<CategoryResponse>.Failure($"Category with ID {request.categoryId} does not exists", ErrorType.NotFound);
         }
 
         category.Name = request.Name;
 
         await context.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Updated category with Id: {CategoryId}, to new name", request.CategoryId);
+        logger.LogInformation("Updated category with Id: {CategoryId}, to new name", request.categoryId);
 
-        var response = category.MapToResponse();
-
-        return Result<UpdateCategoryNameResponse>.Success(response);
+        return Result<CategoryResponse>.Success(category.MapToResponse());
     }
 }

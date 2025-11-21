@@ -5,5 +5,5 @@ namespace ItemsShop.Catalogs.PublicApi;
 
 public interface ICatalogModuleApi
 {
-    Task<Result<GetProductResponse>> GetProductAsync(GetProductRequest request, CancellationToken cancellationToken);
+    Task<Result<ProductResponse>> GetProductAsync(GetProductRequest request, CancellationToken cancellationToken);
 }

@@ -12,7 +12,8 @@ public static class MapHealthChecksExtensions
         {
             Predicate = _ => true,
             ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
-        });
+        })
+        .DisableHttpMetrics();
 
         return app;
     }

@@ -6,6 +6,10 @@ public class UpdateCategoryDescriptionRequestValidator : AbstractValidator<Updat
 {
     public UpdateCategoryDescriptionRequestValidator()
     {
+        RuleFor(x => x.categoryId)
+            .NotEmpty()
+                .WithMessage("CategoryId must be set");
+
         RuleFor(x => x.Description)
             .NotEmpty()
                 .When(x => x.Description != null)

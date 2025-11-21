@@ -1,7 +1,7 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +28,7 @@ public class DeleteCategoryEndpoint : IEndpoint
     private static async Task<IResult> Handle(
         [AsParameters] DeleteCategoryRequest request,
         [FromServices] IValidator<DeleteCategoryRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IDeleteCategoryHandler handler,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -38,14 +38,12 @@ public class DeleteCategoryEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.NoContent()
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

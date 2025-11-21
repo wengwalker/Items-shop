@@ -1,34 +1,30 @@
 using ItemsShop.Catalogs.PublicApi.Contracts;
 using ItemsShop.Orders.Domain.Entities;
+using ItemsShop.Orders.Features.Shared.Responses;
 
 namespace ItemsShop.Orders.Features.Features.OrderItems.CreateOrderItem;
 
 internal static class CreateOrderItemMappingExtensions
 {
-    public static CreateOrderItemCommand MapToCommand(this CreateOrderItemRequest request, Guid orderId)
-        => new(orderId,
-                request.Quantity,
-                request.ProductId);
+    public static GetProductRequest MapToRequest(this CreateOrderItemRequest request)
+        => new(request.ProductId);
 
-    public static GetProductRequest MapToRequest(this CreateOrderItemCommand command)
-        => new(command.ProductId);
-
-    public static OrderItemEntity MapToOrderItem(this CreateOrderItemCommand command, ProductItem product)
+    public static OrderItemEntity MapToOrderItem(this CreateOrderItemRequest request, ProductResponse product)
         => new()
         {
             Id = Guid.NewGuid(),
-            OrderId = command.OrderId,
-            ProductId = command.ProductId,
+            OrderId = request.orderId,
+            ProductId = request.ProductId,
             ProductPrice = product.Price,
-            ProductQuantity = product.Quantity,
-            ItemPrice = product.Price * command.Quantity,
+            ProductQuantity = request.Quantity,
+            ItemPrice = product.Price * request.Quantity,
         };
 
-    public static CreateOrderItemResponse MapToResponse(this OrderItemEntity orderItem)
+    public static OrderItemResponse MapToResponse(this OrderItemEntity orderItem)
         => new(orderItem.Id,
-                orderItem.OrderId,
-                orderItem.ProductQuantity,
                 orderItem.ProductId,
                 orderItem.ProductPrice,
-                orderItem.ItemPrice);
+                orderItem.ProductQuantity,
+                orderItem.ItemPrice,
+                orderItem.OrderId);
 }

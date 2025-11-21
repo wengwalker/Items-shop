@@ -1,7 +1,8 @@
 using FluentValidation;
 using ItemsShop.Common.Api.Abstractions;
+using ItemsShop.Common.Api.Extensions;
 using ItemsShop.Orders.Features.Shared.Consts;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Orders.Features.Shared.Responses;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,8 @@ using Microsoft.AspNetCore.Routing;
 namespace ItemsShop.Orders.Features.Features.Orders.UpdateOrderPrice;
 
 public sealed record UpdateOrderPriceRequest(
-    decimal Price);
+    [FromRoute] Guid orderId,
+    [FromBody] decimal Price);
 
 public class UpdateOrderPriceEndpoint : IEndpoint
 {
@@ -21,16 +23,15 @@ public class UpdateOrderPriceEndpoint : IEndpoint
             .WithTags(OrdersTagConsts.OrdersEndpointTags)
             .WithSummary("Updates an order total price")
             .WithDescription("Updates an order total price by providing order id in route and price in body")
-            .Produces<UpdateOrderPriceResponse>()
+            .Produces<OrderResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
-        [FromRoute] Guid orderId,
-        [FromBody] UpdateOrderPriceRequest request,
+        [AsParameters] UpdateOrderPriceRequest request,
         [FromServices] IValidator<UpdateOrderPriceRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IUpdateOrderPriceHandler handler,
         CancellationToken cancellationToken)
     {
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
@@ -40,14 +41,12 @@ public class UpdateOrderPriceEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand(orderId);
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Ok(response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }
