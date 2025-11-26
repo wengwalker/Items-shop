@@ -11,8 +11,8 @@ using Microsoft.AspNetCore.Routing;
 namespace ItemsShop.Orders.Features.Features.OrderItems.GetOrderItem;
 
 public sealed record GetOrderItemRequest(
-    [FromRoute] Guid orderId,
-    [FromRoute] Guid itemId);
+    Guid OrderId,
+    Guid ItemId);
 
 public class GetOrderItemEndpoint : IEndpoint
 {
@@ -29,11 +29,14 @@ public class GetOrderItemEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] GetOrderItemRequest request,
+        [FromRoute] Guid orderId,
+        [FromRoute] Guid itemId,
         [FromServices] IValidator<GetOrderItemRequest> validator,
         [FromServices] IGetOrderItemHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new GetOrderItemRequest(orderId, itemId);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)

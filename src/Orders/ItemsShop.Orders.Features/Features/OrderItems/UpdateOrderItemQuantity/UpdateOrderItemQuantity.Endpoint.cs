@@ -10,10 +10,13 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Orders.Features.Features.OrderItems.UpdateOrderItemQuantity;
 
+internal sealed record UpdateOrderItemQuantityBody(
+    int Quantity);
+
 public sealed record UpdateOrderItemQuantityRequest(
-    [FromRoute] Guid orderId,
-    [FromRoute] Guid itemId,
-    [FromBody] int Quantity);
+    Guid OrderId,
+    Guid ItemId,
+    int Quantity);
 
 public class UpdateOrderItemQuantityEndpoint : IEndpoint
 {
@@ -31,11 +34,15 @@ public class UpdateOrderItemQuantityEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] UpdateOrderItemQuantityRequest request,
+        [FromRoute] Guid orderId,
+        [FromRoute] Guid itemId,
+        [FromBody] UpdateOrderItemQuantityBody body,
         [FromServices] IValidator<UpdateOrderItemQuantityRequest> validator,
         [FromServices] IUpdateOrderItemQuantityHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new UpdateOrderItemQuantityRequest(orderId, itemId, body.Quantity);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)

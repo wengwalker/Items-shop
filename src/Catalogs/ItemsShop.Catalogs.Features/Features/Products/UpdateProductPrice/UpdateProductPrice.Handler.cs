@@ -19,16 +19,16 @@ internal sealed class UpdateProductPriceHandler(
 {
     public async Task<Result<ProductResponse>> HandleAsync(UpdateProductPriceRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Updating product with Id: {ProductId}, to new price", request.productId);
+        logger.LogInformation("Updating product with Id: {ProductId}, to new price", request.ProductId);
 
         var product = await context.Products
-            .FirstOrDefaultAsync(x => x.Id == request.productId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.ProductId, cancellationToken);
 
         if (product == null)
         {
-            logger.LogInformation("Product with Id {ProductId} does not exists", request.productId);
+            logger.LogInformation("Product with Id {ProductId} does not exists", request.ProductId);
 
-            return Result<ProductResponse>.Failure($"Product with ID {request.productId} does not exists", ErrorType.NotFound);
+            return Result<ProductResponse>.Failure($"Product with ID {request.ProductId} does not exists", ErrorType.NotFound);
         }
 
         product.Price = request.Price;
@@ -36,7 +36,7 @@ internal sealed class UpdateProductPriceHandler(
 
         await context.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Updated product with Id: {ProductId}, to new price", request.productId);
+        logger.LogInformation("Updated product with Id: {ProductId}, to new price", request.ProductId);
 
         return Result<ProductResponse>.Success(product.MapToResponse());
     }

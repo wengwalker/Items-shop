@@ -19,37 +19,37 @@ internal sealed class UpdateCartItemQuantityHandler(
 {
     public async Task<Result<CartItemResponse>> HandleAsync(UpdateCartItemQuantityRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Updating CartItem Quantity from Cart with ID {CartId}", request.cartId);
+        logger.LogInformation("Updating CartItem Quantity from Cart with ID {CartId}", request.CartId);
 
         bool cartExists = await context.Carts
-            .AnyAsync(x => x.Id == request.cartId, cancellationToken);
+            .AnyAsync(x => x.Id == request.CartId, cancellationToken);
 
         if (!cartExists)
         {
-            logger.LogInformation("Cart with ID {CartId} does not exists", request.cartId);
+            logger.LogInformation("Cart with ID {CartId} does not exists", request.CartId);
 
-            return Result<CartItemResponse>.Failure($"Cart with ID {request.cartId} does not exists", ErrorType.NotFound);
+            return Result<CartItemResponse>.Failure($"Cart with ID {request.CartId} does not exists", ErrorType.NotFound);
         }
 
         var cartItem = await context.CartItems
-            .FirstOrDefaultAsync(x => x.Id == request.itemId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.ItemId, cancellationToken);
 
         if (cartItem == null)
         {
-            logger.LogInformation("CartItem with ID {CartItemId} does not exists", request.itemId);
+            logger.LogInformation("CartItem with ID {CartItemId} does not exists", request.ItemId);
 
-            return Result<CartItemResponse>.Failure($"CartItem with ID {request.itemId} does not exists", ErrorType.NotFound);
+            return Result<CartItemResponse>.Failure($"CartItem with ID {request.ItemId} does not exists", ErrorType.NotFound);
         }
 
         var product = await context.Products
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == request.itemId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.ItemId, cancellationToken);
 
         if (product == null)
         {
-            logger.LogInformation("Product with Id {ItemId} does not exists", request.itemId);
+            logger.LogInformation("Product with Id {ItemId} does not exists", request.ItemId);
 
-            return Result<CartItemResponse>.Failure($"Product with Id {request.itemId} does not exists", ErrorType.NotFound);
+            return Result<CartItemResponse>.Failure($"Product with Id {request.ItemId} does not exists", ErrorType.NotFound);
         }
 
         if (product.Quantity < request.Quantity)
@@ -66,7 +66,7 @@ internal sealed class UpdateCartItemQuantityHandler(
 
         await context.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Updated CartItem Quantity from Cart with ID {CartId}", request.cartId);
+        logger.LogInformation("Updated CartItem Quantity from Cart with ID {CartId}", request.CartId);
 
         return Result<CartItemResponse>.Success(cartItem.MapToResponse());
     }

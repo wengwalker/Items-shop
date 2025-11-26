@@ -19,25 +19,25 @@ internal sealed class GetOrderItemsHandler(
 {
     public async Task<Result<List<OrderItemResponse>>> HandleAsync(GetOrderItemsRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Fetching OrderItems from Order with Id {OrderId}", request.orderId);
+        logger.LogInformation("Fetching OrderItems from Order with Id {OrderId}", request.OrderId);
 
         bool orderExists = await context.Orders
-            .AnyAsync(x => x.Id == request.orderId, cancellationToken);
+            .AnyAsync(x => x.Id == request.OrderId, cancellationToken);
 
         if (!orderExists)
         {
-            logger.LogInformation("Order with Id {OrderId} does not exists", request.orderId);
+            logger.LogInformation("Order with Id {OrderId} does not exists", request.OrderId);
 
-            return Result<List<OrderItemResponse>>.Failure($"Order with Id {request.orderId} does not exists", ErrorType.NotFound);
+            return Result<List<OrderItemResponse>>.Failure($"Order with Id {request.OrderId} does not exists", ErrorType.NotFound);
         }
 
         List<OrderItemResponse> orderItems = await context.OrderItems
             .AsNoTracking()
-            .Where(x => x.OrderId == request.orderId)
+            .Where(x => x.OrderId == request.OrderId)
             .Select(x => x.MapToResponse())
             .ToListAsync(cancellationToken);
 
-        logger.LogInformation("Fetched OrderItems from Order with Id {OrderId}", request.orderId);
+        logger.LogInformation("Fetched OrderItems from Order with Id {OrderId}", request.OrderId);
 
         return Result<List<OrderItemResponse>>.Success(orderItems);
     }

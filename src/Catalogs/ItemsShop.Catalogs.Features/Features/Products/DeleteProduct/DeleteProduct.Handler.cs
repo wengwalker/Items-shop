@@ -18,16 +18,16 @@ internal sealed class DeleteProductHandler(
 {
     public async Task<Result> HandleAsync(DeleteProductRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Deleting product with ID: {ProductId}", request.productId);
+        logger.LogInformation("Deleting product with ID: {ProductId}", request.ProductId);
 
         var product = await context.Products
-            .FirstOrDefaultAsync(x => x.Id == request.productId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.ProductId, cancellationToken);
 
         if (product == null)
         {
-            logger.LogInformation("Product with ID {ProductId} does not exists", request.productId);
+            logger.LogInformation("Product with ID {ProductId} does not exists", request.ProductId);
 
-            return Result.Failure($"Product with ID {request.productId} does not exists", ErrorType.NotFound);
+            return Result.Failure($"Product with ID {request.ProductId} does not exists", ErrorType.NotFound);
         }
 
         context.Products.Remove(product);

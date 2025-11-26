@@ -11,7 +11,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Categories.GetCategories;
 
-public sealed record GetCategoriesRequest([FromQuery] string? Name, [FromQuery] QuerySortType? SortType);
+public sealed record GetCategoriesRequest(
+    string? Name,
+    QuerySortType? SortType);
 
 public class GetCategoriesEndpoint : IEndpoint
 {
@@ -27,11 +29,14 @@ public class GetCategoriesEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] GetCategoriesRequest request,
+        [FromQuery] string? name,
+        [FromQuery] QuerySortType? sortType,
         [FromServices] IValidator<GetCategoriesRequest> validator,
         [FromServices] IGetCategoriesHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new GetCategoriesRequest(name, sortType);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)

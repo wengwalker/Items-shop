@@ -13,7 +13,7 @@ internal static class CreateOrderItemMappingExtensions
         => new()
         {
             Id = Guid.NewGuid(),
-            OrderId = request.orderId,
+            OrderId = request.OrderId,
             ProductId = request.ProductId,
             ProductPrice = product.Price,
             ProductQuantity = request.Quantity,

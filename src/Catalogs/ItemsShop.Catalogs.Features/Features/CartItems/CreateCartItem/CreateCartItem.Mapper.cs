@@ -9,7 +9,7 @@ internal static class CreateCartItemMappingExtensions
         => new()
         {
             Id = Guid.NewGuid(),
-            CartId = request.cartId,
+            CartId = request.CartId,
             Quantity = request.Quantity,
             ProductId = request.ProductId,
         };

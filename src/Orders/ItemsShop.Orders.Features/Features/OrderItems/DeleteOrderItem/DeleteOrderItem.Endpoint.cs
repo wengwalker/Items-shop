@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Routing;
 namespace ItemsShop.Orders.Features.Features.OrderItems.DeleteOrderItem;
 
 public sealed record DeleteOrderItemRequest(
-    [FromRoute] Guid orderId,
-    [FromRoute] Guid itemId);
+    Guid OrderId,
+    Guid ItemId);
 
 public class DeleteOrderItemEndpoint : IEndpoint
 {
@@ -28,11 +28,14 @@ public class DeleteOrderItemEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] DeleteOrderItemRequest request,
+        [FromRoute] Guid orderId,
+        [FromRoute] Guid itemId,
         [FromServices] IValidator<DeleteOrderItemRequest> validator,
         [FromServices] IDeleteOrderItemHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new DeleteOrderItemRequest(orderId, itemId);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)

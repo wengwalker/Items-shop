@@ -6,11 +6,11 @@ public class DeleteOrderItemRequestValidator : AbstractValidator<DeleteOrderItem
 {
     public DeleteOrderItemRequestValidator()
     {
-        RuleFor(x => x.orderId)
+        RuleFor(x => x.OrderId)
             .NotEmpty()
             .WithMessage("OrderId must be set");
 
-        RuleFor(x => x.itemId)
+        RuleFor(x => x.ItemId)
             .NotEmpty()
             .WithMessage("ItemId must be set");
     }

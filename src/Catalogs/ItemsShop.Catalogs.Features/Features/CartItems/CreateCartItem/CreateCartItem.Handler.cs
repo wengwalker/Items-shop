@@ -20,16 +20,16 @@ internal sealed class CreateCartItemHandler(
     public async Task<Result<CartItemResponse>> HandleAsync(CreateCartItemRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Creating cart item for cart ({CartId}) with product {ProductId} and it's quantity {Quantity}",
-            request.cartId, request.ProductId, request.Quantity);
+            request.CartId, request.ProductId, request.Quantity);
 
         bool cartExists = await context.Carts
-            .AnyAsync(x => x.Id == request.cartId, cancellationToken);
+            .AnyAsync(x => x.Id == request.CartId, cancellationToken);
 
         if (!cartExists)
         {
-            logger.LogInformation("Cart with Id {CartId} does not exists", request.cartId);
+            logger.LogInformation("Cart with Id {CartId} does not exists", request.CartId);
 
-            return Result<CartItemResponse>.Failure($"Cart with Id {request.cartId} does not exists", ErrorType.NotFound);
+            return Result<CartItemResponse>.Failure($"Cart with Id {request.CartId} does not exists", ErrorType.NotFound);
         }
 
         var product = await context.Products
@@ -60,7 +60,7 @@ internal sealed class CreateCartItemHandler(
         await context.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation("Created cart item for cart ({CartId}) with product {ProductId} and it's quantity {Quantity}",
-            request.cartId, request.ProductId, request.Quantity);
+            request.CartId, request.ProductId, request.Quantity);
 
         return Result<CartItemResponse>.Success(cartItem.MapToResponse());
     }

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Categories.DeleteCategory;
 
-public sealed record DeleteCategoryRequest([FromRoute] Guid categoryId);
+public sealed record DeleteCategoryRequest(Guid CategoryId);
 
 public class DeleteCategoryEndpoint : IEndpoint
 {
@@ -26,11 +26,13 @@ public class DeleteCategoryEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] DeleteCategoryRequest request,
+        [FromRoute] Guid categoryId,
         [FromServices] IValidator<DeleteCategoryRequest> validator,
         [FromServices] IDeleteCategoryHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new DeleteCategoryRequest(categoryId);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)

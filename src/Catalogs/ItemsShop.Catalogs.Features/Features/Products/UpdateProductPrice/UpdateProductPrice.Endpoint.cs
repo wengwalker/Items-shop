@@ -10,9 +10,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductPrice;
 
+internal sealed record UpdateProductPriceBody(
+    decimal Price);
+
 public sealed record UpdateProductPriceRequest(
-    [FromRoute] Guid productId,
-    [FromBody] decimal Price);
+    Guid ProductId,
+    decimal Price);
 
 public class UpdateProductPriceEndpoint : IEndpoint
 {
@@ -29,11 +32,14 @@ public class UpdateProductPriceEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] UpdateProductPriceRequest request,
+        [FromRoute] Guid productId,
+        [FromBody] UpdateProductPriceBody body,
         [FromServices] IValidator<UpdateProductPriceRequest> validator,
         [FromServices] IUpdateProductPriceHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new UpdateProductPriceRequest(productId, body.Price);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)

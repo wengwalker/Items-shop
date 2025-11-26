@@ -6,7 +6,7 @@ public class DeleteOrderRequestValidator : AbstractValidator<DeleteOrderRequest>
 {
     public DeleteOrderRequestValidator()
     {
-        RuleFor(x => x.orderId)
+        RuleFor(x => x.OrderId)
             .NotEmpty()
             .WithMessage("orderId must be set");
     }

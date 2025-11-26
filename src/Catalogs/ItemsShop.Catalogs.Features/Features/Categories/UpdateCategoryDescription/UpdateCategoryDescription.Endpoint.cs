@@ -10,9 +10,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Categories.UpdateCategoryDescription;
 
+internal sealed record UpdateCategoryDescriptionBody(
+    string? Description);
+
 public sealed record UpdateCategoryDescriptionRequest(
-    [FromRoute] Guid categoryId,
-    [FromBody] string? Description);
+    Guid CategoryId,
+    string? Description);
 
 public class UpdateCategoryDescriptionEndpoint : IEndpoint
 {
@@ -29,11 +32,14 @@ public class UpdateCategoryDescriptionEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] UpdateCategoryDescriptionRequest request,
+        [FromRoute] Guid categoryId,
+        [FromBody] UpdateCategoryDescriptionBody body,
         [FromServices] IValidator<UpdateCategoryDescriptionRequest> validator,
         [FromServices] IUpdateCategoryDescriptionHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new UpdateCategoryDescriptionRequest(categoryId, body.Description);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)

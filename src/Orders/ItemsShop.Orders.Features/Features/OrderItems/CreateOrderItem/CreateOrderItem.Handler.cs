@@ -22,16 +22,16 @@ internal sealed class CreateOrderItemHandler(
     public async Task<Result<OrderItemResponse>> HandleAsync(CreateOrderItemRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Creating OrderItem that has Product with Id {ProductId} and it's quantity {Quantity} in Order with Id {OrderId}",
-            request.ProductId, request.Quantity, request.orderId);
+            request.ProductId, request.Quantity, request.OrderId);
 
         var orderExists = await context.Orders
-            .AnyAsync(x => x.Id == request.orderId, cancellationToken);
+            .AnyAsync(x => x.Id == request.OrderId, cancellationToken);
 
         if (!orderExists)
         {
-            logger.LogInformation("Order with Id {OrderId} does not exists", request.orderId);
+            logger.LogInformation("Order with Id {OrderId} does not exists", request.OrderId);
 
-            return Result<OrderItemResponse>.Failure($"Order with Id {request.orderId} does not exists", ErrorType.NotFound);
+            return Result<OrderItemResponse>.Failure($"Order with Id {request.OrderId} does not exists", ErrorType.NotFound);
         }
 
         var product = await catalogApi.GetProductAsync(request.MapToRequest(), cancellationToken);
@@ -59,7 +59,7 @@ internal sealed class CreateOrderItemHandler(
         await context.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation("Created OrderItem that has Product with Id {ProductId} and it's quantity {Quantity} in Order with Id {OrderId}",
-            request.ProductId, request.Quantity, request.orderId);
+            request.ProductId, request.Quantity, request.OrderId);
 
         return Result<OrderItemResponse>.Success(orderItem.MapToResponse());
     }

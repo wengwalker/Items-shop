@@ -19,30 +19,30 @@ internal sealed class GetCartItemHandler(
 {
     public async Task<Result<CartItemResponse>> HandleAsync(GetCartItemRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Fetching CartItem with ID {ItemId} from Cart with ID {CartId}", request.itemId, request.cartId);
+        logger.LogInformation("Fetching CartItem with ID {ItemId} from Cart with ID {CartId}", request.ItemId, request.CartId);
 
         var cartExists = await context.Carts
-            .AnyAsync(x => x.Id == request.cartId, cancellationToken);
+            .AnyAsync(x => x.Id == request.CartId, cancellationToken);
 
         if (!cartExists)
         {
-            logger.LogInformation("Cart with ID {CartId} does not exists", request.cartId);
+            logger.LogInformation("Cart with ID {CartId} does not exists", request.CartId);
 
-            return Result<CartItemResponse>.Failure($"Cart with ID {request.cartId} does not exists", ErrorType.NotFound);
+            return Result<CartItemResponse>.Failure($"Cart with ID {request.CartId} does not exists", ErrorType.NotFound);
         }
 
         var cartItem = await context.CartItems
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.CartId == request.cartId && x.Id == request.itemId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.CartId == request.CartId && x.Id == request.ItemId, cancellationToken);
 
         if (cartItem == null)
         {
-            logger.LogInformation("CartItem with ID {ItemId} from Cart with ID {CartId} does not exists", request.itemId, request.cartId);
+            logger.LogInformation("CartItem with ID {ItemId} from Cart with ID {CartId} does not exists", request.ItemId, request.CartId);
 
-            return Result<CartItemResponse>.Failure($"CartItem with ID {request.itemId} from Cart with ID {request.cartId} does not exists", ErrorType.NotFound);
+            return Result<CartItemResponse>.Failure($"CartItem with ID {request.ItemId} from Cart with ID {request.CartId} does not exists", ErrorType.NotFound);
         }
 
-        logger.LogInformation("Fetched CartItem with ID {ItemId} from Cart with ID {CartId}", request.itemId, request.cartId);
+        logger.LogInformation("Fetched CartItem with ID {ItemId} from Cart with ID {CartId}", request.ItemId, request.CartId);
 
         return Result<CartItemResponse>.Success(cartItem.MapToResponse());
     }

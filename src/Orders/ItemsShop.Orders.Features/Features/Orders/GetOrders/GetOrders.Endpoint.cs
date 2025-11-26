@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Orders.Features.Features.Orders.GetOrders;
 
+// TODO: split this record
 public sealed record GetOrdersRequest(
     [FromQuery] QuerySortType? sortType,
     [FromQuery] OrderStatus? status,

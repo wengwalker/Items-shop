@@ -12,8 +12,8 @@ using Microsoft.AspNetCore.Routing;
 namespace ItemsShop.Catalogs.Features.Features.Products.GetProducts;
 
 public sealed record GetProductsRequest(
-    [FromQuery] string? Name,
-    [FromQuery] QuerySortType? SortType);
+    string? Name,
+    QuerySortType? SortType);
 
 public class GetProductsEndpoint : IEndpoint
 {
@@ -29,11 +29,14 @@ public class GetProductsEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] GetProductsRequest request,
+        [FromQuery] string? name,
+        [FromQuery] QuerySortType? sortType,
         [FromServices] IValidator<GetProductsRequest> validator,
         [FromServices] IGetProductsHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new GetProductsRequest(name, sortType);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)

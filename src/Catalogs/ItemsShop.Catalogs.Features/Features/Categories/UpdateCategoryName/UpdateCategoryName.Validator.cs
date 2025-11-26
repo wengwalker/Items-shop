@@ -6,7 +6,7 @@ public class UpdateCategoryNameRequestValidator : AbstractValidator<UpdateCatego
 {
     public UpdateCategoryNameRequestValidator()
     {
-        RuleFor(x => x.categoryId)
+        RuleFor(x => x.CategoryId)
             .NotEmpty()
             .WithMessage("CategoryId must be set");
 

@@ -6,7 +6,7 @@ public class UpdateOrderPriceRequestValidator : AbstractValidator<UpdateOrderPri
 {
     public UpdateOrderPriceRequestValidator()
     {
-        RuleFor(x => x.orderId)
+        RuleFor(x => x.OrderId)
             .NotEmpty()
             .WithMessage("OrderId must be set");
 

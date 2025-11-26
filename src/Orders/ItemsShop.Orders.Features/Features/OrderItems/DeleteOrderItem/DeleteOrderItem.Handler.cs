@@ -18,32 +18,32 @@ internal sealed class DeleteOrderItemHandler(
 {
     public async Task<Result> HandleAsync(DeleteOrderItemRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Deleting item with Id {ItemId} from order with id {OrderId}", request.itemId, request.orderId);
+        logger.LogInformation("Deleting item with Id {ItemId} from order with id {OrderId}", request.ItemId, request.OrderId);
 
         var orderExists = await context.Orders
-            .AnyAsync(x => x.Id == request.orderId, cancellationToken);
+            .AnyAsync(x => x.Id == request.OrderId, cancellationToken);
 
         if (!orderExists)
         {
-            logger.LogInformation("Order with Id {OrderId} does not exists", request.orderId);
+            logger.LogInformation("Order with Id {OrderId} does not exists", request.OrderId);
 
-            return Result.Failure($"Order with Id {request.orderId} does not exists", ErrorType.NotFound);
+            return Result.Failure($"Order with Id {request.OrderId} does not exists", ErrorType.NotFound);
         }
 
         var orderItem = await context.OrderItems
-            .FirstOrDefaultAsync(x => x.Id == request.itemId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.ItemId, cancellationToken);
 
         if (orderItem == null)
         {
-            logger.LogInformation("Item with Id {ItemId} does not exists", request.itemId);
+            logger.LogInformation("Item with Id {ItemId} does not exists", request.ItemId);
 
-            return Result.Failure($"Item with Id {request.itemId} does not exists", ErrorType.NotFound);
+            return Result.Failure($"Item with Id {request.ItemId} does not exists", ErrorType.NotFound);
         }
 
         context.OrderItems.Remove(orderItem);
         await context.SaveChangesAsync(cancellationToken);
 
-        logger.LogInformation("Deleted item with Id {ItemId} from order with Id: {OrderId}", request.itemId, request.orderId);
+        logger.LogInformation("Deleted item with Id {ItemId} from order with Id: {OrderId}", request.ItemId, request.OrderId);
 
         return Result.Success();
     }

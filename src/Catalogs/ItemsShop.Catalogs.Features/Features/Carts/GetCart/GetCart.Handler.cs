@@ -23,16 +23,16 @@ internal sealed class GetCartHandler(
 
         var cart = await context.Carts
             .AsNoTracking()
-            .FirstOrDefaultAsync(x => x.Id == request.cartId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.CartId, cancellationToken);
 
         if (cart == null)
         {
-            logger.LogInformation("Cart with ID {CartId} does not exists", request.cartId);
+            logger.LogInformation("Cart with ID {CartId} does not exists", request.CartId);
 
-            return Result<CartResponse>.Failure($"Cart with ID {request.cartId} does not exists", ErrorType.NotFound);
+            return Result<CartResponse>.Failure($"Cart with ID {request.CartId} does not exists", ErrorType.NotFound);
         }
 
-        logger.LogInformation("Fetched cart with ID: {CartId}", request.cartId);
+        logger.LogInformation("Fetched cart with ID: {CartId}", request.CartId);
 
         return Result<CartResponse>.Success(cart.MapToResponse());
     }

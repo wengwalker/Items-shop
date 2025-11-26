@@ -6,7 +6,7 @@ public class CreateOrderItemRequestValidator : AbstractValidator<CreateOrderItem
 {
     public CreateOrderItemRequestValidator()
     {
-        RuleFor(x => x.orderId)
+        RuleFor(x => x.OrderId)
             .NotEmpty()
             .WithMessage("OrderId must be set");
 

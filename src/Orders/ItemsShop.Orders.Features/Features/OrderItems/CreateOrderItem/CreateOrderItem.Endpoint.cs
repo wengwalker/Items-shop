@@ -10,10 +10,14 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Orders.Features.Features.OrderItems.CreateOrderItem;
 
+internal sealed record CreateOrderItemBody(
+    long Quantity,
+    Guid ProductId);
+
 public sealed record CreateOrderItemRequest(
-    [FromRoute] Guid orderId,
-    [FromBody] long Quantity,
-    [FromBody] Guid ProductId);
+    Guid OrderId,
+    long Quantity,
+    Guid ProductId);
 
 public class CreateOrderItemEndpoint : IEndpoint
 {
@@ -32,11 +36,13 @@ public class CreateOrderItemEndpoint : IEndpoint
 
     private static async Task<IResult> Handle(
         [FromRoute] Guid orderId,
-        [FromBody] CreateOrderItemRequest request,
+        [FromBody] CreateOrderItemBody body,
         [FromServices] IValidator<CreateOrderItemRequest> validator,
         [FromServices] ICreateOrderItemHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new CreateOrderItemRequest(orderId, body.Quantity, body.ProductId);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)

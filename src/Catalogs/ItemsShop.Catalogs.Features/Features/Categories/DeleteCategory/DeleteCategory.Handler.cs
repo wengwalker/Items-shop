@@ -18,16 +18,16 @@ internal sealed class DeleteCategoryHandler(
 {
     public async Task<Result> HandleAsync(DeleteCategoryRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Deleting category with Id: {CategoryId}", request.categoryId);
+        logger.LogInformation("Deleting category with Id: {CategoryId}", request.CategoryId);
 
         var category = await context.Categories
-            .FirstOrDefaultAsync(x => x.Id == request.categoryId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.CategoryId, cancellationToken);
 
         if (category == null)
         {
-            logger.LogInformation("Category with Id {CategoryId} does not exists", request.categoryId);
+            logger.LogInformation("Category with Id {CategoryId} does not exists", request.CategoryId);
 
-            return Result.Failure($"Category with Id {request.categoryId} does not exists", ErrorType.NotFound);
+            return Result.Failure($"Category with Id {request.CategoryId} does not exists", ErrorType.NotFound);
         }
 
         context.Categories.Remove(category);

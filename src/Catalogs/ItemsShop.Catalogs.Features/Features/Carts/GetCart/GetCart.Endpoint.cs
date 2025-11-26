@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Carts.GetCart;
 
-public sealed record GetCartRequest([FromRoute] Guid cartId);
+public sealed record GetCartRequest(Guid CartId);
 
 public class GetCartEndpoint : IEndpoint
 {
@@ -27,11 +27,13 @@ public class GetCartEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] GetCartRequest request,
+        [FromRoute] Guid cartId,
         [FromServices] IValidator<GetCartRequest> validator,
         [FromServices] IGetCartHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new GetCartRequest(cartId);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)

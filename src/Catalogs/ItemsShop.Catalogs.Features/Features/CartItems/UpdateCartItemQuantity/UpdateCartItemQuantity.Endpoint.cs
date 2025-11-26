@@ -10,10 +10,13 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.CartItems.UpdateCartItemQuantity;
 
+internal sealed record UpdateCartItemQuantityBody(
+    int Quantity);
+
 public sealed record UpdateCartItemQuantityRequest(
-    [FromRoute] Guid cartId,
-    [FromRoute] Guid itemId,
-    [FromBody] int Quantity);
+    Guid CartId,
+    Guid ItemId,
+    int Quantity);
 
 public class UpdateCartItemQuantityEndpoint : IEndpoint
 {
@@ -31,11 +34,15 @@ public class UpdateCartItemQuantityEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] UpdateCartItemQuantityRequest request,
+        [FromRoute] Guid cartId,
+        [FromRoute] Guid itemId,
+        [FromBody] UpdateCartItemQuantityBody body,
         [FromServices] IValidator<UpdateCartItemQuantityRequest> validator,
         [FromServices] IUpdateCartItemQuantityHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new UpdateCartItemQuantityRequest(cartId, itemId, body.Quantity);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)

@@ -1,6 +1,5 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
-using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.PublicApi.Contracts;
 using ItemsShop.Common.Api.Abstractions;
 using ItemsShop.Common.Api.Extensions;
@@ -31,7 +30,7 @@ public class GetProductEndpoint : IEndpoint
         [FromServices] IGetProductHandler handler,
         CancellationToken cancellationToken)
     {
-        var request = productId.MapToRequest();
+        var request = new GetProductRequest(productId);
 
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 

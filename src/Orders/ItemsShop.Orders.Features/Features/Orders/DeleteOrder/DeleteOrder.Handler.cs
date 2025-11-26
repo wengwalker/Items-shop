@@ -18,16 +18,16 @@ internal sealed class DeleteOrderHandler(
 {
     public async Task<Result> HandleAsync(DeleteOrderRequest request, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Deleting order with Id: {OrderId}", request.orderId);
+        logger.LogInformation("Deleting order with Id: {OrderId}", request.OrderId);
 
         var order = await context.Orders
-            .FirstOrDefaultAsync(x => x.Id == request.orderId, cancellationToken);
+            .FirstOrDefaultAsync(x => x.Id == request.OrderId, cancellationToken);
 
         if (order == null)
         {
-            logger.LogInformation("Order with Id {OrderId} does not exists", request.orderId);
+            logger.LogInformation("Order with Id {OrderId} does not exists", request.OrderId);
 
-            return Result.Failure($"Order with Id {request.orderId} does not exists", ErrorType.NotFound);
+            return Result.Failure($"Order with Id {request.OrderId} does not exists", ErrorType.NotFound);
         }
 
         context.Orders.Remove(order);
