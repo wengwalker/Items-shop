@@ -24,10 +24,10 @@ internal sealed class UpdateOrderItemQuantityHandler(
         logger.LogInformation("Updating OrderItem quantity with Id {ItemId} to quantity {Quantity} in Order with Id {OrderId}",
             request.ItemId, request.Quantity, request.OrderId);
 
-        var orderExists = await context.Orders
-            .AnyAsync(x => x.Id == request.OrderId, cancellationToken);
+        var order = await context.Orders
+            .FirstOrDefaultAsync(x => x.Id == request.OrderId, cancellationToken);
 
-        if (!orderExists)
+        if (order == null)
         {
             logger.LogInformation("Order with Id {OrderId} does not exists", request.OrderId);
 
@@ -63,8 +63,13 @@ internal sealed class UpdateOrderItemQuantityHandler(
                     ErrorType.BadRequest);
         }
 
+        var oldPrice = orderItem.ItemPrice;
+
         orderItem.ProductQuantity = request.Quantity;
         orderItem.ItemPrice = request.Quantity * product.Value.Price;
+
+        order.TotalPrice -= oldPrice;
+        order.TotalPrice += orderItem.ItemPrice;
 
         await context.SaveChangesAsync(cancellationToken);
 
