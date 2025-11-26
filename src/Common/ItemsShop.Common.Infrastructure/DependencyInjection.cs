@@ -39,7 +39,7 @@ public static class DependencyInjectionExtensions
                     .AddNpgsqlInstrumentation();
 
                 metrics
-                    .AddPrometheusExporter();
+                    .AddOtlpExporter();
             })
             .WithTracing(tracing =>
             {

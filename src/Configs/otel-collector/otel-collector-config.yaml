@@ -1,0 +1,49 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+      grpc:
+        endpoint: 0.0.0.0:4317
+
+  prometheus:
+    config:
+      scrape_configs:
+        - job_name: 'postgres-exporter'
+          static_configs:
+            - targets: ['postgres-exporter:9187']
+
+exporters:
+  debug:
+    verbosity: detailed
+
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+  
+  zipkin:
+    endpoint: "http://jaeger:9411/api/v2/spans"
+
+  otlphttp/seq:
+    endpoint: "http://seq:5341/ingest/otlp"
+    tls:
+      insecure: true
+
+processors:
+  batch:
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [zipkin, debug]
+
+    metrics:
+      receivers: [otlp, prometheus]
+      processors: [batch]
+      exporters: [prometheus, debug]
+    
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlphttp/seq, debug]
