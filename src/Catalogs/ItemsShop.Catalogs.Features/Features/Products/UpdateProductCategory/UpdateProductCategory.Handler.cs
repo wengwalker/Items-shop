@@ -1,25 +1,23 @@
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Catalogs.PublicApi.Contracts;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductCategory;
 
-public sealed record UpdateProductCategoryCommand(
-    Guid ProductId,
-    Guid CategoryId) : IRequest<Result<UpdateProductCategoryResponse>>;
-
-public sealed record UpdateProductCategoryResponse(
-    Guid ProductId,
-    Guid CategoryId);
-
-public sealed class UpdateProductCategoryHandler(
-    CatalogDbContext context,
-    ILogger<UpdateProductCategoryHandler> logger) : IRequestHandler<UpdateProductCategoryCommand, Result<UpdateProductCategoryResponse>>
+internal interface IUpdateProductCategoryHandler : IHandler
 {
-    public async Task<Result<UpdateProductCategoryResponse>> Handle(UpdateProductCategoryCommand request, CancellationToken cancellationToken)
+    Task<Result<ProductResponse>> HandleAsync(UpdateProductCategoryRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class UpdateProductCategoryHandler(
+    CatalogDbContext context,
+    ILogger<UpdateProductCategoryHandler> logger)
+    : IUpdateProductCategoryHandler
+{
+    public async Task<Result<ProductResponse>> HandleAsync(UpdateProductCategoryRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Updating product with Id: {ProductId}, to new category with Id: {NewCategoryId}", request.ProductId, request.CategoryId);
 
@@ -30,8 +28,7 @@ public sealed class UpdateProductCategoryHandler(
         {
             logger.LogInformation("Category with Id {CategoryId} does not exists", request.CategoryId);
 
-            return Result<UpdateProductCategoryResponse>
-                .Failure($"Category with ID {request.CategoryId} does not exists", StatusCodes.Status404NotFound);
+            return Result<ProductResponse>.Failure($"Category with ID {request.CategoryId} does not exists", ErrorType.NotFound);
         }
 
         var product = await context.Products
@@ -41,8 +38,7 @@ public sealed class UpdateProductCategoryHandler(
         {
             logger.LogInformation("Product with Id {ProductId} does not exists", request.ProductId);
 
-            return Result<UpdateProductCategoryResponse>
-                .Failure($"Product with ID {request.ProductId} does not exists", StatusCodes.Status404NotFound);
+            return Result<ProductResponse>.Failure($"Product with ID {request.ProductId} does not exists", ErrorType.NotFound);
         }
 
         product.CategoryId = request.CategoryId;
@@ -52,8 +48,6 @@ public sealed class UpdateProductCategoryHandler(
 
         logger.LogInformation("Updated product with Id: {ProductId}, to new category with Id: {NewCategoryId}", request.ProductId, request.CategoryId);
 
-        var response = product.MapToResponse();
-
-        return Result<UpdateProductCategoryResponse>.Success(response);
+        return Result<ProductResponse>.Success(product.MapToResponse());
     }
 }

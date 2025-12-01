@@ -1,25 +1,23 @@
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Catalogs.PublicApi.Contracts;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductDescription;
 
-public sealed record UpdateProductDescriptionCommand(
-    Guid ProductId,
-    string Description) : IRequest<Result<UpdateProductDescriptionResponse>>;
-
-public sealed record UpdateProductDescriptionResponse(
-    Guid ProductId,
-    string Description);
-
-public sealed class UpdateProductDescriptionHandler(
-    CatalogDbContext context,
-    ILogger<UpdateProductDescriptionHandler> logger) : IRequestHandler<UpdateProductDescriptionCommand, Result<UpdateProductDescriptionResponse>>
+internal interface IUpdateProductDescriptionHandler : IHandler
 {
-    public async Task<Result<UpdateProductDescriptionResponse>> Handle(UpdateProductDescriptionCommand request, CancellationToken cancellationToken)
+    Task<Result<ProductResponse>> HandleAsync(UpdateProductDescriptionRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class UpdateProductDescriptionHandler(
+    CatalogDbContext context,
+    ILogger<UpdateProductDescriptionHandler> logger)
+    : IUpdateProductDescriptionHandler
+{
+    public async Task<Result<ProductResponse>> HandleAsync(UpdateProductDescriptionRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Updating product with Id: {ProductId}, to new description", request.ProductId);
 
@@ -30,8 +28,7 @@ public sealed class UpdateProductDescriptionHandler(
         {
             logger.LogInformation("Product with Id {ProductId} does not exists", request.ProductId);
 
-            return Result<UpdateProductDescriptionResponse>
-                .Failure($"Product with ID {request.ProductId} does not exists", StatusCodes.Status404NotFound);
+            return Result<ProductResponse>.Failure($"Product with ID {request.ProductId} does not exists", ErrorType.NotFound);
         }
 
         product.Description = request.Description;
@@ -41,8 +38,6 @@ public sealed class UpdateProductDescriptionHandler(
 
         logger.LogInformation("Updated product with Id: {ProductId}, to new description", request.ProductId);
 
-        var response = product.MapToResponse();
-
-        return Result<UpdateProductDescriptionResponse>.Success(response);
+        return Result<ProductResponse>.Success(product.MapToResponse());
     }
 }

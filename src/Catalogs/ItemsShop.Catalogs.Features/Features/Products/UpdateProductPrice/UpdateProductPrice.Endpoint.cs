@@ -1,7 +1,8 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
+using ItemsShop.Catalogs.PublicApi.Contracts;
 using ItemsShop.Common.Api.Abstractions;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,11 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductPrice;
 
+internal sealed record UpdateProductPriceBody(
+    decimal Price);
+
 public sealed record UpdateProductPriceRequest(
+    Guid ProductId,
     decimal Price);
 
 public class UpdateProductPriceEndpoint : IEndpoint
@@ -21,18 +26,20 @@ public class UpdateProductPriceEndpoint : IEndpoint
             .WithTags(ProductsTagConsts.ProductsEndpointTags)
             .WithSummary("Updates an price in product")
             .WithDescription("Updates an price in product by providing product id in route and price in body")
-            .Produces<UpdateProductPriceResponse>()
+            .Produces<ProductResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
         [FromRoute] Guid productId,
-        [FromBody] UpdateProductPriceRequest request,
+        [FromBody] UpdateProductPriceBody body,
         [FromServices] IValidator<UpdateProductPriceRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IUpdateProductPriceHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new UpdateProductPriceRequest(productId, body.Price);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
@@ -40,14 +47,12 @@ public class UpdateProductPriceEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand(productId);
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Ok(response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

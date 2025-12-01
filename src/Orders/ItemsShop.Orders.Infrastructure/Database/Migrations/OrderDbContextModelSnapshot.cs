@@ -32,10 +32,10 @@ namespace ItemsShop.Orders.Infrastructure.Database.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Status")
+                    b.Property<byte>("Status")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(0);
+                        .HasColumnType("smallint")
+                        .HasDefaultValue((byte)0);
 
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("numeric");
@@ -57,6 +57,9 @@ namespace ItemsShop.Orders.Infrastructure.Database.Migrations
                     b.Property<decimal>("ItemPrice")
                         .HasColumnType("numeric");
 
+                    b.Property<Guid?>("OrderEntityId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("OrderId")
                         .HasColumnType("uuid");
 
@@ -66,22 +69,29 @@ namespace ItemsShop.Orders.Infrastructure.Database.Migrations
                     b.Property<decimal>("ProductPrice")
                         .HasColumnType("numeric");
 
-                    b.Property<int>("ProductQuantity")
-                        .HasColumnType("integer");
+                    b.Property<long>("ProductQuantity")
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId");
+                    b.HasIndex("OrderEntityId");
+
+                    b.HasIndex("OrderId", "ProductId")
+                        .IsUnique();
 
                     b.ToTable("OrderItems", "orders");
                 });
 
             modelBuilder.Entity("ItemsShop.Orders.Domain.Entities.OrderItemEntity", b =>
                 {
-                    b.HasOne("ItemsShop.Orders.Domain.Entities.OrderEntity", "Order")
+                    b.HasOne("ItemsShop.Orders.Domain.Entities.OrderEntity", null)
                         .WithMany("OrderItems")
+                        .HasForeignKey("OrderEntityId");
+
+                    b.HasOne("ItemsShop.Orders.Domain.Entities.OrderEntity", "Order")
+                        .WithMany()
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Order");

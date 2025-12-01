@@ -1,10 +1,11 @@
 using FluentValidation;
-using ItemsShop.Catalogs.Features.Features.Products.CreateProduct;
+using ItemsShop.Catalogs.Features.InternalApi;
 using ItemsShop.Catalogs.Features.Shared.Tracing;
 using ItemsShop.Catalogs.Infrastructure;
+using ItemsShop.Catalogs.PublicApi;
 using ItemsShop.Common.Api.Abstractions;
 using ItemsShop.Common.Api.Extensions;
-using Mediator.Lite.Extensions;
+using ItemsShop.Common.Application.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,11 +25,13 @@ public static class CatalogsModuleExtensions
 
     private static IServiceCollection AddCatalogModuleApi(this IServiceCollection services)
     {
-        services.RegisterEndpointsFromAssemblyContaining(typeof(CreateProductEndpoint));
+        services.AddScoped<ICatalogModuleApi, CatalogModuleApi>();
 
-        services.AddMediator(typeof(CreateProductHandler).Assembly);
+        services.RegisterEndpointsFromAssemblyContaining(typeof(CatalogsModuleExtensions));
 
-        services.AddValidatorsFromAssembly(typeof(CreateProductRequestValidator).Assembly);
+        services.RegisterHandlersFromAssemblyContaining(typeof(CatalogsModuleExtensions));
+
+        services.AddValidatorsFromAssembly(typeof(CatalogsModuleExtensions).Assembly);
 
         return services;
     }

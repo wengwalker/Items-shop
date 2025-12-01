@@ -6,7 +6,7 @@ public class DeleteCartRequestValidator : AbstractValidator<DeleteCartRequest>
 {
     public DeleteCartRequestValidator()
     {
-        RuleFor(x => x.cartId)
+        RuleFor(x => x.CartId)
             .NotEmpty()
             .WithMessage("CartId must be set");
     }

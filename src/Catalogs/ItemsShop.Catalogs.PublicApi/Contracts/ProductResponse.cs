@@ -1,6 +1,6 @@
-namespace ItemsShop.Catalogs.Features.Shared.Responses;
+namespace ItemsShop.Catalogs.PublicApi.Contracts;
 
-public sealed record ProductResponse(
+public record ProductResponse(
     Guid Id,
     string Name,
     string Description,

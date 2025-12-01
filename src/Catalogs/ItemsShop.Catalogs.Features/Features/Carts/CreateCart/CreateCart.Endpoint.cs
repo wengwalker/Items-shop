@@ -1,6 +1,7 @@
 using ItemsShop.Catalogs.Features.Shared.Consts;
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Common.Api.Abstractions;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,19 +18,19 @@ public class CreateCartEndpoint : IEndpoint
             .WithTags(CartsTagConsts.CartsEndpointTags)
             .WithSummary("Creates a new cart")
             .WithDescription("Creates a new cart")
-            .Produces<CreateCartResponse>();
+            .Produces<CartResponse>();
     }
 
     private static async Task<IResult> Handle(
-        [FromServices] IMediator mediator,
+        [FromServices] ICreateCartHandler handler,
         CancellationToken cancellationToken)
     {
-        var response = await mediator.Send(new CreateCartCommand(), cancellationToken);
+        var response = await handler.HandleAsync(cancellationToken);
 
         return response.IsSuccess
             ? Results.Created(CartsRouteConsts.BaseRoute, response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

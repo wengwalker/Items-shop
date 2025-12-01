@@ -3,8 +3,10 @@ using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
-using Serilog;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Resources;
 
 namespace ItemsShop.Common.Api;
 
@@ -32,8 +34,32 @@ public static class DependencyInjectionExtensions
 
     public static void AddCoreHostLogging(this WebApplicationBuilder builder)
     {
-        builder.Host.UseSerilog((context, config) =>
-            config.ReadFrom.Configuration(context.Configuration));
+        builder.Logging.ClearProviders();
+
+        builder.Logging.AddConsole();
+
+        builder.Logging.AddOpenTelemetry(options =>
+        {
+            options.IncludeFormattedMessage = true;
+            options.IncludeScopes = true;
+            options.ParseStateValues = true;
+
+            options
+                .SetResourceBuilder(ResourceBuilder
+                    .CreateDefault()
+                    .AddService(builder.Environment.ApplicationName))
+                .AddOtlpExporter();
+        });
+
+        builder.Logging.Configure(options =>
+        {
+            options.ActivityTrackingOptions =
+                ActivityTrackingOptions.SpanId |
+                ActivityTrackingOptions.TraceId |
+                ActivityTrackingOptions.ParentId |
+                ActivityTrackingOptions.Baggage |
+                ActivityTrackingOptions.Tags;
+        });
     }
 
     public static void AddServiceProviderValidation(this WebApplicationBuilder builder)

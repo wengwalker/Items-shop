@@ -27,5 +27,15 @@ public class OrderItemEntityConfiguration : IEntityTypeConfiguration<OrderItemEn
         builder
             .Property(x => x.ProductQuantity)
             .IsRequired();
+
+        builder
+            .HasOne(x => x.Order)
+            .WithMany()
+            .HasForeignKey(x => x.OrderId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder
+            .HasIndex(x => new { x.OrderId, x.ProductId })
+            .IsUnique();
     }
 }

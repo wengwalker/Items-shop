@@ -6,7 +6,7 @@ public class DeleteCategoryRequestValidator : AbstractValidator<DeleteCategoryRe
 {
     public DeleteCategoryRequestValidator()
     {
-        RuleFor(x => x.categoryId)
+        RuleFor(x => x.CategoryId)
             .NotEmpty()
             .WithMessage("Id must be set");
     }

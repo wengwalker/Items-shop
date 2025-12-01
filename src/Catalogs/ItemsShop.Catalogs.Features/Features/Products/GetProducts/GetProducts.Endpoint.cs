@@ -1,8 +1,9 @@
 using FluentValidation;
-using ItemsShop.Catalogs.Domain.Enums;
 using ItemsShop.Catalogs.Features.Shared.Consts;
+using ItemsShop.Catalogs.PublicApi.Contracts;
 using ItemsShop.Common.Api.Abstractions;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Common.Api.Extensions;
+using ItemsShop.Common.Application.Enums;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.GetProducts;
 
-public sealed record GetProductsRequest([FromQuery] string? Name, [FromQuery] OrderQueryType? OrderType);
+public sealed record GetProductsRequest(
+    string? Name,
+    QuerySortType? SortType);
 
 public class GetProductsEndpoint : IEndpoint
 {
@@ -21,16 +24,19 @@ public class GetProductsEndpoint : IEndpoint
             .WithTags(ProductsTagConsts.ProductsEndpointTags)
             .WithSummary("Returns list of products")
             .WithDescription("Returns list of products and accepts query params: name and order")
-            .Produces<GetProductsResponse>()
+            .Produces<List<ProductResponse>>()
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] GetProductsRequest request,
+        [FromQuery] string? name,
+        [FromQuery] QuerySortType? sortType,
         [FromServices] IValidator<GetProductsRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IGetProductsHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new GetProductsRequest(name, sortType);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
@@ -38,14 +44,12 @@ public class GetProductsEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Ok(response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

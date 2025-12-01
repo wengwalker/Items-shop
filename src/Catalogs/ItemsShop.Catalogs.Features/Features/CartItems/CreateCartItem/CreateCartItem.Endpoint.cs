@@ -1,7 +1,8 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Common.Api.Abstractions;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,12 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.CartItems.CreateCartItem;
 
+internal sealed record CreateCartItemBody(
+    int Quantity,
+    Guid ProductId);
+
 public sealed record CreateCartItemRequest(
+    Guid CartId,
     int Quantity,
     Guid ProductId);
 
@@ -22,7 +28,7 @@ public class CreateCartItemEndpoint : IEndpoint
             .WithTags(CartItemsTagConsts.CartItemsEndpointTags)
             .WithSummary("Creates a new item in cart")
             .WithDescription("Creates a new item in cart by providing cart id in route and new quantity and product id in body")
-            .Produces<CreateCartItemResponse>()
+            .Produces<CartItemResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
@@ -30,11 +36,13 @@ public class CreateCartItemEndpoint : IEndpoint
 
     private static async Task<IResult> Handle(
         [FromRoute] Guid cartId,
-        [FromBody] CreateCartItemRequest request,
+        [FromBody] CreateCartItemBody body,
         [FromServices] IValidator<CreateCartItemRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] ICreateCartItemHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new CreateCartItemRequest(cartId, body.Quantity, body.ProductId);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
@@ -42,14 +50,12 @@ public class CreateCartItemEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand(cartId);
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Created(CartItemsRouteConsts.BaseRoute, response.Value)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

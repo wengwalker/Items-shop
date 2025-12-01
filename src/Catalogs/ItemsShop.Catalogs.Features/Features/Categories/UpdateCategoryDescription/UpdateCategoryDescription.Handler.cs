@@ -1,25 +1,23 @@
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Categories.UpdateCategoryDescription;
 
-public sealed record UpdateCategoryDescriptionCommand(
-    Guid CategoryId,
-    string? Description) : IRequest<Result<UpdateCategoryDescriptionResponse>>;
-
-public sealed record UpdateCategoryDescriptionResponse(
-    Guid CategoryId,
-    string? Description);
-
-public sealed class UpdateCategoryDescriptionHandler(
-    CatalogDbContext context,
-    ILogger<UpdateCategoryDescriptionHandler> logger) : IRequestHandler<UpdateCategoryDescriptionCommand, Result<UpdateCategoryDescriptionResponse>>
+internal interface IUpdateCategoryDescriptionHandler : IHandler
 {
-    public async Task<Result<UpdateCategoryDescriptionResponse>> Handle(UpdateCategoryDescriptionCommand request, CancellationToken cancellationToken)
+    Task<Result<CategoryResponse>> HandleAsync(UpdateCategoryDescriptionRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class UpdateCategoryDescriptionHandler(
+    CatalogDbContext context,
+    ILogger<UpdateCategoryDescriptionHandler> logger)
+    : IUpdateCategoryDescriptionHandler
+{
+    public async Task<Result<CategoryResponse>> HandleAsync(UpdateCategoryDescriptionRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Updating category with Id: {CategoryId}, to new description", request.CategoryId);
 
@@ -30,8 +28,7 @@ public sealed class UpdateCategoryDescriptionHandler(
         {
             logger.LogInformation("Category with Id {CategoryId} does not exists", request.CategoryId);
 
-            return Result<UpdateCategoryDescriptionResponse>
-                .Failure($"Category with ID {request.CategoryId} does not exists", StatusCodes.Status404NotFound);
+            return Result<CategoryResponse>.Failure($"Category with ID {request.CategoryId} does not exists", ErrorType.NotFound);
         }
 
         category.Description = request.Description;
@@ -40,8 +37,6 @@ public sealed class UpdateCategoryDescriptionHandler(
 
         logger.LogInformation("Updated category with Id: {CategoryId}, to new description", request.CategoryId);
 
-        var response = category.MapToResponse();
-
-        return Result<UpdateCategoryDescriptionResponse>.Success(response);
+        return Result<CategoryResponse>.Success(category.MapToResponse());
     }
 }

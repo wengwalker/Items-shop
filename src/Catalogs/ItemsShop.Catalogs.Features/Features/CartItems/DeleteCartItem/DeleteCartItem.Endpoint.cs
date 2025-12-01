@@ -1,7 +1,7 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
 using ItemsShop.Common.Api.Abstractions;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.CartItems.DeleteCartItem;
 
-public sealed record DeleteCartItemRequest([FromRoute] Guid cartId, [FromRoute] Guid itemId);
+public sealed record DeleteCartItemRequest(
+    Guid CartId,
+    Guid ItemId);
 
 public class DeleteCartItemEndpoint : IEndpoint
 {
@@ -26,11 +28,14 @@ public class DeleteCartItemEndpoint : IEndpoint
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] DeleteCartItemRequest request,
+        [FromRoute] Guid cartId,
+        [FromRoute] Guid itemId,
         [FromServices] IValidator<DeleteCartItemRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IDeleteCartItemHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new DeleteCartItemRequest(cartId, itemId);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
@@ -38,14 +43,12 @@ public class DeleteCartItemEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.NoContent()
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

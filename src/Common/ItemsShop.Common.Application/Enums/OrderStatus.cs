@@ -1,4 +1,4 @@
-namespace ItemsShop.Orders.Domain.Enums;
+namespace ItemsShop.Common.Application.Enums;
 
 public enum OrderStatus
 {

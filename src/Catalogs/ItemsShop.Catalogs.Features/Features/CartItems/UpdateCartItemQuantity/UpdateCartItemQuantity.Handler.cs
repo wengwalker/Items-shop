@@ -1,28 +1,23 @@
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.CartItems.UpdateCartItemQuantity;
 
-public sealed record UpdateCartItemQuantityCommand(
-    Guid CartId,
-    Guid ItemId,
-    int Quantity) : IRequest<Result<UpdateCartItemQuantityResponse>>;
-
-public sealed record UpdateCartItemQuantityResponse(
-    Guid ItemId,
-    Guid CartId,
-    int Quantity,
-    Guid ProductId);
-
-public sealed class UpdateCartItemQuantityHandler(
-    CatalogDbContext context,
-    ILogger<UpdateCartItemQuantityHandler> logger) : IRequestHandler<UpdateCartItemQuantityCommand, Result<UpdateCartItemQuantityResponse>>
+internal interface IUpdateCartItemQuantityHandler : IHandler
 {
-    public async Task<Result<UpdateCartItemQuantityResponse>> Handle(UpdateCartItemQuantityCommand request, CancellationToken cancellationToken)
+    Task<Result<CartItemResponse>> HandleAsync(UpdateCartItemQuantityRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class UpdateCartItemQuantityHandler(
+    CatalogDbContext context,
+    ILogger<UpdateCartItemQuantityHandler> logger)
+    : IUpdateCartItemQuantityHandler
+{
+    public async Task<Result<CartItemResponse>> HandleAsync(UpdateCartItemQuantityRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Updating CartItem Quantity from Cart with ID {CartId}", request.CartId);
 
@@ -33,8 +28,7 @@ public sealed class UpdateCartItemQuantityHandler(
         {
             logger.LogInformation("Cart with ID {CartId} does not exists", request.CartId);
 
-            return Result<UpdateCartItemQuantityResponse>
-                .Failure($"Cart with ID {request.CartId} does not exists", StatusCodes.Status404NotFound);
+            return Result<CartItemResponse>.Failure($"Cart with ID {request.CartId} does not exists", ErrorType.NotFound);
         }
 
         var cartItem = await context.CartItems
@@ -44,8 +38,7 @@ public sealed class UpdateCartItemQuantityHandler(
         {
             logger.LogInformation("CartItem with ID {CartItemId} does not exists", request.ItemId);
 
-            return Result<UpdateCartItemQuantityResponse>
-                .Failure($"CartItem with ID {request.ItemId} does not exists", StatusCodes.Status404NotFound);
+            return Result<CartItemResponse>.Failure($"CartItem with ID {request.ItemId} does not exists", ErrorType.NotFound);
         }
 
         var product = await context.Products
@@ -56,26 +49,25 @@ public sealed class UpdateCartItemQuantityHandler(
         {
             logger.LogInformation("Product with Id {ItemId} does not exists", request.ItemId);
 
-            return Result<UpdateCartItemQuantityResponse>
-                .Failure($"Product with Id {request.ItemId} does not exists", StatusCodes.Status404NotFound);
+            return Result<CartItemResponse>.Failure($"Product with Id {request.ItemId} does not exists", ErrorType.NotFound);
         }
 
         if (product.Quantity < request.Quantity)
         {
-            logger.LogInformation("Required quantity ({Quantity}) exceeds the quantity of the product with Id {ProductId} of {Quantity} items", request.Quantity, product.Id, product.Quantity);
+            logger.LogInformation("Required quantity ({Quantity}) exceeds the quantity of the product with Id {ProductId} of {Quantity} items",
+                request.Quantity, product.Id, product.Quantity);
 
-            return Result<UpdateCartItemQuantityResponse>
-                .Failure($"Required quantity ({request.Quantity}) exceeds the quantity of the product with Id {product.Id} of {product.Quantity} items", StatusCodes.Status400BadRequest);
+            return Result<CartItemResponse>
+                .Failure($"Required quantity ({request.Quantity}) exceeds the quantity of the product with Id {product.Id} of {product.Quantity} items",
+                    ErrorType.BadRequest);
         }
 
         cartItem.Quantity = request.Quantity;
 
         await context.SaveChangesAsync(cancellationToken);
 
-        var response = cartItem.MapToResponse();
-
         logger.LogInformation("Updated CartItem Quantity from Cart with ID {CartId}", request.CartId);
 
-        return Result<UpdateCartItemQuantityResponse>.Success(response);
+        return Result<CartItemResponse>.Success(cartItem.MapToResponse());
     }
 }

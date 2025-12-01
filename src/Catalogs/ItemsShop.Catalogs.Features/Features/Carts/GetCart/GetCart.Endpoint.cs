@@ -1,7 +1,8 @@
 using FluentValidation;
 using ItemsShop.Catalogs.Features.Shared.Consts;
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Common.Api.Abstractions;
-using Mediator.Lite.Interfaces;
+using ItemsShop.Common.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +10,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace ItemsShop.Catalogs.Features.Features.Carts.GetCart;
 
-public sealed record GetCartRequest([FromRoute] Guid cartId);
+public sealed record GetCartRequest(Guid CartId);
 
 public class GetCartEndpoint : IEndpoint
 {
@@ -20,17 +21,19 @@ public class GetCartEndpoint : IEndpoint
             .WithTags(CartsTagConsts.CartsEndpointTags)
             .WithSummary("Returns one cart")
             .WithDescription("Returns one cart by providing cart id in route")
-            .Produces<GetCartResponse>()
+            .Produces<CartResponse>()
             .ProducesProblem(StatusCodes.Status404NotFound)
             .ProducesValidationProblem();
     }
 
     private static async Task<IResult> Handle(
-        [AsParameters] GetCartRequest request,
+        [FromRoute] Guid cartId,
         [FromServices] IValidator<GetCartRequest> validator,
-        [FromServices] IMediator mediator,
+        [FromServices] IGetCartHandler handler,
         CancellationToken cancellationToken)
     {
+        var request = new GetCartRequest(cartId);
+
         var validationResult = await validator.ValidateAsync(request, cancellationToken);
 
         if (!validationResult.IsValid)
@@ -38,14 +41,12 @@ public class GetCartEndpoint : IEndpoint
             return Results.ValidationProblem(validationResult.ToDictionary());
         }
 
-        var command = request.MapToCommand();
-
-        var response = await mediator.Send(command, cancellationToken);
+        var response = await handler.HandleAsync(request, cancellationToken);
 
         return response.IsSuccess
             ? Results.Ok(response)
             : Results.Problem(
-                detail: response.Error,
-                statusCode: response.StatusCode);
+                detail: response.Description,
+                statusCode: response.Error?.ToStatusCode());
     }
 }

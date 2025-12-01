@@ -1,25 +1,23 @@
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Catalogs.PublicApi.Contracts;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.UpdateProductQuantity;
 
-public sealed record UpdateProductQuantityCommand(
-    Guid ProductId,
-    long Quantity) : IRequest<Result<UpdateProductQuantityResponse>>;
-
-public sealed record UpdateProductQuantityResponse(
-    Guid ProductId,
-    long Quantity);
-
-public sealed class UpdateProductQuantityHandler(
-    CatalogDbContext context,
-    ILogger<UpdateProductQuantityHandler> logger) : IRequestHandler<UpdateProductQuantityCommand, Result<UpdateProductQuantityResponse>>
+internal interface IUpdateProductQuantityHandler : IHandler
 {
-    public async Task<Result<UpdateProductQuantityResponse>> Handle(UpdateProductQuantityCommand request, CancellationToken cancellationToken)
+    Task<Result<ProductResponse>> HandleAsync(UpdateProductQuantityRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class UpdateProductQuantityHandler(
+    CatalogDbContext context,
+    ILogger<UpdateProductQuantityHandler> logger)
+    : IUpdateProductQuantityHandler
+{
+    public async Task<Result<ProductResponse>> HandleAsync(UpdateProductQuantityRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Updating product with Id: {ProductId}, to new stock quantity", request.ProductId);
 
@@ -30,8 +28,7 @@ public sealed class UpdateProductQuantityHandler(
         {
             logger.LogInformation("Product with Id {ProductId} does not exists", request.ProductId);
 
-            return Result<UpdateProductQuantityResponse>
-                .Failure($"Product with ID {request.ProductId} does not exists", StatusCodes.Status404NotFound);
+            return Result<ProductResponse>.Failure($"Product with ID {request.ProductId} does not exists", ErrorType.NotFound);
         }
 
         product.Quantity = request.Quantity;
@@ -41,8 +38,6 @@ public sealed class UpdateProductQuantityHandler(
 
         logger.LogInformation("Updated product with Id: {ProductId}, to new stock quantity", request.ProductId);
 
-        var response = product.MapToResponse();
-
-        return Result<UpdateProductQuantityResponse>.Success(response);
+        return Result<ProductResponse>.Success(product.MapToResponse());
     }
 }

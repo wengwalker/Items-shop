@@ -1,21 +1,19 @@
 using ItemsShop.Catalogs.Domain.Entities;
+using ItemsShop.Catalogs.Features.Shared.Responses;
 
 namespace ItemsShop.Catalogs.Features.Features.Categories.CreateCategory;
 
 internal static class CreateCategoryMappingExtensions
 {
-    public static CreateCategoryCommand MapToCommand(this CreateCategoryRequest request)
-        => new(request.Name, request.Description);
-
-    public static CategoryEntity MapToCategory(this CreateCategoryCommand command)
+    public static CategoryEntity MapToCategory(this CreateCategoryRequest request)
         => new()
         {
             Id = Guid.NewGuid(),
-            Name = command.Name,
-            Description = command.Description,
+            Name = request.Name,
+            Description = request.Description,
         };
 
-    public static CreateCategoryResponse MapToResponse(this CategoryEntity category)
+    public static CategoryResponse MapToResponse(this CategoryEntity category)
         => new(category.Id,
                 category.Name,
                 category.Description);

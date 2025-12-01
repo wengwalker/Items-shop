@@ -1,24 +1,20 @@
 using ItemsShop.Catalogs.Domain.Entities;
+using ItemsShop.Catalogs.Features.Shared.Responses;
 
 namespace ItemsShop.Catalogs.Features.Features.CartItems.CreateCartItem;
 
 internal static class CreateCartItemMappingExtensions
 {
-    public static CreateCartItemCommand MapToCommand(this CreateCartItemRequest request, Guid cartId)
-        => new(cartId,
-                request.Quantity,
-                request.ProductId);
-
-    public static CartItemEntity MapToCartItem(this CreateCartItemCommand command)
+    public static CartItemEntity MapToCartItem(this CreateCartItemRequest request)
         => new()
         {
             Id = Guid.NewGuid(),
-            CartId = command.CartId,
-            Quantity = command.Quantity,
-            ProductId = command.ProductId,
+            CartId = request.CartId,
+            Quantity = request.Quantity,
+            ProductId = request.ProductId,
         };
 
-    public static CreateCartItemResponse MapToResponse(this CartItemEntity cartItem)
+    public static CartItemResponse MapToResponse(this CartItemEntity cartItem)
         => new(cartItem.Id,
                 cartItem.Quantity,
                 cartItem.CartId,

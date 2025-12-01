@@ -1,22 +1,23 @@
 using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.CartItems.GetCartItem;
 
-public sealed record GetCartItemQuery(Guid CartId, Guid ItemId) : IRequest<Result<GetCartItemResponse>>;
-
-public sealed record GetCartItemResponse(CartItemResponse Item);
-
-public sealed class GetCartItemHandler(
-    CatalogDbContext context,
-    ILogger<GetCartItemHandler> logger) : IRequestHandler<GetCartItemQuery, Result<GetCartItemResponse>>
+internal interface IGetCartItemHandler : IHandler
 {
-    public async Task<Result<GetCartItemResponse>> Handle(GetCartItemQuery request, CancellationToken cancellationToken)
+    Task<Result<CartItemResponse>> HandleAsync(GetCartItemRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class GetCartItemHandler(
+    CatalogDbContext context,
+    ILogger<GetCartItemHandler> logger)
+    : IGetCartItemHandler
+{
+    public async Task<Result<CartItemResponse>> HandleAsync(GetCartItemRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching CartItem with ID {ItemId} from Cart with ID {CartId}", request.ItemId, request.CartId);
 
@@ -27,8 +28,7 @@ public sealed class GetCartItemHandler(
         {
             logger.LogInformation("Cart with ID {CartId} does not exists", request.CartId);
 
-            return Result<GetCartItemResponse>
-                .Failure($"Cart with ID {request.CartId} does not exists", StatusCodes.Status404NotFound);
+            return Result<CartItemResponse>.Failure($"Cart with ID {request.CartId} does not exists", ErrorType.NotFound);
         }
 
         var cartItem = await context.CartItems
@@ -39,14 +39,11 @@ public sealed class GetCartItemHandler(
         {
             logger.LogInformation("CartItem with ID {ItemId} from Cart with ID {CartId} does not exists", request.ItemId, request.CartId);
 
-            return Result<GetCartItemResponse>
-                .Failure($"CartItem with ID {request.ItemId} from Cart with ID {request.CartId} does not exists", StatusCodes.Status404NotFound);
+            return Result<CartItemResponse>.Failure($"CartItem with ID {request.ItemId} from Cart with ID {request.CartId} does not exists", ErrorType.NotFound);
         }
-
-        var response = cartItem.MapToResponse();
 
         logger.LogInformation("Fetched CartItem with ID {ItemId} from Cart with ID {CartId}", request.ItemId, request.CartId);
 
-        return Result<GetCartItemResponse>.Success(response);
+        return Result<CartItemResponse>.Success(cartItem.MapToResponse());
     }
 }

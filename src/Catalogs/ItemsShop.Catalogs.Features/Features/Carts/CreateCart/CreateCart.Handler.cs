@@ -1,34 +1,37 @@
+using ItemsShop.Catalogs.Domain.Entities;
+using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Carts.CreateCart;
 
-public sealed record CreateCartCommand() : IRequest<Result<CreateCartResponse>>;
-
-public sealed record CreateCartResponse(
-    Guid CartId,
-    DateTime LastUpdated);
-
-public sealed class CreateCartHandler(
-    CatalogDbContext context,
-    ILogger<CreateCartHandler> logger) : IRequestHandler<CreateCartCommand, Result<CreateCartResponse>>
+internal interface ICreateCartHandler : IHandler
 {
-    public async Task<Result<CreateCartResponse>> Handle(CreateCartCommand request, CancellationToken cancellationToken)
+    Task<Result<CartResponse>> HandleAsync(CancellationToken cancellationToken);
+}
+
+internal sealed class CreateCartHandler(
+    CatalogDbContext context,
+    ILogger<CreateCartHandler> logger)
+    : ICreateCartHandler
+{
+    public async Task<Result<CartResponse>> HandleAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("Creating cart entity");
 
-        var cart = request.MapToCart();
+        var cart = new CartEntity
+        {
+            Id = Guid.NewGuid(),
+            LastUpdated = DateTime.UtcNow
+        };
 
         context.Carts.Add(cart);
-
         await context.SaveChangesAsync(cancellationToken);
 
         logger.LogInformation("Created cart entity with Id {CartId}", cart.Id);
 
-        var response = cart.MapToResponse();
-
-        return Result<CreateCartResponse>.Success(response);
+        return Result<CartResponse>.Success(cart.MapToResponse());
     }
 }

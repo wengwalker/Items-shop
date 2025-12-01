@@ -1,25 +1,24 @@
-using ItemsShop.Catalogs.Domain.Enums;
-using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Catalogs.PublicApi.Contracts;
+using ItemsShop.Common.Application.Enums;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.GetProducts;
 
-public sealed record GetProductsQuery(
-    string? Name,
-    OrderQueryType? OrderType) : IRequest<Result<GetProductsResponse>>;
+internal interface IGetProductsHandler : IHandler
+{
+    Task<Result<List<ProductResponse>>> HandleAsync(GetProductsRequest request, CancellationToken cancellationToken);
+}
 
-public sealed record GetProductsResponse(ICollection<ProductResponse> Products);
-
-public sealed class GetProductsHandler(
+internal sealed class GetProductsHandler(
     CatalogDbContext context,
     ILogger<GetProductsHandler> logger)
-    : IRequestHandler<GetProductsQuery, Result<GetProductsResponse>>
+    : IGetProductsHandler
 {
-    public async Task<Result<GetProductsResponse>> Handle(GetProductsQuery request, CancellationToken cancellationToken)
+    public async Task<Result<List<ProductResponse>>> HandleAsync(GetProductsRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching products");
 
@@ -34,11 +33,11 @@ public sealed class GetProductsHandler(
             query = query.Where(x => EF.Functions.ILike(x.Name, $"%{request.Name}%"));
         }
 
-        if (request.OrderType is not null)
+        if (request.SortType is not null)
         {
-            logger.LogInformation("Fetching products in specified order: {OrderType}", request.OrderType);
+            logger.LogInformation("Fetching products in specified order: {OrderType}", request.SortType);
 
-            query = request.OrderType == OrderQueryType.Ascending
+            query = request.SortType == QuerySortType.Ascending
                 ? query.OrderBy(x => x.Name)
                 : query.OrderByDescending(x => x.Name);
         }
@@ -47,10 +46,8 @@ public sealed class GetProductsHandler(
             .Select(x => x.MapToResponse())
             .ToListAsync(cancellationToken);
 
-        var response = products.MapToResponse();
+        logger.LogInformation("Fetched {Count} products", products.Count);
 
-        logger.LogInformation("Fetched {Count} products", response.Products.Count);
-
-        return Result<GetProductsResponse>.Success(response);
+        return Result<List<ProductResponse>>.Success(products);
     }
 }

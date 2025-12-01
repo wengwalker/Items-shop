@@ -1,22 +1,23 @@
-using ItemsShop.Catalogs.Features.Shared.Responses;
 using ItemsShop.Catalogs.Infrastructure.Database;
+using ItemsShop.Catalogs.PublicApi.Contracts;
+using ItemsShop.Common.Domain.Handlers;
 using ItemsShop.Common.Domain.Results;
-using Mediator.Lite.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace ItemsShop.Catalogs.Features.Features.Products.GetProduct;
 
-public sealed record GetProductQuery(Guid ProductId) : IRequest<Result<GetProductResponse>>;
-
-public sealed record GetProductResponse(ProductResponse Product);
-
-public sealed class GetProductHandler(
-    CatalogDbContext context,
-    ILogger<GetProductHandler> logger) : IRequestHandler<GetProductQuery, Result<GetProductResponse>>
+internal interface IGetProductHandler : IHandler
 {
-    public async Task<Result<GetProductResponse>> Handle(GetProductQuery request, CancellationToken cancellationToken)
+    Task<Result<ProductResponse>> HandleAsync(GetProductRequest request, CancellationToken cancellationToken);
+}
+
+internal sealed class GetProductHandler(
+    CatalogDbContext context,
+    ILogger<GetProductHandler> logger)
+    : IGetProductHandler
+{
+    public async Task<Result<ProductResponse>> HandleAsync(GetProductRequest request, CancellationToken cancellationToken)
     {
         logger.LogInformation("Fetching product with Id: {ProductId}", request.ProductId);
 
@@ -28,14 +29,11 @@ public sealed class GetProductHandler(
         {
             logger.LogInformation("Product with Id: {ProductId} does not exists", request.ProductId);
 
-            return Result<GetProductResponse>
-                .Failure($"Product with ID {request.ProductId} does not exists", StatusCodes.Status404NotFound);
+            return Result<ProductResponse>.Failure($"Product with ID {request.ProductId} does not exists", ErrorType.NotFound);
         }
-
-        GetProductResponse response = product.MapToResponse();
 
         logger.LogInformation("Fetched product with Id: {ProductId}", request.ProductId);
 
-        return Result<GetProductResponse>.Success(response);
+        return Result<ProductResponse>.Success(product.MapToResponse());
     }
 }

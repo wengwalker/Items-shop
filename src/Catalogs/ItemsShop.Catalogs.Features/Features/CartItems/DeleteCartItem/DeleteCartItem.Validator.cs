@@ -6,11 +6,11 @@ public class DeleteCartItemRequestValidator : AbstractValidator<DeleteCartItemRe
 {
     public DeleteCartItemRequestValidator()
     {
-        RuleFor(x => x.cartId)
+        RuleFor(x => x.CartId)
             .NotEmpty()
             .WithMessage("CartId must be set");
 
-        RuleFor(x => x.itemId)
+        RuleFor(x => x.ItemId)
             .NotEmpty()
             .WithMessage("ItemId must be set");
     }
