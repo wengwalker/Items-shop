@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\ItemsShop.Common.Infrastructure\ItemsShop.Common.Infrastructure.csproj" />
+    <ProjectReference Include="..\ItemsShop.Orders.Domain\ItemsShop.Orders.Domain.csproj" />
+  </ItemGroup>
+    
+</Project>

@@ -1,5 +1,6 @@
 ---
 name: "Bug Report"
+about: Use this template for tracking bug reports
 description: "Report a bug"
 title: "Bug: "
 labels: ["bug"]

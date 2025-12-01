@@ -1,0 +1,13 @@
+using FluentValidation;
+
+namespace ItemsShop.Catalogs.Features.Features.Carts.GetCart;
+
+public class GetCartRequestValidator : AbstractValidator<GetCartRequest>
+{
+    public GetCartRequestValidator()
+    {
+        RuleFor(x => x.CartId)
+            .NotEmpty()
+            .WithMessage("CartId must be set");
+    }
+}

@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+    <PackageReference Include="FluentValidation" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Catalogs\ItemsShop.Catalogs.PublicApi\ItemsShop.Catalogs.PublicApi.csproj" />
+    <ProjectReference Include="..\..\Common\ItemsShop.Common.Api\ItemsShop.Common.Api.csproj" />
+    <ProjectReference Include="..\..\Common\ItemsShop.Common.Application\ItemsShop.Common.Application.csproj" />
+    <ProjectReference Include="..\..\Common\ItemsShop.Common.Domain\ItemsShop.Common.Domain.csproj" />
+    <ProjectReference Include="..\ItemsShop.Orders.Infrastructure\ItemsShop.Orders.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

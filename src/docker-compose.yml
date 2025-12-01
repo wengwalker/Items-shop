@@ -1,0 +1,154 @@
+networks:
+  itemsshop-network:
+    driver: bridge
+
+volumes:
+  db_data:
+  seq_data:
+
+services:
+  itemsshop-db:
+    image: postgres:18.0-alpine
+    container_name: itemsshop-db
+    hostname: itemsshop-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_HOST=${DATABASE_HOST}
+      - POSTGRES_PORT=${DATABASE_INNER_PORT}
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_DB}
+    command: >
+      postgres
+      -c shared_preload_libraries=pg_stat_statements
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./Configs/postgres:/docker-entrypoint-initdb.d
+    ports:
+      - ${DATABASE_PORTS:-5432:5432}
+    networks:
+      - itemsshop-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB} -p $${POSTGRES_PORT}"]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter:v0.18.1
+    hostname: itemsshop-db-exporter
+    restart: always
+    environment:
+      - DATA_SOURCE_NAME=postgresql://postgres:password@itemsshop-db:5432/postgres?sslmode=disable
+    command: ["--collector.stat_statements"]
+    ports:
+      - ${EXPORTER_PORTS:-9187:9187}
+    networks:
+      - itemsshop-network
+    depends_on:
+      itemsshop-db:
+        condition: service_healthy
+
+  jaeger:
+    image: jaegertracing/jaeger:2.11.0
+    container_name: jaeger
+    hostname: jaeger
+    restart: unless-stopped
+    ports:
+      - ${JAEGER_UI_PORTS:-16686:16686}
+      - ${JAEGER_OTLP_PORTS:-9411:9411}
+    networks:
+      - itemsshop-network
+
+  seq:
+    image: datalust/seq:2025.2
+    container_name: seq
+    restart: unless-stopped
+    environment:
+      - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_NOAUTHENTICATION=True
+    volumes:
+      - seq_data:/data
+    ports:
+      - ${SEQ_PORTS:-5341:5341}
+      - ${SEQ_UI_PORTS:-8081:80}
+    networks:
+      - itemsshop-network
+
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.139.0
+    hostname: otel-collector
+    container_name: otel-collector
+    restart: always
+    command: ["--config=/etc/otel-collector-config.yaml"]
+    volumes:
+      - ./Configs/otel-collector/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - ${OTEL_COLLECTOR_PROMETHEUS_SCRAPE_PORT:-8889:8889}
+      - ${OTEL_COLLECTOR_GRPC_PORT:-4317:4317}
+      - ${OTEL_COLLECTOR_HTTP_PORT:-4318:4318}
+    networks:
+      - itemsshop-network
+    depends_on:
+      - jaeger
+      - seq
+      - postgres-exporter
+
+  prometheus:
+    image: prom/prometheus:v3.7.3
+    container_name: prometheus
+    hostname: prometheus
+    restart: always
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-admin-api'
+    volumes:
+      - ./Configs/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - ${PROMETHEUS_PORTS:-9090:9090}
+    networks:
+      - itemsshop-network
+
+  grafana:
+    image: grafana/grafana:12.2
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=${GRAFANA_AUTH_ANONYMOUS_ENABLED}
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=${GRAFANA_AUTH_ANONYMOUS_ORG_ROLE}
+      - GF_AUTH_DISABLE_LOGIN_FORM=${GRAFANA_AUTH_DISABLE_LOGIN_FORM}
+    volumes:
+      - ./Configs/grafana/configs/dashboards.yaml:/etc/grafana/provisioning/dashboards/dashboards.yaml
+      - ./Configs/grafana/configs/datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+      - ./Configs/grafana/dashboards:/var/lib/grafana/dashboards
+    ports:
+      - ${GRAFANA_PORTS:-3000:3000}
+    networks:
+      - itemsshop-network
+
+  itemsshop-host:
+    image: itemsshop-host:0.1
+    container_name: itemsshop-host
+    hostname: itemsshop-host
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./Host/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - OTEL_EXPORTER_OTLP_ENDPOINT=${OTEL_COLLECTOR_EXPORTER_ENDPOINT}
+      - OTEL_EXPORTER_OTLP_PROTOCOL=${OTEL_COLLECTOR_EXPORTER_PROTOCOL}
+    ports:
+      - ${HOST_PORTS:-8080:8080}
+    networks:
+      - itemsshop-network
+    healthcheck:
+      test: ["CMD", "curl --fail http://localhost:8080/healthz || exit"]
+      interval: 5s
+      timeout: 3s
+      retries: 2
+      start_period: 10s
+    depends_on:
+      - otel-collector

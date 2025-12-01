@@ -1,9 +1,9 @@
 version: 2
 updates:
   - package-ecosystem: "nuget"
-    directories: ["/src/**/*"]
+    directories: ["/src"]
     schedule:
-      interval: monthly
+      interval: weekly
       day: "friday"
       time: "19:00"
       timezone: "Europe/Moscow"
@@ -12,26 +12,23 @@ updates:
       - "dependencies"
       - "dependabot"
     ignore:
-      - dependency-name: "Microsoft.AspNetCore.*"
+      - dependency-name: "Microsoft.EntityFrameworkCore*"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "Microsoft.EntityFrameworkCore.*"
+      - dependency-name: "Npgsql.EntityFrameworkCore*"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "Npgsql.EntityFrameworkCore.*"
+      - dependency-name: "Npgsql.OpenTelemetry"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "FluentValidation"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "Swashbuckle.AspNetCore"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "Serilog.AspNetCore"
-        update-types: ["version-update:semver-major"]
-      - dependency-name: "FluentValidation.*"
     assignees:
       - "wengwalker"
+    target-branch: "develop"
+    versioning-strategy: "increase"
 
   - package-ecosystem: "github-actions"
-    directories: [".github/workflows"]
+    directories: ["/"]
     schedule:
       interval: "monthly"
     labels:
       - "dependencies"
       - "dependabot"
+    target-branch: "develop"
+    versioning-strategy: "auto"
