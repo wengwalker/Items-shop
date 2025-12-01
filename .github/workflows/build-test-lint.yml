@@ -15,6 +15,8 @@ jobs:
     env:
       SOLUTION_FILE: ./src/ItemsShop.sln
       PROJECT_PATH: ./src/Host/ItemsShop.Host/ItemsShop.Host.csproj
+      CATALOG_MIGRATIONS_PATH: ./src/Catalogs/ItemsShop.Catalogs.Infrastructure/Database/Migrations/
+      ORDER_MIGRATIONS_PATH: ./src/Orders/ItemsShop.Orders.Infrastructure/Database/Migrations/
     steps:
       - uses: actions/checkout@v6
       - name: Setup dotnet
@@ -33,7 +35,9 @@ jobs:
 
       - name: Linter
         run: |
-          dotnet format ${{ env.SOLUTION_FILE }} --verify-no-changes || (echo "Code formatting issues detected. Run 'dotnet format' locally to fix." && exit 1)
+          dotnet format ${{ env.SOLUTION_FILE }} --verify-no-changes --no-restore \
+            --exclude ${{ env.CATALOG_MIGRATIONS_PATH }} --exclude ${{ env.ORDER_MIGRATIONS_PATH }} \
+            || (echo "Code formatting issues detected. Run 'dotnet format' locally to fix." && exit 1)
 
       - name: Build
         run: |
