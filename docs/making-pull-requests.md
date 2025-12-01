@@ -1,60 +1,79 @@
-# Development process (making pull requests)
+## Development process (making pull requests)
 
-1. **Fork the Repository**
+This document describes a recommended workflow for contributing changes via pull requests.  
+It complements the high-level guidance in `CONTRIBUTING.md`.
 
-   - Click the "Fork" button at the top right of the repository page
+1. **Fork the repository**
 
-2. **Clone your Fork**
+   - Click the **Fork** button at the top right of the GitHub repository page.
 
-```bash
-git clone https://github.com/YOUR_USERNAME/Items-shop.git
-cd Items-shop
-```
+2. **Clone your fork**
 
-3. **Set Upstream Remote**
+   ```bash
+   git clone https://github.com/YOUR_USERNAME/Items-shop.git
+   cd Items-shop
+   ```
 
-```bash
-git remote add upstream https://github.com/wengwalker/Items-shop.git
-```
+3. **Set upstream remote**
 
-4. **Sync with Upstream Develop branch**
+   ```bash
+   git remote add upstream https://github.com/wengwalker/Items-shop.git
+   ```
 
-```bash
-git fetch upstream
-git switch develop
-git pull upstream develop
-```
+4. **Sync with upstream `develop` branch**
 
-5. **Create a Feature or Bugfix branch from develop**
+   ```bash
+   git fetch upstream
+   git switch develop
+   git pull upstream develop
+   ```
 
-```bash
-git switch -c feature/your-feature-name develop
-# or for bug fixes:
-git switch -c bugfix/issue-number-description develop
-```
+5. **Create a feature or bugfix branch from `develop`**
+
+   ```bash
+   # feature work
+   git switch -c feature/your-feature-name develop
+
+   # or for bug fixes
+   git switch -c bugfix/issue-number-description develop
+   ```
 
 6. **Make your changes**
 
-- Follow the code standards below
-- Add tests if applicable
-- Update documentation as needed
+   - Keep changes focused and cohesive (one feature or fix per branch).
+   - Follow the existing project structure:
+     - Domain / Application / Infrastructure / Features per module.
+     - Minimal API endpoints implementing `IEndpoint` for HTTP surface.
+   - Add or update tests when applicable.
+   - Update documentation in `docs/` and `README.md` when behavior or API changes.
 
-7. **Regularly Sync with Upstream Develop**
+7. **Regularly sync with upstream `develop`**
 
-```bash
-git fetch upstream
-git rebase upstream/develop
-```
+   ```bash
+   git fetch upstream
+   git rebase upstream/develop
+   ```
 
-8. **Push changes**
+   Resolve conflicts locally and rerun tests before pushing.
 
-```bash
-git push origin your-branch-name
-```
+8. **Push your branch**
 
-9. **Create a Pull Request to Develop branch**
+   ```bash
+   git push origin your-branch-name
+   ```
 
-- Navigate to the original repository
-- Click "Compare & pull request"
-- Ensure the base branch is set to `develop`
-- Fill out the PR template
+9. **Create a pull request targeting `develop`**
+
+   - Navigate to the original repository on GitHub.
+   - Click **Compare & pull request**.
+   - Ensure the base branch is set to `develop`.
+   - Use a PR title that follows the convention described in `CONTRIBUTING.md`.
+   - Provide a concise summary, implementation details, and testing notes in the PR description.
+   - Link the related issue (for example: “Fixes #123”).
+
+10. **Review and iteration**
+
+    - Address reviewer comments with additional commits (avoid force-push unless asked).
+    - Keep the discussion on the PR so future contributors can see the reasoning.
+
+Once the PR is approved and checks pass, a maintainer will merge it into `develop`.
