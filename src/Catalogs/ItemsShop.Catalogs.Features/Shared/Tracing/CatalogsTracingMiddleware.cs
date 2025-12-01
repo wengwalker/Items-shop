@@ -10,7 +10,7 @@ public class CatalogsTracingMiddleware(RequestDelegate next)
 
     public async Task InvokeAsync(HttpContext context)
     {
-        if(!DetermineCatalogsModulePaths(context))
+        if (!DetermineCatalogsModulePaths(context))
         {
             await next(context);
 

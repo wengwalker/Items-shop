@@ -7,10 +7,10 @@ namespace ItemsShop.Orders.Features.Features.OrderItems.UpdateOrderItemQuantity;
 internal static class UpdateOrderItemQuantityMappingExtensions
 {
     public static GetProductRequest MapToRequest(this OrderItemEntity orderItem)
-        => new (orderItem.ProductId);
+        => new(orderItem.ProductId);
 
     public static OrderItemResponse MapToResponse(this OrderItemEntity orderItem)
-        => new (orderItem.Id,
+        => new(orderItem.Id,
                 orderItem.ProductId,
                 orderItem.ProductPrice,
                 orderItem.ProductQuantity,

@@ -6,7 +6,7 @@ namespace ItemsShop.Orders.Features.Features.OrderItems.GetOrderItems;
 internal static class GetOrderItemsMappingExtensions
 {
     public static OrderItemResponse MapToResponse(this OrderItemEntity orderItem)
-        => new (orderItem.Id,
+        => new(orderItem.Id,
                 orderItem.ProductId,
                 orderItem.ProductPrice,
                 orderItem.ProductQuantity,

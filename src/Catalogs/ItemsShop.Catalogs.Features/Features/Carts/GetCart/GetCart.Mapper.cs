@@ -6,5 +6,5 @@ namespace ItemsShop.Catalogs.Features.Features.Carts.GetCart;
 internal static class GetCartMappingExtensions
 {
     public static CartResponse MapToResponse(this CartEntity cart)
-        => new (cart.Id, cart.LastUpdated);
+        => new(cart.Id, cart.LastUpdated);
 }
