@@ -1,0 +1,54 @@
+name: Build and Test
+
+on:
+  pull_request:
+    branches: [master, develop]
+    types: [opened, reopened, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    env:
+      SOLUTION_FILE: ./src/ItemsShop.sln
+      PROJECT_PATH: ./src/Host/ItemsShop.Host/ItemsShop.Host.csproj
+      CATALOG_MIGRATIONS_PATH: ./src/Catalogs/ItemsShop.Catalogs.Infrastructure/Database/Migrations/
+      ORDER_MIGRATIONS_PATH: ./src/Orders/ItemsShop.Orders.Infrastructure/Database/Migrations/
+    steps:
+      - uses: actions/checkout@v6
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: 10.0.*
+
+      - name: Install dotnet-format
+        run: |
+          dotnet tool install -g dotnet-format || true
+          echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Restore
+        run: |
+          dotnet restore ${{ env.SOLUTION_FILE }} --disable-parallel
+
+      - name: Linter
+        run: |
+          dotnet format ${{ env.SOLUTION_FILE }} --verify-no-changes --no-restore \
+            --exclude ${{ env.CATALOG_MIGRATIONS_PATH }} --exclude ${{ env.ORDER_MIGRATIONS_PATH }} \
+            || (echo "Code formatting issues detected. Run 'dotnet format' locally to fix." && exit 1)
+
+      - name: Build
+        run: |
+          dotnet build ${{ env.SOLUTION_FILE }} \
+            --configuration Release \
+            --no-restore
+
+      - name: Test
+        run: |
+          dotnet test ${{ env.SOLUTION_FILE }} \
+            --configuration Release \
+            --no-build \
+            --no-restore \
+            --verbosity normal
