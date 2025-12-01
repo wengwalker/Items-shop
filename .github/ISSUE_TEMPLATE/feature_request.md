@@ -1,5 +1,6 @@
 ---
 name: "Feature Request"
+about: Use this template for tracking new features
 description: "Suggest a new feature"
 title: "Feature: "
 labels: ["enhancement"]
