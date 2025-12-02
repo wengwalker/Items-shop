@@ -1,0 +1,42 @@
+<Solution>
+
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+
+  <Folder Name="/Configs/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="docker-compose.yml" />
+    <File Path="Host/Dockerfile" />
+  </Folder>
+
+  <Folder Name="/Common/">
+    <Project Path="Common/ItemsShop.Common.Api/ItemsShop.Common.Api.csproj" />
+    <Project Path="Common/ItemsShop.Common.Application/ItemsShop.Common.Application.csproj" />
+    <Project Path="Common/ItemsShop.Common.Domain/ItemsShop.Common.Domain.csproj" />
+    <Project Path="Common/ItemsShop.Common.Infrastructure/ItemsShop.Common.Infrastructure.csproj" />
+  </Folder>
+
+  <Folder Name="/Host/">
+    <Project Path="Host/ItemsShop.Host/ItemsShop.Host.csproj" />
+  </Folder>
+
+  <Folder Name="/Modules/" />
+
+  <Folder Name="/Modules/Catalogs/">
+    <Project Path="Catalogs/ItemsShop.Catalogs.Domain/ItemsShop.Catalogs.Domain.csproj" />
+    <Project Path="Catalogs/ItemsShop.Catalogs.Features/ItemsShop.Catalogs.Features.csproj" />
+    <Project Path="Catalogs/ItemsShop.Catalogs.Infrastructure/ItemsShop.Catalogs.Infrastructure.csproj" />
+    <Project Path="Catalogs/ItemsShop.Catalogs.PublicApi/ItemsShop.Catalogs.PublicApi.csproj" />
+  </Folder>
+
+  <Folder Name="/Modules/Orders/">
+    <Project Path="Orders/ItemsShop.Orders.Domain/ItemsShop.Orders.Domain.csproj" />
+    <Project Path="Orders/ItemsShop.Orders.Features/ItemsShop.Orders.Features.csproj" />
+    <Project Path="Orders/ItemsShop.Orders.Infrastructure/ItemsShop.Orders.Infrastructure.csproj" />
+  </Folder>
+
+</Solution>

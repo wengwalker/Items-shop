@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <EnforeCodeStyleInBuild>true</EnforeCodeStyleInBuild>
   </PropertyGroup>
 
 </Project>
